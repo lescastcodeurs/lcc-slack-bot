@@ -25,11 +25,14 @@ asdf install
 
 ## Running the application in dev mode
 
-You can run your application in dev mode that enables live coding using:
+You can run the application in dev mode that enables live coding using:
 
 ```shell
 quarkus dev
 ```
+
+The application is available at [http://localhost:8080](http://localhost:8080). The Dev UI is available at
+[http://localhost:8080/q/dev/](http://localhost:8080/q/dev/).
 
 ## Packaging and running the application
 

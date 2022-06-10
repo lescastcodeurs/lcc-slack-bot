@@ -12,6 +12,7 @@ dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-undertow'
     implementation 'io.quarkus:quarkus-arc'
+    implementation 'com.slack.api:bolt-servlet:1.22.2'
     testImplementation 'io.quarkus:quarkus-junit5'
 }
 
