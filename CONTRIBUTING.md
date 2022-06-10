@@ -1,46 +1,44 @@
+# Contributing guide
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+If you want to learn more about Quarkus, please visit its website: https://quarkus.io/.
+
+## Setup
+
+If you have not done so, you need to:
+
+1. install Git and configure your GitHub access
+2. install a JDK (for example [Eclipse Temurin](https://projects.eclipse.org/projects/adoptium.temurin)),
+3. [install Gradle](https://gradle.org/install/),
+4. [install Quarkus CLI](https://quarkus.io/guides/cli-tooling).
+
+Please refer to [.tool-versions](/.tool-versions) for the exact versions. If you are using [asdf](https://asdf-vm.com/),
+then you can install the required dependencies (except git) using the following commands :
+
+```shell
+asdf plugin-add java
+asdf plugin-add gradle
+asdf plugin-add quarkus https://github.com/marcwrobel/asdf-quarkus
+asdf install
+```
 
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
-```shell script
-gradle quarkusDev
-```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+```shell
+quarkus dev
+```
 
 ## Packaging and running the application
 
 The application can be packaged using:
-```shell script
-gradle build
+
+```shell
+quarkus build
 ```
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
 
 The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-gradle build -Dquarkus.package.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-```shell script
-gradle build -Dquarkus.package.type=native
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-```shell script
-gradle build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./build/lcc-slack-bot-1.0.0-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
+For more information have a look at [Building Quarkus apps with Gradle](https://quarkus.io/guides/gradle-tooling).
