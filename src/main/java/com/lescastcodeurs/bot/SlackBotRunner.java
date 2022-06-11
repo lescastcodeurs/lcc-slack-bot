@@ -37,7 +37,10 @@ public class SlackBotRunner implements QuarkusApplication {
     App app = new App(appConfig);
     app.event(AppMentionEvent.class, (req, ctx) -> {
       LOG.debug("Received : {}", req);
-      ctx.say("Hey there !");
+
+      SlackBotAction command = SlackBotAction.guess(req.getEvent().getText());
+      ctx.say(command.response());
+
       return ctx.ack();
     });
 

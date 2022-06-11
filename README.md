@@ -28,4 +28,4 @@ export SLACK_BOT_TOKEN='xoxb-XXX'
 java -jar build/quarkus-app/quarkus-run.jar
 ```
 
-Once the bot is started, you can mention it in your messages : `@lcc help !`.
+Once the bot is started, you can mention it in your messages : `@lcc Help me please !`.
