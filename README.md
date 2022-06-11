@@ -1,4 +1,5 @@
 [![Build](https://github.com/lescastcodeurs/lcc-slack-bot/workflows/Build/badge.svg)](https://github.com/lescastcodeurs/lcc-slack-bot/actions)
+[![CodeQL](https://github.com/lescastcodeurs/lcc-slack-bot/workflows/CodeQL/badge.svg)](https://github.com/lescastcodeurs/lcc-slack-bot/actions)
 
 # lcc-slack-bot - _Les Cast Codeurs podcast_ bot
 
