@@ -11,6 +11,11 @@ repositories {
 dependencies {
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation 'io.quarkus:quarkus-arc'
+
+  implementation 'com.slack.api:bolt-socket-mode:1.22.2'
+  implementation 'javax.websocket:javax.websocket-api:1.1'
+  implementation 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.17'
+
   testImplementation 'io.quarkus:quarkus-junit5'
 }
 

@@ -2,16 +2,14 @@ _metadata:
   major_version: 1
 
 display_information:
-  name: LCC
-  description: Les Cast Codeurs Podcast bot
+  name: Les Cast Codeurs Podcast App
+  description: A Slack bot that automates show notes creation for Les Cast Codeurs podcast.
   long_description: |
-    A Slack bot that automates show notes creation for Les Cast Codeurs podcast.
-
     This bot reacts to message like '@lcc generate show notes' and :
 
-    - it reads all the current Slack channel,s
-    - it generates the show notes in markdown format from what was read,
-    - and it publish the markdown file to the GitHub wiki of lescastcodeurs.com.
+    1- it reads all the messages in the current Slack channel,
+    2- it generates the show notes in markdown format,
+    3- it publishes the markdown file to the GitHub wiki of lescastcodeurs.com.
 
     A Slack channel must be dedicated to a single episode. And a threaded conversations must be dedicated to a single link.
     The first message of a threaded conversation must be the link.
@@ -25,13 +23,9 @@ features:
 oauth_config:
   scopes:
     bot:
-      - links:read # View URLs in messages
-      - channels:history # View messages and other content in public channels that lcc has been added to
-      - app_mentions:read # View messages that directly mention lcc in conversations that the app is in
-      - channels:read # View basic information about public channels in a workspace
-      - groups:history # View messages and other content in private channels that lcc has been added to
-      - groups:read # View basic information about private channels that lcc has been added to
-      - users:write # Set presence for lcc
+      - app_mentions:read # View messages that directly mention @lcc in conversations that the app is in
+      - chat:write # Send messages as @lcc
+      - users:write # Set presence for LCC
 
 settings:
   event_subscriptions:
