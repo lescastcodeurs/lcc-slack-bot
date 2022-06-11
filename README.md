@@ -1,4 +1,6 @@
-# lcc-slack-bot
+[![Build](https://github.com/lescastcodeurs/lcc-slack-bot/workflows/Build/badge.svg)](https://github.com/lescastcodeurs/lcc-slack-bot/actions)
+
+# lcc-slack-bot - _Les Cast Codeurs podcast_ bot
 
 A slack bot that automates show notes creation for _Les Cast Codeurs podcast_.
 
