@@ -1,5 +1,6 @@
 plugins {
   id 'java'
+  id 'idea'
   id 'io.quarkus'
 }
 
@@ -34,4 +35,11 @@ compileJava {
 
 compileTestJava {
   options.encoding = 'UTF-8'
+}
+
+idea {
+  module {
+    downloadJavadoc = true
+    downloadSources = true
+  }
 }
