@@ -51,7 +51,7 @@ public class SlackMentionListener implements QuarkusApplication {
     app.event(AppMentionEvent.class, (req, ctx) -> {
       LOG.debug("Received : {}", req);
 
-      SlackBotAction command = SlackBotAction.guess(req.getEvent().getText());
+      SlackBotCommand command = SlackBotCommand.guess(req.getEvent().getText());
       ctx.say(command.response());
 
       return ctx.ack();
