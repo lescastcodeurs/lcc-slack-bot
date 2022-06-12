@@ -5,10 +5,13 @@ import com.slack.api.bolt.AppConfig;
 import com.slack.api.bolt.socket_mode.SocketModeApp;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.runtime.QuarkusApplication;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Listen to Slack {@link AppMentionEvent}s and respond to the given commands.
@@ -19,9 +22,16 @@ import java.io.IOException;
  */
 public class SlackMentionListener implements QuarkusApplication {
 
-  public static final String SLACK_BOT_TOKEN_ENV_NAME = "SLACK_BOT_TOKEN";
-  public static final String SLACK_APP_TOKEN_ENV_NAME = "SLACK_APP_TOKEN";
   private static final Logger LOG = LoggerFactory.getLogger(SlackMentionListener.class);
+
+  private final String appToken;
+  private final String botToken;
+
+  public SlackMentionListener(@ConfigProperty(name = "slack.app.token") String appToken,
+                              @ConfigProperty(name = "slack.bot.token") String botToken) {
+    this.appToken = requireNonNull(appToken);
+    this.botToken = requireNonNull(botToken);
+  }
 
   @Override
   public int run(String... args) {
@@ -35,7 +45,6 @@ public class SlackMentionListener implements QuarkusApplication {
   }
 
   private SocketModeApp createApp() throws IOException {
-    String botToken = System.getenv(SLACK_BOT_TOKEN_ENV_NAME);
     AppConfig appConfig = AppConfig.builder().singleTeamBotToken(botToken).build();
 
     App app = new App(appConfig);
@@ -48,7 +57,6 @@ public class SlackMentionListener implements QuarkusApplication {
       return ctx.ack();
     });
 
-    String appToken = System.getenv(SLACK_APP_TOKEN_ENV_NAME);
     return new SocketModeApp(appToken, app);
   }
 }
