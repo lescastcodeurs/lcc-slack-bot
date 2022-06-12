@@ -11,13 +11,17 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Implements the bot logic.
+ * Listen to Slack {@link AppMentionEvent}s and respond to the given commands.
+ * <p>
+ * Note that <a href="https://api.slack.com/legacy/interactive-messages#responding_right_away">Slack needs an HTTP 200
+ * OK response within 3 seconds</a>. Commands that may take more time to be processed must be handled asynchronously and
+ * in the context a new Slack message.
  */
-public class SlackBotRunner implements QuarkusApplication {
+public class SlackMentionListener implements QuarkusApplication {
 
   public static final String SLACK_BOT_TOKEN_ENV_NAME = "SLACK_BOT_TOKEN";
   public static final String SLACK_APP_TOKEN_ENV_NAME = "SLACK_APP_TOKEN";
-  private static final Logger LOG = LoggerFactory.getLogger(SlackBotRunner.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SlackMentionListener.class);
 
   @Override
   public int run(String... args) {

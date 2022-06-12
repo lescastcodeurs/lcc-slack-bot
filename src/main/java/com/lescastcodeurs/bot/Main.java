@@ -10,6 +10,6 @@ import io.quarkus.runtime.annotations.QuarkusMain;
 @QuarkusMain
 public class Main {
   public static void main(String... args) {
-    Quarkus.run(SlackBotRunner.class, args);
+    Quarkus.run(SlackMentionListener.class, args);
   }
 }
