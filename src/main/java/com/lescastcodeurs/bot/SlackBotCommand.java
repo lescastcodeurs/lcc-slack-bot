@@ -1,5 +1,6 @@
 package com.lescastcodeurs.bot;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static java.util.Arrays.stream;
@@ -10,7 +11,7 @@ public enum SlackBotCommand {
 
   ARE_YOU_THERE(1, ".*are you there.*", "are you there", "Yep, I'm all ears."),
 
-  GENERATE_SHOW_NOTES(2, ".*generate show ?notes?.*", "generate show notes", "OK, I'm on it !"),
+  GENERATE_SHOW_NOTES(2, ".*generate show ?notes?.*", "generate show notes", "OK, I'm on it !", HandlerAddresses.GENERATE_SHOW_NOTES),
 
   HELP(3, ".*help.*", "help", null) {
     @Override
@@ -51,11 +52,22 @@ public enum SlackBotCommand {
    */
   private final String response;
 
-  SlackBotCommand(int guessOrder, String guessRegex, String sampleCommand, String response) {
+  /**
+   * Address of the handler to which the slack event must be sent if further processing is required to fulfil the
+   * command. Use {@code null} if no further processing is required.
+   */
+  private final String handlerAddress;
+
+  SlackBotCommand(int guessOrder, String guessRegex, String sampleCommand, String response, String handlerAddress) {
     this.guessOrder = guessOrder;
     this.guessPattern = Pattern.compile(guessRegex, Pattern.CASE_INSENSITIVE);
     this.sampleCommand = sampleCommand;
     this.response = response;
+    this.handlerAddress = handlerAddress;
+  }
+
+  SlackBotCommand(int guessOrder, String guessRegex, String sampleCommand, String response) {
+    this(guessOrder, guessRegex, sampleCommand, response, null);
   }
 
   public static SlackBotCommand guess(String request) {
@@ -87,5 +99,9 @@ public enum SlackBotCommand {
 
   public String response() {
     return response;
+  }
+
+  public Optional<String> handlerAddress() {
+    return Optional.ofNullable(handlerAddress);
   }
 }

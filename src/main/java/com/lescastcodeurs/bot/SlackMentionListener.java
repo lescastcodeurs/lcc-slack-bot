@@ -5,6 +5,7 @@ import com.slack.api.bolt.AppConfig;
 import com.slack.api.bolt.socket_mode.SocketModeApp;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.runtime.QuarkusApplication;
+import io.vertx.core.eventbus.EventBus;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,18 +18,20 @@ import static java.util.Objects.requireNonNull;
  * Listen to Slack {@link AppMentionEvent}s and respond to the given commands.
  * <p>
  * Note that <a href="https://api.slack.com/legacy/interactive-messages#responding_right_away">Slack needs an HTTP 200
- * OK response within 3 seconds</a>. Commands that may take more time to be processed must be handled asynchronously and
- * in the context a new Slack message.
+ * OK response within 3 seconds</a>. Commands that may take more time to be processed must be handled asynchronously.
  */
 public class SlackMentionListener implements QuarkusApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(SlackMentionListener.class);
 
+  private final EventBus bus;
   private final String appToken;
   private final String botToken;
 
-  public SlackMentionListener(@ConfigProperty(name = "slack.app.token") String appToken,
+  public SlackMentionListener(EventBus bus,
+                              @ConfigProperty(name = "slack.app.token") String appToken,
                               @ConfigProperty(name = "slack.bot.token") String botToken) {
+    this.bus = requireNonNull(bus);
     this.appToken = requireNonNull(appToken);
     this.botToken = requireNonNull(botToken);
   }
@@ -51,7 +54,9 @@ public class SlackMentionListener implements QuarkusApplication {
     app.event(AppMentionEvent.class, (req, ctx) -> {
       LOG.debug("Received : {}", req);
 
-      SlackBotCommand command = SlackBotCommand.guess(req.getEvent().getText());
+      AppMentionEvent event = req.getEvent();
+      SlackBotCommand command = SlackBotCommand.guess(event.getText());
+      command.handlerAddress().ifPresent(address -> bus.publish(address, event));
       ctx.say(command.response());
 
       return ctx.ack();
