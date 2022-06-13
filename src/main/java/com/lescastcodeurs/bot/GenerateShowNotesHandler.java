@@ -32,13 +32,19 @@ public final class GenerateShowNotesHandler {
 
   @ConsumeEvent(GENERATE_SHOW_NOTES_ADDRESS)
   public void consume(AppMentionEvent event) {
-    Slack slack = Slack.getInstance();
-    MethodsClient methods = slack.methods(botToken);
     String channel = event.getChannel();
 
     try {
-      methods.chatPostMessage(
-        ChatPostMessageRequest.builder().channel(channel).text("Done !").build()
+      MethodsClient slack = Slack.getInstance().methods(botToken);
+
+      var showNotes = new ShowNotes();
+
+      slack.chatPostMessage(
+        ChatPostMessageRequest
+          .builder()
+          .channel(channel)
+          .text(showNotes.render())
+          .build()
       );
       LOG.info("Show notes generated for channel {}", channel);
     } catch (Exception e) {
