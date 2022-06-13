@@ -11,7 +11,7 @@ public enum SlackBotCommand {
 
   ARE_YOU_THERE(1, ".*are you there.*", "are you there", "Yep, I'm all ears."),
 
-  GENERATE_SHOW_NOTES(2, ".*generate show ?notes?.*", "generate show notes", "OK, I'm on it !", HandlerAddresses.GENERATE_SHOW_NOTES),
+  GENERATE_SHOW_NOTES(2, ".*generate show ?notes?.*", "generate show notes", "OK, I'm on it !", Constants.GENERATE_SHOW_NOTES_ADDRESS),
 
   HELP(3, ".*help.*", "help", null) {
     @Override

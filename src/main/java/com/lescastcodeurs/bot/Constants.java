@@ -1,6 +1,6 @@
 package com.lescastcodeurs.bot;
 
-public final class ConfigKey {
+public final class Constants {
 
   /**
    * Configuration key for the app-level token ({@code xapp-XXX}).
@@ -16,7 +16,12 @@ public final class ConfigKey {
    */
   public static final String SLACK_BOT_TOKEN = "slack.bot.token";
 
-  private ConfigKey() {
+  /**
+   * Address for the {@link com.lescastcodeurs.bot.GenerateShowNotesHandler}.
+   */
+  public static final String GENERATE_SHOW_NOTES_ADDRESS = "generate-show-notes";
+
+  private Constants() {
     // prevent instantiation
   }
 }

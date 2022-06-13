@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import static com.lescastcodeurs.bot.Constants.GENERATE_SHOW_NOTES_ADDRESS;
+
 /**
  * Handles {@link SlackBotCommand#GENERATE_SHOW_NOTES} commands.
  */
@@ -14,7 +16,7 @@ import javax.enterprise.context.ApplicationScoped;
 public final class GenerateShowNotesHandler {
   private static final Logger LOG = LoggerFactory.getLogger(GenerateShowNotesHandler.class);
 
-  @ConsumeEvent(HandlerAddresses.GENERATE_SHOW_NOTES)
+  @ConsumeEvent(GENERATE_SHOW_NOTES_ADDRESS)
   public void consume(AppMentionEvent event) {
     LOG.info("Show notes generated for channel {}", event.getChannel());
   }

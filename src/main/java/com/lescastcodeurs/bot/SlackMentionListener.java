@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.lescastcodeurs.bot.ConfigKey.SLACK_APP_TOKEN;
-import static com.lescastcodeurs.bot.ConfigKey.SLACK_BOT_TOKEN;
+import static com.lescastcodeurs.bot.Constants.SLACK_APP_TOKEN;
+import static com.lescastcodeurs.bot.Constants.SLACK_BOT_TOKEN;
 import static java.util.Objects.requireNonNull;
 
 /**
