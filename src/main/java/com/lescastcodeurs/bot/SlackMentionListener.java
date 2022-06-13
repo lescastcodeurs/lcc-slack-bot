@@ -1,20 +1,19 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.Constants.SLACK_APP_TOKEN;
+import static com.lescastcodeurs.bot.Constants.SLACK_BOT_TOKEN;
+import static java.util.Objects.requireNonNull;
+
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
 import com.slack.api.bolt.socket_mode.SocketModeApp;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.runtime.QuarkusApplication;
 import io.vertx.core.eventbus.EventBus;
+import java.io.IOException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-
-import static com.lescastcodeurs.bot.Constants.SLACK_APP_TOKEN;
-import static com.lescastcodeurs.bot.Constants.SLACK_BOT_TOKEN;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Listen to Slack {@link AppMentionEvent}s and respond to the given commands.
@@ -24,15 +23,19 @@ import static java.util.Objects.requireNonNull;
  */
 public class SlackMentionListener implements QuarkusApplication {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SlackMentionListener.class);
+  private static final Logger LOG = LoggerFactory.getLogger(
+    SlackMentionListener.class
+  );
 
   private final EventBus bus;
   private final String appToken;
   private final String botToken;
 
-  public SlackMentionListener(EventBus bus,
-                              @ConfigProperty(name = SLACK_APP_TOKEN) String appToken,
-                              @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken) {
+  public SlackMentionListener(
+    EventBus bus,
+    @ConfigProperty(name = SLACK_APP_TOKEN) String appToken,
+    @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken
+  ) {
     this.bus = requireNonNull(bus);
     this.appToken = requireNonNull(appToken);
     this.botToken = requireNonNull(botToken);
@@ -50,19 +53,27 @@ public class SlackMentionListener implements QuarkusApplication {
   }
 
   private SocketModeApp createApp() throws IOException {
-    AppConfig appConfig = AppConfig.builder().singleTeamBotToken(botToken).build();
+    AppConfig appConfig = AppConfig
+      .builder()
+      .singleTeamBotToken(botToken)
+      .build();
 
     App app = new App(appConfig);
-    app.event(AppMentionEvent.class, (req, ctx) -> {
-      LOG.debug("Received : {}", req);
+    app.event(
+      AppMentionEvent.class,
+      (req, ctx) -> {
+        LOG.debug("Received : {}", req);
 
-      AppMentionEvent event = req.getEvent();
-      SlackBotCommand command = SlackBotCommand.guess(event.getText());
-      command.handlerAddress().ifPresent(address -> bus.publish(address, event));
-      ctx.say(command.response());
+        AppMentionEvent event = req.getEvent();
+        SlackBotCommand command = SlackBotCommand.guess(event.getText());
+        command
+          .handlerAddress()
+          .ifPresent(address -> bus.publish(address, event));
+        ctx.say(command.response());
 
-      return ctx.ack();
-    });
+        return ctx.ack();
+      }
+    );
 
     return new SocketModeApp(appToken, app);
   }

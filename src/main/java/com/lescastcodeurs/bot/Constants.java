@@ -19,7 +19,8 @@ public final class Constants {
   /**
    * Address for the {@link com.lescastcodeurs.bot.GenerateShowNotesHandler}.
    */
-  public static final String GENERATE_SHOW_NOTES_ADDRESS = "generate-show-notes";
+  public static final String GENERATE_SHOW_NOTES_ADDRESS =
+    "generate-show-notes";
 
   private Constants() {
     // prevent instantiation

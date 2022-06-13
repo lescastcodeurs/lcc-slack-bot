@@ -10,14 +10,17 @@ If you have not done so, you need to:
 
 1. install Git and configure your GitHub access
 2. install a JDK (for example [Eclipse Temurin](https://projects.eclipse.org/projects/adoptium.temurin)),
-3. [install Gradle](https://gradle.org/install/),
-4. [install Quarkus CLI](https://quarkus.io/guides/cli-tooling).
+3. install [Node.js](https://nodejs.org/en/download/) (needed for formatting files
+   using [prettier](https://prettier.io/)),
+4. [install Gradle](https://gradle.org/install/),
+5. [install Quarkus CLI](https://quarkus.io/guides/cli-tooling).
 
 Please refer to [.tool-versions](/.tool-versions) for the exact versions. If you are using [asdf](https://asdf-vm.com/),
 then you can install the required dependencies (except git) using the following commands :
 
 ```shell
 asdf plugin-add java
+asdf plugin-add nodejs
 asdf plugin-add gradle
 asdf plugin-add quarkus https://github.com/marcwrobel/asdf-quarkus
 asdf install

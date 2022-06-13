@@ -1,17 +1,22 @@
 package com.lescastcodeurs.bot;
 
-import java.util.Optional;
-import java.util.regex.Pattern;
-
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.joining;
 
-public enum SlackBotCommand {
+import java.util.Optional;
+import java.util.regex.Pattern;
 
+public enum SlackBotCommand {
   ARE_YOU_THERE(1, ".*are you there.*", "are you there", "Yep, I'm all ears."),
 
-  GENERATE_SHOW_NOTES(2, ".*generate show ?notes?.*", "generate show notes", "OK, I'm on it !", Constants.GENERATE_SHOW_NOTES_ADDRESS),
+  GENERATE_SHOW_NOTES(
+    2,
+    ".*generate show ?notes?.*",
+    "generate show notes",
+    "OK, I'm on it !",
+    Constants.GENERATE_SHOW_NOTES_ADDRESS
+  ),
 
   HELP(3, ".*help.*", "help", null) {
     @Override
@@ -58,7 +63,13 @@ public enum SlackBotCommand {
    */
   private final String handlerAddress;
 
-  SlackBotCommand(int guessOrder, String guessRegex, String sampleCommand, String response, String handlerAddress) {
+  SlackBotCommand(
+    int guessOrder,
+    String guessRegex,
+    String sampleCommand,
+    String response,
+    String handlerAddress
+  ) {
     this.guessOrder = guessOrder;
     this.guessPattern = Pattern.compile(guessRegex, Pattern.CASE_INSENSITIVE);
     this.sampleCommand = sampleCommand;
@@ -66,7 +77,12 @@ public enum SlackBotCommand {
     this.handlerAddress = handlerAddress;
   }
 
-  SlackBotCommand(int guessOrder, String guessRegex, String sampleCommand, String response) {
+  SlackBotCommand(
+    int guessOrder,
+    String guessRegex,
+    String sampleCommand,
+    String response
+  ) {
     this(guessOrder, guessRegex, sampleCommand, response, null);
   }
 
@@ -74,7 +90,8 @@ public enum SlackBotCommand {
     return stream(values())
       .sorted(comparingInt(SlackBotCommand::guessOrder))
       .filter(c -> c.canReplyTo(request))
-      .findFirst().orElse(UNKNOWN);
+      .findFirst()
+      .orElse(UNKNOWN);
   }
 
   private boolean canReplyTo(String request) {

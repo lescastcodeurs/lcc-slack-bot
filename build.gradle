@@ -2,6 +2,7 @@ plugins {
   id 'java'
   id 'idea'
   id 'io.quarkus'
+  id 'com.diffplug.spotless'
 }
 
 repositories {
@@ -36,6 +37,15 @@ compileJava {
 
 compileTestJava {
   options.encoding = 'UTF-8'
+}
+
+spotless {
+  format 'misc', {
+    target '**/*.md', '**/*.yml', '**/*.json', 'src/*/java/**/*.java'
+
+    prettier(['prettier': prettierVersion, 'prettier-plugin-java': prettierJavaVersion])
+      .configFile('.prettierrc.yml')
+  }
 }
 
 idea {
