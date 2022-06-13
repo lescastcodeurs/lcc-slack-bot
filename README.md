@@ -15,7 +15,7 @@ First you need to create a [Slack app](https://api.slack.com/start) and install 
 1. go to [https://api.slack.com/apps](https://api.slack.com/apps),
 2. create a new Slack app using this [manifest.yml](/src/main/slack/manifest.yml),
 3. optionally set an app icon in _Settings > Basic Information_,
-4. create an _App-Level Tokens_ with the scope `connections:write` in _Settings > Basic Information_ and save it for
+4. create an _app-level token_ with the scope `connections:write` in _Settings > Basic Information_ and save it for
    later (it will be referred as `SLACK_APP_TOKEN`),
 5. install the app using the _Install to worspace_ button in _Settings > Basic Information_,
 6. save the _Bot User OAuth Token_ for later in _Features > OAuth & Permissions_ (it will be referred

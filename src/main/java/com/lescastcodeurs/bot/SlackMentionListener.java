@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static com.lescastcodeurs.bot.ConfigKey.SLACK_APP_TOKEN;
+import static com.lescastcodeurs.bot.ConfigKey.SLACK_BOT_TOKEN;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -29,8 +31,8 @@ public class SlackMentionListener implements QuarkusApplication {
   private final String botToken;
 
   public SlackMentionListener(EventBus bus,
-                              @ConfigProperty(name = "slack.app.token") String appToken,
-                              @ConfigProperty(name = "slack.bot.token") String botToken) {
+                              @ConfigProperty(name = SLACK_APP_TOKEN) String appToken,
+                              @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken) {
     this.bus = requireNonNull(bus);
     this.appToken = requireNonNull(appToken);
     this.botToken = requireNonNull(botToken);
