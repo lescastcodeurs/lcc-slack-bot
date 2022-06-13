@@ -9,8 +9,11 @@ import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.model.event.AppMentionEvent;
+import io.quarkus.qute.Location;
+import io.quarkus.qute.Template;
 import io.quarkus.vertx.ConsumeEvent;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
@@ -22,11 +25,15 @@ public final class GenerateShowNotesHandler {
 
   private static final Logger LOG = getLogger(GenerateShowNotesHandler.class);
 
+  private final Template notes;
   private final String botToken;
 
+  @Inject
   public GenerateShowNotesHandler(
+    @Location("show-notes.md") Template notes,
     @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken
   ) {
+    this.notes = requireNonNull(notes);
     this.botToken = requireNonNull(botToken);
   }
 
@@ -37,14 +44,11 @@ public final class GenerateShowNotesHandler {
     try {
       MethodsClient slack = Slack.getInstance().methods(botToken);
 
-      var showNotes = new ShowNotes();
+      ShowNotes data = new ShowNotes();
+      String result = notes.render(data);
 
       slack.chatPostMessage(
-        ChatPostMessageRequest
-          .builder()
-          .channel(channel)
-          .text(showNotes.render())
-          .build()
+        ChatPostMessageRequest.builder().channel(channel).text(result).build()
       );
       LOG.info("Show notes generated for channel {}", channel);
     } catch (Exception e) {

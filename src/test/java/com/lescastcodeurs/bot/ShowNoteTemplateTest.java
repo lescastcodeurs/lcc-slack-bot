@@ -3,15 +3,20 @@ package com.lescastcodeurs.bot;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.quarkus.qute.Location;
+import io.quarkus.qute.Template;
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
-class ShowNotesTest {
+@QuarkusTest
+class ShowNoteTemplateTest {
+
+  @Location("show-notes.md")
+  private Template notes;
 
   @Test
   void generateEmpty() {
-    var showNotes = new ShowNotes();
-
-    String rendered = showNotes.render();
+    String rendered = notes.render(new ShowNotes());
 
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
