@@ -1,8 +1,10 @@
 package com.lescastcodeurs.bot;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.util.Arrays.stream;
+import static org.junit.jupiter.api.Assertions.*;
 
+import com.slack.api.methods.response.conversations.ConversationsHistoryResponse;
+import com.slack.api.model.Message;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.test.junit.QuarkusTest;
@@ -16,7 +18,7 @@ class ShowNoteTemplateTest {
 
   @Test
   void generateEmpty() {
-    String rendered = notes.render(new ShowNotes());
+    String rendered = notes.render(new ShowNotes(history()));
 
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
@@ -31,5 +33,49 @@ class ShowNoteTemplateTest {
     assertTrue(rendered.contains("Enregistré le"));
     assertTrue(rendered.contains("Téléchargement de l’épisode"));
     assertTrue(rendered.contains("Soutenez Les Cast Codeurs sur Patreon"));
+  }
+
+  @Test
+  void generateWithLinks() {
+    String rendered = notes.render(
+      new ShowNotes(
+        history(
+          "random comment 1",
+          "https://openjdk.java.net/projects/leyden/notes/01-beginnings",
+          "random comment 2",
+          "https://foojay.io/today/7-reasons-why-after-26-years-java-still-makes-sense/",
+          "@lcc generate show notes"
+        )
+      )
+    );
+
+    assertNotNull(rendered);
+    assertTrue(rendered.startsWith("---"));
+    assertTrue(
+      rendered.contains(
+        "[https://openjdk.java.net/projects/leyden/notes/01-beginnings]"
+      )
+    );
+    assertTrue(
+      rendered.contains(
+        "[https://foojay.io/today/7-reasons-why-after-26-years-java-still-makes-sense/]"
+      )
+    );
+    assertFalse(rendered.contains("random comment"));
+    assertFalse(rendered.contains("generate show notes"));
+  }
+
+  private ConversationsHistoryResponse history(String... messages) {
+    var response = new ConversationsHistoryResponse();
+    response.setMessages(
+      stream(messages)
+        .map(text -> {
+          Message message = new Message();
+          message.setText(text.startsWith("http") ? "<" + text + ">" : text);
+          return message;
+        })
+        .toList()
+    );
+    return response;
   }
 }

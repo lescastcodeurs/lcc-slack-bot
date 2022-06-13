@@ -8,6 +8,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
+import com.slack.api.methods.request.conversations.ConversationsHistoryRequest;
+import com.slack.api.methods.response.conversations.ConversationsHistoryResponse;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
@@ -44,7 +46,13 @@ public final class GenerateShowNotesHandler {
     try {
       MethodsClient slack = Slack.getInstance().methods(botToken);
 
-      ShowNotes data = new ShowNotes();
+      ConversationsHistoryResponse history = slack.conversationsHistory(
+        ConversationsHistoryRequest
+          .builder()
+          .channel(event.getChannel())
+          .build()
+      );
+      ShowNotes data = new ShowNotes(history);
       String result = notes.render(data);
 
       slack.chatPostMessage(
