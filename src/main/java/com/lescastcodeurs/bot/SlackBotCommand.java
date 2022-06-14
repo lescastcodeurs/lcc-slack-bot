@@ -4,6 +4,7 @@ import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.joining;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -22,7 +23,8 @@ public enum SlackBotCommand {
     @Override
     public String response() {
       String commands = stream(SlackBotCommand.values())
-        .map(SlackBotCommand::guessPattern)
+        .map(SlackBotCommand::sampleCommand)
+        .filter(Objects::nonNull)
         .map(Object::toString)
         .collect(joining(" | "));
 
