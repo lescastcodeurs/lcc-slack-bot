@@ -55,3 +55,12 @@ idea {
     downloadSources = true
   }
 }
+
+// Auto-format code if not on CI
+// See also https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables,
+// https://docs.gitlab.com/ee/ci/variables/predefined_variables.html.
+if (!System.getenv().containsKey('CI')) {
+  tasks.named('spotlessCheck') {
+    dependsOn(tasks.named('spotlessApply'))
+  }
+} // else execute only spotlessCheck
