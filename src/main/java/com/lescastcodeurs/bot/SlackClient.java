@@ -20,13 +20,13 @@ import org.slf4j.Logger;
  * A simple wrapper for this bot around Slacks {@link com.slack.api.methods.MethodsClient}.
  */
 @ApplicationScoped
-public final class SlackBotClient {
+public final class SlackClient {
 
-  private static final Logger LOG = getLogger(SlackBotClient.class);
+  private static final Logger LOG = getLogger(SlackClient.class);
 
   private final String botToken;
 
-  public SlackBotClient(
+  public SlackClient(
     @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken
   ) {
     this.botToken = requireNonNull(botToken);

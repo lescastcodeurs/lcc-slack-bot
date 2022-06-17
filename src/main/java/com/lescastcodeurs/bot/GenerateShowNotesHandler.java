@@ -23,11 +23,11 @@ public final class GenerateShowNotesHandler {
   private static final Logger LOG = getLogger(GenerateShowNotesHandler.class);
 
   private final Template notes;
-  private final SlackBotClient client;
+  private final SlackClient client;
 
   @Inject
   public GenerateShowNotesHandler(
-    SlackBotClient client,
+    SlackClient client,
     @Location("show-notes.md") Template notes
   ) {
     this.notes = requireNonNull(notes);
