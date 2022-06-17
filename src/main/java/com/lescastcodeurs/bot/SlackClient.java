@@ -7,6 +7,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
+import com.slack.api.methods.SlackApiTextResponse;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.conversations.ConversationsHistoryRequest;
 import java.io.IOException;
@@ -26,85 +27,82 @@ public final class SlackClient {
 
   private final String botToken;
 
-  public SlackClient(
-    @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken
-  ) {
+  public SlackClient(@ConfigProperty(name = SLACK_BOT_TOKEN) String botToken) {
     this.botToken = requireNonNull(botToken);
   }
 
+  /**
+   * See <a href="https://api.slack.com/methods/conversations.history">conversations.history</a>.
+   */
   public List<SlackMessage> history(String channel) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
-    var request = ConversationsHistoryRequest
-      .builder()
-      .channel(channel)
-      .build();
 
-    try {
-      var response = slack.conversationsHistory(request);
-      warnIfResponseContainsWarning(
-        response.getWarning(),
-        channel,
-        response.getWarning()
-      );
-
-      if (response.isOk()) {
-        return response.getMessages().stream().map(SlackMessage::new).toList();
-      } else {
-        throw error(channel, response.getError());
-      }
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    } catch (SlackApiException e) {
-      throw new UncheckedSlackApiException(e);
-    }
+    return SlackApi
+      .check(() ->
+        slack.conversationsHistory(
+          ConversationsHistoryRequest.builder().channel(channel).build()
+        )
+      )
+      .getMessages()
+      .stream()
+      .map(SlackMessage::new)
+      .toList();
   }
 
+  /**
+   * See <a href="https://api.slack.com/methods/chat.postMessage">chat.postMessage</a>.
+   */
   public void chatPostMessage(String channel, String message) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
-    var request = ChatPostMessageRequest
-      .builder()
-      .channel(channel)
-      .text(message)
-      .build();
 
-    try {
-      var response = slack.chatPostMessage(request);
-      warnIfResponseContainsWarning(
-        response.getWarning(),
-        channel,
-        response.getWarning()
-      );
-
-      if (!response.isOk()) {
-        throw error(channel, response.getError());
-      }
-    } catch (IOException e) {
-      throw new UncheckedIOException(e);
-    } catch (SlackApiException e) {
-      throw new UncheckedSlackApiException(e);
-    }
-  }
-
-  private void warnIfResponseContainsWarning(
-    String response,
-    String channel,
-    String response1
-  ) {
-    if (response != null) {
-      LOG.warn(
-        "chatPostMessage call to channel {} succeeded but returned a warning : {}",
-        channel,
-        response1
-      );
-    }
-  }
-
-  private UncheckedSlackApiException error(String channel, String response) {
-    return new UncheckedSlackApiException(
-      "chatPostMessage call to channel %s succeeded but returned an error : %s".formatted(
-          channel,
-          response
-        )
+    SlackApi.check(() ->
+      slack.chatPostMessage(
+        ChatPostMessageRequest.builder().channel(channel).text(message).build()
+      )
     );
+  }
+
+  /**
+   * Wrap call to Slack API and handle error / warning.
+   *
+   * @param <R> the response type
+   */
+  @FunctionalInterface
+  private interface SlackApi<R extends SlackApiTextResponse> {
+    R call() throws IOException, SlackApiException;
+
+    static <R extends SlackApiTextResponse> R check(SlackApi<R> api) {
+      try {
+        R response = api.call();
+        handleWarning(response);
+        handleError(response);
+        return response;
+      } catch (IOException e) {
+        throw new UncheckedIOException(e);
+      } catch (SlackApiException e) {
+        throw new UncheckedSlackApiException(e);
+      }
+    }
+
+    static void handleWarning(SlackApiTextResponse response) {
+      if (response.getWarning() != null) {
+        LOG.warn(
+          "slack {} contains a warning : {}",
+          response.getClass().getSimpleName(),
+          response.getWarning()
+        );
+      }
+    }
+
+    static void handleError(SlackApiTextResponse response) {
+      if (!response.isOk()) {
+        throw new UncheckedSlackApiException(
+          "slack %s contains an error : %s".formatted(
+              response.getClass().getSimpleName(),
+              response.getError()
+            )
+        );
+      }
+    }
   }
 }
