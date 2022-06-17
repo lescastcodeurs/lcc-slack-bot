@@ -43,6 +43,7 @@ compileTestJava {
 spotless {
   format 'misc', {
     target '**/*.md', '**/*.yml', '**/*.json', 'src/*/java/**/*.java'
+    targetExclude 'src/main/resources/templates/**/*.*'
 
     prettier(['prettier': prettierVersion, 'prettier-plugin-java': prettierJavaVersion])
       .configFile('.prettierrc.yml')

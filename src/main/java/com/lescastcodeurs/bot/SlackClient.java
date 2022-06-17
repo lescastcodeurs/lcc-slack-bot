@@ -1,6 +1,7 @@
 package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.Constants.SLACK_BOT_TOKEN;
+import static java.util.Comparator.*;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -10,9 +11,13 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.SlackApiTextResponse;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.conversations.ConversationsHistoryRequest;
+import com.slack.api.methods.request.conversations.ConversationsRepliesRequest;
+import com.slack.api.model.Message;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
@@ -23,6 +28,22 @@ import org.slf4j.Logger;
 @ApplicationScoped
 public final class SlackClient {
 
+  /**
+   * Chronological comparator of {@link Message}s.
+   */
+  private static final Comparator<Message> CHRONOLOGICAL = comparing(
+    Message::getTs,
+    nullsLast(naturalOrder())
+  );
+
+  /**
+   * Returns {@code true} if a {@link Message} is a reply, {@code false} otherwise.
+   */
+  private static final Predicate<Message> IS_REPLY = r ->
+    r.getTs() == null ||
+    r.getThreadTs() == null ||
+    !r.getTs().equals(r.getThreadTs());
+
   private static final Logger LOG = getLogger(SlackClient.class);
 
   private final String botToken;
@@ -32,7 +53,10 @@ public final class SlackClient {
   }
 
   /**
-   * See <a href="https://api.slack.com/methods/conversations.history">conversations.history</a>.
+   * Fetch the messages (and their replies) of the given channel in chronological order.
+   *
+   * @see #replies(String, String)
+   * @see <a href="https://api.slack.com/methods/conversations.history">conversations.history</a>.
    */
   public List<SlackMessage> history(String channel) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
@@ -45,12 +69,46 @@ public final class SlackClient {
       )
       .getMessages()
       .stream()
-      .map(SlackMessage::new)
+      .sorted(CHRONOLOGICAL)
+      .map(m -> new SlackMessage(m, replies(channel, m))) // note: oddly, m.getChannel() is null, so it should be given explicitly
+      .toList();
+  }
+
+  private List<String> replies(String channel, Message message) {
+    Integer replyCount = message.getReplyCount();
+
+    if (replyCount != null && replyCount > 0) {
+      return replies(channel, message.getTs());
+    }
+
+    return List.of();
+  }
+
+  /**
+   * Fetch the replies of the given message in chronological order.
+   *
+   * @see <a href="https://api.slack.com/methods/conversations.replies">conversations.replies</a>.
+   */
+  public List<String> replies(String channel, String ts) {
+    MethodsClient slack = Slack.getInstance().methods(botToken);
+    return SlackApi
+      .check(() ->
+        slack.conversationsReplies(
+          ConversationsRepliesRequest.builder().channel(channel).ts(ts).build()
+        )
+      )
+      .getMessages()
+      .stream()
+      .filter(IS_REPLY)
+      .sorted(CHRONOLOGICAL)
+      .map(Message::getText)
       .toList();
   }
 
   /**
-   * See <a href="https://api.slack.com/methods/chat.postMessage">chat.postMessage</a>.
+   * Post a message in the given channel.
+   *
+   * @see <a href="https://api.slack.com/methods/chat.postMessage">chat.postMessage</a>.
    */
   public void chatPostMessage(String channel, String message) {
     MethodsClient slack = Slack.getInstance().methods(botToken);

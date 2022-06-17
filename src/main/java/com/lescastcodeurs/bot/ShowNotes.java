@@ -1,7 +1,5 @@
 package com.lescastcodeurs.bot;
 
-import static java.util.Comparator.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,11 +10,6 @@ public class ShowNotes {
 
   public ShowNotes(List<SlackMessage> history) {
     this.now = LocalDateTime.now();
-    this.links =
-      history
-        .stream()
-        .sorted(comparing(SlackMessage::timestamp))
-        .filter(SlackMessage::isLink)
-        .toList();
+    this.links = history.stream().filter(SlackMessage::isLink).toList();
   }
 }

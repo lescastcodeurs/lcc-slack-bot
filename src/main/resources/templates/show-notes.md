@@ -19,6 +19,10 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 {#for link in links}
 [{link.url}]({link.url})
+
+{#for reply in link.replies}
+- {reply}
+{/for}
 {/for}
 
 ### Langages

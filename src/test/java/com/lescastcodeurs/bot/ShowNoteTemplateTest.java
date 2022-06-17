@@ -66,7 +66,7 @@ class ShowNoteTemplateTest {
 
   private List<SlackMessage> history(String... messages) {
     return stream(messages)
-      .map(message -> new SlackMessage(null, message))
+      .map(message -> new SlackMessage(null, message, List.of()))
       .toList();
   }
 }
