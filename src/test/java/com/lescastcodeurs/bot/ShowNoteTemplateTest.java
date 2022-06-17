@@ -35,7 +35,7 @@ class ShowNoteTemplateTest {
   }
 
   @Test
-  void generateWithLinks() {
+  void generateWithNotes() {
     String rendered = notes.render(
       new ShowNotes(
         history(
@@ -52,21 +52,31 @@ class ShowNoteTemplateTest {
     assertTrue(rendered.startsWith("---"));
     assertTrue(
       rendered.contains(
-        "(https://openjdk.java.net/projects/leyden/notes/01-beginnings)"
+        "https://openjdk.java.net/projects/leyden/notes/01-beginnings"
       )
     );
     assertTrue(
       rendered.contains(
-        "(https://foojay.io/today/7-reasons-why-after-26-years-java-still-makes-sense/)"
+        "https://foojay.io/today/7-reasons-why-after-26-years-java-still-makes-sense/"
       )
     );
+    assertTrue(rendered.contains("- comment 1"));
+    assertTrue(rendered.contains("- comment 2"));
+    assertTrue(rendered.contains("- comment 3"));
+
     assertFalse(rendered.contains("random comment"));
     assertFalse(rendered.contains("generate show notes"));
   }
 
   private List<SlackMessage> history(String... messages) {
     return stream(messages)
-      .map(message -> new SlackMessage(null, message, List.of()))
+      .map(message ->
+        new SlackMessage(
+          null,
+          message,
+          List.of("comment 1", "comment 2", "comment 3")
+        )
+      )
       .toList();
   }
 }

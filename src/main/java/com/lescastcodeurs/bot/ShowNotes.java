@@ -6,15 +6,15 @@ import java.util.List;
 public class ShowNotes {
 
   public final LocalDateTime now;
-  public final List<SlackMessage> links;
+  public final List<ShowNote> notes;
 
   public ShowNotes(List<SlackMessage> messages) {
     this.now = LocalDateTime.now();
-    this.links =
+    this.notes =
       messages
         .stream()
-        .filter(SlackMessage::isShowNoteEntry)
-        .map(SlackMessage::asShowNotesEntry)
+        .filter(ShowNote::isShowNote)
+        .map(ShowNote::new)
         .toList();
   }
 }
