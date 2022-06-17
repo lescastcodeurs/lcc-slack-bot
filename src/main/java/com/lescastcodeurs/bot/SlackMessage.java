@@ -6,11 +6,16 @@ import static java.util.function.Predicate.not;
 import com.slack.api.model.Message;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Extract required information from a Slack message.
  */
 public final class SlackMessage {
+
+  private static final String SHOW_NOTE_REGEX = "<(https?://.+)>.*";
+  private static final Pattern SHOW_NOTE_PATTERN = Pattern.compile(SHOW_NOTE_REGEX, Pattern.CASE_INSENSITIVE);
 
   // See https://github.com/slackhq/slack-api-docs/issues/7#issuecomment-67913241.
   private final String timestamp;
@@ -40,17 +45,19 @@ public final class SlackMessage {
   }
 
   public boolean isShowNoteEntry() {
-    return text.startsWith("<http") && text.endsWith(">");
+    return SHOW_NOTE_PATTERN.matcher(text).matches();
   }
 
   /**
    * Transform this message to an LCC show notes entry.
    */
   public SlackMessage asShowNotesEntry() {
-    String url = text.length() > 3
-      ? text.substring(1).substring(0, text.length() - 2)
-      : text;
+    Matcher matcher = SHOW_NOTE_PATTERN.matcher(text);
+    if (!matcher.find( )) {
+      throw new UnsupportedOperationException("this message does not look like a show note entry, dit you call isShowNoteEntry() to check it ?");
+    }
 
+    String url = matcher.group(1);
     List<String> newReplies = new ArrayList<>();
     for (String reply : replies) {
       stream(reply.split("[\n•]+"))

@@ -44,6 +44,9 @@ class SlackMessageTest {
     assertTrue(
       new SlackMessage(null, "<http://www.google.fr/>", null).isShowNoteEntry()
     );
+    assertTrue(
+      new SlackMessage(null, "<http://www.google.fr/> (note)", null).isShowNoteEntry()
+    );
 
     assertFalse(
       new SlackMessage(null, "http://www.google.fr/", null).isShowNoteEntry()
