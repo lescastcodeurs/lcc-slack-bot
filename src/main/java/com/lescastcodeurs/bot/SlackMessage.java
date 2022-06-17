@@ -1,6 +1,10 @@
 package com.lescastcodeurs.bot;
 
+import static java.util.Arrays.stream;
+import static java.util.function.Predicate.not;
+
 import com.slack.api.model.Message;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +20,7 @@ public final class SlackMessage {
   public SlackMessage(String timestamp, String text, List<String> replies) {
     this.timestamp = timestamp == null ? "9999999999.999999" : timestamp;
     this.text = text == null ? "" : text;
-    this.replies = replies == null ? List.of() : replies;
+    this.replies = replies == null ? List.of() : List.copyOf(replies);
   }
 
   public SlackMessage(Message message, List<String> replies) {
@@ -35,11 +39,26 @@ public final class SlackMessage {
     return replies;
   }
 
-  public boolean isLink() {
+  public boolean isShowNoteEntry() {
     return text.startsWith("<http") && text.endsWith(">");
   }
 
-  public String url() {
-    return text.substring(1).substring(0, text.length() - 2);
+  /**
+   * Transform this message to an LCC show notes entry.
+   */
+  public SlackMessage asShowNotesEntry() {
+    String url = text.length() > 3
+      ? text.substring(1).substring(0, text.length() - 2)
+      : text;
+
+    List<String> newReplies = new ArrayList<>();
+    for (String reply : replies) {
+      stream(reply.split("[\n•]+"))
+        .map(String::trim)
+        .filter(not(String::isBlank))
+        .forEachOrdered(newReplies::add);
+    }
+
+    return new SlackMessage(timestamp, url, newReplies);
   }
 }

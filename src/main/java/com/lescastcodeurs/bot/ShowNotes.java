@@ -8,8 +8,13 @@ public class ShowNotes {
   public final LocalDateTime now;
   public final List<SlackMessage> links;
 
-  public ShowNotes(List<SlackMessage> history) {
+  public ShowNotes(List<SlackMessage> messages) {
     this.now = LocalDateTime.now();
-    this.links = history.stream().filter(SlackMessage::isLink).toList();
+    this.links =
+      messages
+        .stream()
+        .filter(SlackMessage::isShowNoteEntry)
+        .map(SlackMessage::asShowNotesEntry)
+        .toList();
   }
 }

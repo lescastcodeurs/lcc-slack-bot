@@ -37,22 +37,31 @@ class SlackMessageTest {
   }
 
   @Test
-  void isLink() {
+  void isShowNoteEntry() {
     assertTrue(
-      new SlackMessage(null, "<https://www.google.fr/>", null).isLink()
+      new SlackMessage(null, "<https://www.google.fr/>", null).isShowNoteEntry()
     );
     assertTrue(
-      new SlackMessage(null, "<http://www.google.fr/>", null).isLink()
+      new SlackMessage(null, "<http://www.google.fr/>", null).isShowNoteEntry()
     );
 
-    assertFalse(new SlackMessage(null, "http://www.google.fr/", null).isLink());
-    assertFalse(new SlackMessage(null, "whatever", null).isLink());
+    assertFalse(
+      new SlackMessage(null, "http://www.google.fr/", null).isShowNoteEntry()
+    );
+    assertFalse(new SlackMessage(null, "whatever", null).isShowNoteEntry());
   }
 
   @Test
-  void url() {
-    String url = new SlackMessage(null, "<https://www.google.fr/>", null).url();
+  void asShowNotesEntry() {
+    SlackMessage message = new SlackMessage(
+      null,
+      "<https://www.google.fr>",
+      List.of(" • note 1\n• \tnote 2\t\n• note 3 \n")
+    );
 
-    assertEquals("https://www.google.fr/", url);
+    SlackMessage result = message.asShowNotesEntry();
+
+    assertEquals("https://www.google.fr", result.text());
+    assertEquals(List.of("note 1", "note 2", "note 3"), result.replies());
   }
 }
