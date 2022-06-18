@@ -1,8 +1,8 @@
 package com.lescastcodeurs.bot;
 
-import java.text.Normalizer;
+import static java.util.Objects.requireNonNull;
+
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -10,24 +10,48 @@ import java.util.Set;
  * Les cast codeurs podcast categories.
  */
 public enum ShowNoteCategory {
-  NEWS("news", "nouvelles", "nouvelle"),
-  LANGUAGES("langages", "langage", "languages", "language", "langs", "lang"),
-  LIBRARIES("libraries", "librairies", "librairie", "library", "libs", "lib"),
-  INFRASTRUCTURE("infrastructure", "infra"),
-  CLOUD("cloud"),
-  WEB("web"),
-  DATA("data"),
-  TOOLING("outillage", "tooling"),
-  ARCHITECTURE("architecture", "architectures", "archi", "arch"),
+  NEWS("Non catégorisées", "news", "nouvelles", "nouvelle"),
+  LANGUAGES(
+    "Langages",
+    "langages",
+    "langage",
+    "languages",
+    "language",
+    "langs",
+    "lang"
+  ),
+  LIBRARIES(
+    "Librairies",
+    "libraries",
+    "librairies",
+    "librairie",
+    "library",
+    "libs",
+    "lib"
+  ),
+  INFRASTRUCTURE("Infrastructure", "infrastructure", "infra"),
+  CLOUD("Cloud", "cloud"),
+  WEB("Web", "web"),
+  DATA("Data", "data"),
+  TOOLING("Outillage", "outillage", "tooling"),
+  ARCHITECTURE(
+    "Architecture",
+    "architecture",
+    "architectures",
+    "archi",
+    "arch"
+  ),
   METHODOLOGIES(
+    "Méthodologies",
     "methodologies",
     "methodologie",
     "methodology",
     "methode",
     "methodo"
   ),
-  SECURITY("securite", "security", "secure", "secu", "sec"),
+  SECURITY("Sécurité", "securite", "security", "secure", "secu", "sec"),
   SOCIETY(
+    "Loi, société et organisation",
     "loi",
     "law",
     "societe",
@@ -37,18 +61,17 @@ public enum ShowNoteCategory {
     "orga",
     "org"
   ),
-  EPISODE_TOOL("outils", "outil", "tools", "tool"),
-  BEGINNERS("debutants", "debutant", "beginners", "beginner"),
-  CONFERENCE("conferences", "conference", "conf");
+  EPISODE_TOOL("Outils de l’épisode", "outils", "outil", "tools", "tool"),
+  BEGINNERS(
+    "Rubrique débutant",
+    "debutants",
+    "debutant",
+    "beginners",
+    "beginner"
+  ),
+  CONFERENCE("Conférences", "conferences", "conference", "conf");
 
-  private static String normalize(String s) {
-    String normalized = Normalizer.normalize(s, Normalizer.Form.NFD);
-    normalized = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}", "");
-    normalized = normalized.toLowerCase(Locale.ROOT);
-    normalized = normalized.trim();
-    return normalized;
-  }
-
+  private final String description;
   private final Set<String> labels;
 
   /**
@@ -58,7 +81,7 @@ public enum ShowNoteCategory {
    */
   public static Optional<ShowNoteCategory> find(String label) {
     if (label != null) {
-      String normalized = normalize(label);
+      String normalized = StringUtils.normalize(label);
 
       for (ShowNoteCategory category : values()) {
         if (category.labels.contains(normalized)) {
@@ -70,11 +93,14 @@ public enum ShowNoteCategory {
     return Optional.empty();
   }
 
-  ShowNoteCategory(String... labels) {
+  ShowNoteCategory(String description, String... labels) {
+    this.description = requireNonNull(description);
     this.labels =
-      Set.copyOf(
-        Arrays.stream(labels).map(ShowNoteCategory::normalize).toList()
-      );
+      Set.copyOf(Arrays.stream(labels).map(StringUtils::normalize).toList());
+  }
+
+  public String description() {
+    return description;
   }
 
   public Set<String> getLabels() {

@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 /**
- * Handles {@link SlackBotCommand#GENERATE_SHOW_NOTES} commands.
+ * Handles {@link SlackBotAction#GENERATE_SHOW_NOTES} commands.
  */
 @ApplicationScoped
 public final class GenerateShowNotesHandler {

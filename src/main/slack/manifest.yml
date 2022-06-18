@@ -10,9 +10,6 @@ display_information:
     1- it reads all the messages in the current Slack channel,
     2- it generates the show notes in markdown format,
     3- it publishes the markdown file to the GitHub wiki of lescastcodeurs.com.
-
-    A Slack channel must be dedicated to a single episode. And a threaded conversations must be dedicated to a single link.
-    The first message of a threaded conversation must be the link.
   background_color: '#997704'
 
 features:
