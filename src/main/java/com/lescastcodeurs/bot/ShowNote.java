@@ -54,9 +54,9 @@ public class ShowNote {
     return urlMatcher.group("url");
   }
 
-  public String category() {
+  public ShowNoteCategory category() {
     String category = urlMatcher.group("category");
-    return category == null ? "unknown" : category;
+    return ShowNoteCategory.find(category).orElse(ShowNoteCategory.NEWS);
   }
 
   public List<String> replies() {

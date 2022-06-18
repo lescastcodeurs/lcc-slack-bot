@@ -1,16 +1,19 @@
 package com.lescastcodeurs.bot;
 
-import static java.util.Arrays.stream;
+import static com.lescastcodeurs.bot.TestConstants.URL;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.test.junit.QuarkusTest;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
-class ShowNoteTemplateTest {
+class ShowNotesTest {
 
   @Location("show-notes.md")
   private Template notes;
@@ -30,46 +33,48 @@ class ShowNoteTemplateTest {
     assertTrue(rendered.contains("tweet:"));
     assertTrue(rendered.contains("# tweet size:"));
     assertTrue(rendered.contains("Enregistré le"));
+    assertTrue(rendered.contains(Integer.toString(LocalDate.now().getYear())));
     assertTrue(rendered.contains("Téléchargement de l’épisode"));
     assertTrue(rendered.contains("Soutenez Les Cast Codeurs sur Patreon"));
+    assertTrue(rendered.endsWith("<!-- vim: set spelllang=fr : -->\n"));
   }
 
   @Test
   void generateWithNotes() {
-    String rendered = notes.render(
-      new ShowNotes(
-        history(
-          "random comment 1",
-          "<https://openjdk.java.net/projects/leyden/notes/01-beginnings>",
-          "random comment 2",
-          "<https://foojay.io/today/7-reasons-why-after-26-years-java-still-makes-sense/>",
-          "@lcc generate show notes"
-        )
-      )
-    );
+    List<String> messages = new ArrayList<>();
+    messages.add("random comment 1");
+    for (ShowNoteCategory category : ShowNoteCategory.values()) {
+      String label = category.getLabels().stream().findFirst().orElseThrow();
+      String url = "<" + URL + "/" + category + "> (" + label + ")";
+      messages.add(url);
+    }
+    messages.add("random comment 2");
+    messages.add("@lcc generate show notes");
+
+    String rendered = notes.render(new ShowNotes(history(messages)));
 
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
-    assertTrue(
-      rendered.contains(
-        "https://openjdk.java.net/projects/leyden/notes/01-beginnings"
-      )
-    );
-    assertTrue(
-      rendered.contains(
-        "https://foojay.io/today/7-reasons-why-after-26-years-java-still-makes-sense/"
-      )
-    );
+    for (ShowNoteCategory category : ShowNoteCategory.values()) {
+      String url = URL + "/" + category;
+      assertTrue(rendered.contains(url));
+    }
     assertTrue(rendered.contains("- comment 1"));
     assertTrue(rendered.contains("- comment 2"));
     assertTrue(rendered.contains("- comment 3"));
+    assertTrue(rendered.endsWith("<!-- vim: set spelllang=fr : -->\n"));
 
     assertFalse(rendered.contains("random comment"));
     assertFalse(rendered.contains("generate show notes"));
   }
 
   private List<SlackMessage> history(String... messages) {
-    return stream(messages)
+    return history(asList(messages));
+  }
+
+  private List<SlackMessage> history(List<String> messages) {
+    return messages
+      .stream()
       .map(message ->
         new SlackMessage(
           null,
