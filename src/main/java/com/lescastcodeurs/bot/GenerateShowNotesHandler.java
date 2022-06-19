@@ -9,6 +9,8 @@ import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.vertx.ConsumeEvent;
 import java.io.UncheckedIOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,26 +25,42 @@ public final class GenerateShowNotesHandler {
   private static final Logger LOG = getLogger(GenerateShowNotesHandler.class);
 
   private final Template notes;
-  private final SlackClient client;
+  private final SlackClient slackClient;
+  private final GitHubClient gitHubClient;
 
   @Inject
   public GenerateShowNotesHandler(
-    SlackClient client,
+    SlackClient slackClient,
+    GitHubClient gitHubClient,
     @Location("show-notes.md") Template notes
   ) {
     this.notes = requireNonNull(notes);
-    this.client = requireNonNull(client);
+    this.slackClient = requireNonNull(slackClient);
+    this.gitHubClient = requireNonNull(gitHubClient);
   }
 
   @ConsumeEvent(GENERATE_SHOW_NOTES_ADDRESS)
-  public void consume(AppMentionEvent event) {
+  public void consume(AppMentionEvent event) throws InterruptedException {
     String channel = event.getChannel();
 
     try {
-      List<SlackMessage> messages = client.history(channel);
-      client.chatPostMessage(channel, notes.render(new ShowNotes(messages)));
+      List<SlackMessage> messages = slackClient.history(channel);
+
+      String markdown = notes.render(new ShowNotes(messages));
+      String filename =
+        "lcc-%d.md".formatted(
+            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+          );
+      String showNoteUrl = gitHubClient.createFile(filename, markdown);
+
+      slackClient.chatPostMessage(
+        channel,
+        "C'est fait, les show notes sont disponibles sur <" + showNoteUrl + ">."
+      );
       LOG.info("Show notes generated for channel {}", channel);
-    } catch (UncheckedIOException | UncheckedSlackApiException e) {
+    } catch (
+      UncheckedIOException | UncheckedSlackApiException | GitHubApiException e
+    ) {
       LOG.error(
         "An unexpected error occurred while generating show notes for channel {}.",
         channel,
