@@ -5,7 +5,6 @@ import static java.util.function.Predicate.not;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,10 +16,13 @@ import java.util.regex.Pattern;
  */
 public class ShowNote {
 
-  private static final String URL_REGEX =
-    "<(?<url>https?://.+)>( [(](?<category>[a-z]+)[)])?.*";
-  private static final Pattern URL_PATTERN = Pattern.compile(
-    URL_REGEX,
+  private static final Pattern SHOW_NOTE_PATTERN = Pattern.compile(
+    "^((?<category>[a-z]+):)?\\s*(?<note><https?://.+)$",
+    CASE_INSENSITIVE
+  );
+
+  private static final Pattern CATEGORY_PATTERN = Pattern.compile(
+    "^((?<category>[a-z]+):\\s*)?",
     CASE_INSENSITIVE
   );
 
@@ -28,12 +30,12 @@ public class ShowNote {
   private final Matcher urlMatcher;
 
   public static boolean isShowNote(SlackMessage message) {
-    return URL_PATTERN.matcher(message.text()).matches();
+    return SHOW_NOTE_PATTERN.matcher(message.text()).matches();
   }
 
   public ShowNote(SlackMessage message) {
     this.message = requireNonNull(message);
-    this.urlMatcher = URL_PATTERN.matcher(message.text());
+    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(message.text());
 
     if (!urlMatcher.find()) {
       throw new IllegalArgumentException(
@@ -47,11 +49,11 @@ public class ShowNote {
   }
 
   public String text() {
-    return message.text();
-  }
+    if (category() != ShowNoteCategory.NEWS) {
+      return CATEGORY_PATTERN.matcher(message.asMarkdown()).replaceAll(""); // strip category
+    }
 
-  public String url() {
-    return urlMatcher.group("url");
+    return message.asMarkdown();
   }
 
   public ShowNoteCategory category() {
@@ -60,20 +62,28 @@ public class ShowNote {
   }
 
   public List<String> replies() {
-    return message.replies();
+    return message.repliesAsMarkdown();
   }
 
   public List<String> comments() {
     List<String> comments = new ArrayList<>();
 
-    for (String reply : message.replies()) {
-      Arrays
-        .stream(reply.split("[\n•]+"))
-        .map(String::trim)
+    for (String reply : message.repliesAsMarkdown()) {
+      reply
+        .lines()
         .filter(not(String::isBlank))
+        .map(this::asListItem)
         .forEachOrdered(comments::add);
     }
 
     return List.copyOf(comments);
+  }
+
+  private String asListItem(String line) {
+    if (!line.startsWith("-") && !line.startsWith("  -")) {
+      return "- " + line;
+    }
+
+    return line;
   }
 }

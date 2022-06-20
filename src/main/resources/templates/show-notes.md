@@ -20,154 +20,154 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 ### Non catégorisées
 
 {#for note in notes('news')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Langages
 
 {#for note in notes('Langages')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Librairies
 
 {#for note in notes('Librairies')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Infrastructure
 
 {#for note in notes('Infrastructure')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Cloud
 
 {#for note in notes('Cloud')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Web
 
 {#for note in notes('Web')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Data
 
 {#for note in notes('Data')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Outillage
 
 {#for note in notes('Outillage')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Architecture
 
 {#for note in notes('Architecture')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Méthodologies
 
 {#for note in notes('Méthodologies')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Sécurité
 
 {#for note in notes('Sécurité')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ### Loi, société et organisation
 
 {#for note in notes('Loi')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ## Outils de l’épisode
 
 {#for note in notes('Outils')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
 ## Rubrique débutant
 
 {#for note in notes('débutant')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 
@@ -177,11 +177,11 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 TODO: reprendre celles de l’épisode d’avant
 
 {#for note in notes('Conférences')}
-{note.url}
+{note.text}
 
 {#for comment in note.comments}
-- {comment}
-  {/for}
+{comment}
+{/for}
 
 {/for}
 

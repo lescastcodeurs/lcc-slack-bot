@@ -7,7 +7,7 @@ public interface TestConstants {
   String URL = "https://google.com";
   String HTTP_URL = "http://google.com";
 
-  String NOTE_URL = "<%s> (%s)".formatted(URL, CATEGORY);
-  String NOTE_HTTP_URL = "<%s> (%s)".formatted(HTTP_URL, CATEGORY);
+  String NOTE_URL = "%s: <%s>".formatted(CATEGORY, URL);
+  String NOTE_HTTP_URL = "%s: <%s>".formatted(CATEGORY, HTTP_URL);
   String UNCATEGORIZED_NOTE_URL = "<%s>".formatted(URL);
 }

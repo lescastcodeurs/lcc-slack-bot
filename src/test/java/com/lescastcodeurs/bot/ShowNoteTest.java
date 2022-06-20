@@ -27,21 +27,11 @@ class ShowNoteTest {
   }
 
   @Test
-  void sameMessageData() {
-    var message = new SlackMessage(TS, NOTE_URL, List.of("a", "b", "c"));
-    var note = new ShowNote(message);
-
-    assertEquals(message.timestamp(), note.timestamp());
-    assertEquals(message.text(), note.text());
-    assertEquals(message.replies(), note.replies());
-  }
-
-  @Test
   void url() {
     var message = new SlackMessage(TS, NOTE_URL, List.of());
     var note = new ShowNote(message);
 
-    assertEquals(URL, note.url());
+    assertTrue(note.text().contains(URL));
   }
 
   @Test
@@ -61,6 +51,9 @@ class ShowNoteTest {
     );
     var note = new ShowNote(message);
 
-    assertEquals(List.of("note 1", "note 2", "note 3"), note.comments());
+    assertEquals(
+      List.of("- note 1", "- note 2\t", "- note 3 "),
+      note.comments()
+    );
   }
 }
