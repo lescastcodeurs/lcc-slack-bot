@@ -18,7 +18,7 @@ dependencies {
 
   implementation 'com.slack.api:bolt-socket-mode:1.23.0'
   implementation 'javax.websocket:javax.websocket-api:1.1'
-  implementation 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.17'
+  implementation 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.19'
 
   testImplementation 'io.quarkus:quarkus-junit5'
 }
