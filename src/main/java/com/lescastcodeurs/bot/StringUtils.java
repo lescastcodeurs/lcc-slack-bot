@@ -16,4 +16,16 @@ public final class StringUtils {
     normalized = normalized.trim();
     return normalized;
   }
+
+  public static String asFilename(String base, String extension) {
+    String normalizedBase = StringUtils
+      .normalize(base)
+      .replaceAll("[^a-z\\d]+", "-");
+    normalizedBase = normalizedBase.isEmpty() ? "-" : normalizedBase;
+    String normalizedExtension = extension
+      .trim()
+      .toLowerCase(Locale.ROOT)
+      .replaceAll("[^a-z\\d]+", "");
+    return normalizedBase + "." + normalizedExtension;
+  }
 }
