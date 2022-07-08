@@ -13,6 +13,10 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -44,12 +48,14 @@ public class GitHubClient {
   }
 
   /**
-   * Create a new file in the configured {@link #repository} under the given filename.
+   * Create or update a file in the configured {@link #repository} under the given filename.
    *
    * @see <a href="https://docs.github.com/en/rest/repos/contents#create-or-update-file-contents">Create or update file contents</a>
    */
-  public String createFile(String filename, String content)
+  public String createOrUpdateFile(String filename, String content)
     throws InterruptedException {
+    Optional<String> sha = getSha(filename);
+
     send(
       HttpRequest
         .newBuilder(URI.create(gitHubApiUrl(filename)))
@@ -59,20 +65,49 @@ public class GitHubClient {
           HttpRequest.BodyPublishers.ofString(
             """
             {
-              "message": "publish show notes",
-              "committer": { "name": "@lcc", "email": "commentaire@lescastcodeurs.com" },
-              "content": "%s"
+              "message": "publish show notes"
+              ,"committer": { "name": "@lcc", "email": "commentaire@lescastcodeurs.com" }
+              ,"content": "%s"
+              %s
             }
             """.formatted(
-                base64(content)
+                base64(content),
+                sha.isPresent() ? ",\"sha\":\"%s\"".formatted(sha.get()) : ""
               )
           )
         )
         .build(),
+      200,
       201
     );
 
     return gitHubUrl(filename);
+  }
+
+  private Optional<String> getSha(String filename) throws InterruptedException {
+    HttpResponse<String> response = send(
+      HttpRequest
+        .newBuilder(URI.create(gitHubApiUrl(filename)))
+        .header("Accept", "application/vnd.github.v3+json")
+        .header("Authorization", "token " + token)
+        .GET()
+        .build(),
+      200,
+      404
+    );
+
+    if (response.statusCode() == 200) {
+      // Note: should be replaced with proper JSON parsing
+      Pattern shaPattern = Pattern.compile(
+        ".*\"sha\"\\s*:\\s*\"(?<sha>[^\"]+)\".*"
+      );
+      Matcher matcher = shaPattern.matcher(response.body());
+      if (matcher.matches()) {
+        return Optional.of(matcher.group("sha"));
+      }
+    }
+
+    return Optional.empty();
   }
 
   private String gitHubApiUrl(String filename) {
@@ -93,7 +128,7 @@ public class GitHubClient {
 
   private HttpResponse<String> send(
     HttpRequest request,
-    int expectedResponseCode
+    Integer... expectedResponseCodes
   ) throws InterruptedException {
     try {
       HttpResponse<String> response = client.send(
@@ -102,7 +137,8 @@ public class GitHubClient {
       );
 
       int status = response.statusCode();
-      if (status == expectedResponseCode) {
+      Set<Integer> expectedStatuses = Set.of(expectedResponseCodes);
+      if (expectedStatuses.contains(status)) {
         return response;
       } else {
         throw new GitHubApiException(response);

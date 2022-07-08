@@ -20,9 +20,10 @@ features:
 oauth_config:
   scopes:
     bot:
-      - app_mentions:read # View messages that directly mention @lcc in conversations that the app is in
-      - channels:history # View messages and other content in channels that the app has been added to
-      - chat:write # Send messages as @lcc
+      - app_mentions:read # View messages that directly mention @lcc in conversations that the app is in.
+      - channels:history # View messages and other content in public channels that Les Cast Codeurs Podcast App has been added to.
+      - channels:read # View basic information about public channels in a workspace, such as the channel name.
+      - chat:write # Send messages as @lcc.
 
 settings:
   event_subscriptions:

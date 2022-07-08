@@ -11,6 +11,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.SlackApiTextResponse;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.conversations.ConversationsHistoryRequest;
+import com.slack.api.methods.request.conversations.ConversationsInfoRequest;
 import com.slack.api.methods.request.conversations.ConversationsRepliesRequest;
 import com.slack.api.model.Message;
 import java.io.IOException;
@@ -50,6 +51,22 @@ public final class SlackClient {
 
   public SlackClient(@ConfigProperty(name = SLACK_BOT_TOKEN) String botToken) {
     this.botToken = requireNonNull(botToken);
+  }
+
+  /**
+   * Get the given channel name.
+   */
+  public String name(String channel) {
+    MethodsClient slack = Slack.getInstance().methods(botToken);
+
+    return SlackApi
+      .check(() ->
+        slack.conversationsInfo(
+          ConversationsInfoRequest.builder().channel(channel).build()
+        )
+      )
+      .getChannel()
+      .getName();
   }
 
   /**
@@ -155,9 +172,11 @@ public final class SlackClient {
     static void handleError(SlackApiTextResponse response) {
       if (!response.isOk()) {
         throw new UncheckedSlackApiException(
-          "slack %s contains an error : %s".formatted(
+          "slack %s contains an error : %s (needed = %s, provided = %s)".formatted(
               response.getClass().getSimpleName(),
-              response.getError()
+              response.getError(),
+              response.getNeeded(),
+              response.getProvided()
             )
         );
       }

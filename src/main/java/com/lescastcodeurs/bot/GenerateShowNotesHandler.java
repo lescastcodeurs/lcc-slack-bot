@@ -1,6 +1,7 @@
 package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.Constants.GENERATE_SHOW_NOTES_ADDRESS;
+import static com.lescastcodeurs.bot.StringUtils.asFilename;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -9,8 +10,6 @@ import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.vertx.ConsumeEvent;
 import java.io.UncheckedIOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -44,14 +43,12 @@ public final class GenerateShowNotesHandler {
     String channel = event.getChannel();
 
     try {
+      String channelName = slackClient.name(channel);
       List<SlackMessage> messages = slackClient.history(channel);
 
-      String markdown = notes.render(new ShowNotes(messages));
-      String filename =
-        "lcc-%d.md".formatted(
-            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
-          );
-      String showNoteUrl = gitHubClient.createFile(filename, markdown);
+      String filename = asFilename(channelName, "md");
+      String content = notes.render(new ShowNotes(messages));
+      String showNoteUrl = gitHubClient.createOrUpdateFile(filename, content);
 
       slackClient.chatPostMessage(
         channel,
