@@ -3,8 +3,10 @@ package com.lescastcodeurs.bot;
 import static com.lescastcodeurs.bot.Constants.GITHUB_REPOSITORY;
 import static com.lescastcodeurs.bot.Constants.GITHUB_TOKEN;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static javax.json.Json.createObjectBuilder;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,9 +17,11 @@ import java.time.Duration;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.enterprise.context.ApplicationScoped;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
@@ -54,28 +58,26 @@ public class GitHubClient {
    */
   public String createOrUpdateFile(String filename, String content)
     throws InterruptedException {
+    JsonObjectBuilder commit = createObjectBuilder()
+      .add("message", "publish show notes")
+      .add(
+        "committer",
+        Json
+          .createObjectBuilder()
+          .add("name", "@lcc")
+          .add("email", "commentaire@lescastcodeurs.com")
+      )
+      .add("content", encoder.encodeToString(content.getBytes(UTF_8)));
+
     Optional<String> sha = getSha(filename);
+    sha.ifPresent(s -> commit.add("sha", s));
 
     send(
       HttpRequest
         .newBuilder(URI.create(gitHubApiUrl(filename)))
         .header("Accept", "application/vnd.github.v3+json")
         .header("Authorization", "token " + token)
-        .PUT(
-          HttpRequest.BodyPublishers.ofString(
-            """
-            {
-              "message": "publish show notes"
-              ,"committer": { "name": "@lcc", "email": "commentaire@lescastcodeurs.com" }
-              ,"content": "%s"
-              %s
-            }
-            """.formatted(
-                base64(content),
-                sha.isPresent() ? ",\"sha\":\"%s\"".formatted(sha.get()) : ""
-              )
-          )
-        )
+        .PUT(HttpRequest.BodyPublishers.ofString(commit.build().toString()))
         .build(),
       200,
       201
@@ -85,6 +87,8 @@ public class GitHubClient {
   }
 
   private Optional<String> getSha(String filename) throws InterruptedException {
+    String sha = null;
+
     HttpResponse<String> response = send(
       HttpRequest
         .newBuilder(URI.create(gitHubApiUrl(filename)))
@@ -97,17 +101,15 @@ public class GitHubClient {
     );
 
     if (response.statusCode() == 200) {
-      // Note: should be replaced with proper JSON parsing
-      Pattern shaPattern = Pattern.compile(
-        ".*\"sha\"\\s*:\\s*\"(?<sha>[^\"]+)\".*"
-      );
-      Matcher matcher = shaPattern.matcher(response.body());
-      if (matcher.matches()) {
-        return Optional.of(matcher.group("sha"));
+      try (
+        JsonReader reader = Json.createReader(new StringReader(response.body()))
+      ) {
+        JsonObject body = reader.readObject();
+        sha = body.getString("sha");
       }
     }
 
-    return Optional.empty();
+    return Optional.ofNullable(sha);
   }
 
   private String gitHubApiUrl(String filename) {
@@ -120,10 +122,6 @@ public class GitHubClient {
 
   private String gitHubUrl(String filename) {
     return "%s/%s/blob/main/%s".formatted(GITHUB_URL, repository, filename);
-  }
-
-  private String base64(String content) {
-    return encoder.encodeToString(content.getBytes(UTF_8));
   }
 
   private HttpResponse<String> send(
