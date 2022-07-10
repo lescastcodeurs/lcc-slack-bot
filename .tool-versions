@@ -1,4 +1,4 @@
 java temurin-17.0.3+7
-quarkus 2.9.2.Final
+quarkus 2.10.2.Final
 nodejs 16.15.1
 gradle 7.4.2
