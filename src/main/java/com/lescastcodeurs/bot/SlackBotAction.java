@@ -49,9 +49,9 @@ public enum SlackBotAction {
       génère les notes de l'épisode de ce channel. À noter :
       - Un channel Slack doit être dédié à un seul épisode.
       - Un thread de messages (c-a-d une conversation) doit être dédié à un seul lien.
-      - Le premier message d'un thread de messages doit être le lien. Le liens doit de plus être en premier dans le message.
-      - Les réponses aux liens (replies) peuvent être de simples phrase comme des listes.
-      - La mise en *gras*, mise en _italique_, le formatage de `code` sont autorisés dans les réponses (replies) aux liens.
+      - Pour qu'un thread de messages soit reporté dans les show notes, le premier message du thread doit être sur une seule ligne et commencer par un lien (éventuellement préfixé de la catégorie : `(<catégorie>: )?<lien> <puis ce qu'on veut>`).
+      - Les réponses aux liens (replies) peuvent être de simples phrases comme des listes.
+      - La mise en *gras*, la mise en _italique_, ou le formatage de `code` sont autorisés.
       - un lien peut être catégorisé à l'aide d'un libellé, par exemple `https://www.google.com (outillage)`. Les libellés ne sont pas sensibles à la casse ni à l'utilisation d'accents. Les catégories, avec les libellés qu'il est possible d'utiliser, sont :
           - %s
       """.formatted(
