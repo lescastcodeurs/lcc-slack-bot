@@ -73,15 +73,10 @@ class ShowNotesTest {
   }
 
   private List<SlackMessage> history(List<String> messages) {
-    return messages
-      .stream()
-      .map(message ->
-        new SlackMessage(
-          null,
-          message,
-          List.of("comment 1", "comment 2", "comment 3")
-        )
-      )
-      .toList();
+    return messages.stream()
+        .map(
+            message ->
+                new SlackMessage(null, message, List.of("comment 1", "comment 2", "comment 3")))
+        .toList();
   }
 }

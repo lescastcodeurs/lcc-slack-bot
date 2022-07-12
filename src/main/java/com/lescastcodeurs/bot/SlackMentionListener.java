@@ -17,25 +17,24 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Listen to Slack {@link AppMentionEvent}s and respond to the given commands.
- * <p>
- * Note that <a href="https://api.slack.com/legacy/interactive-messages#responding_right_away">Slack needs an HTTP 200
- * OK response within 3 seconds</a>. Commands that may take more time to be processed must be handled asynchronously.
+ *
+ * <p>Note that <a
+ * href="https://api.slack.com/legacy/interactive-messages#responding_right_away">Slack needs an
+ * HTTP 200 OK response within 3 seconds</a>. Commands that may take more time to be processed must
+ * be handled asynchronously.
  */
 public class SlackMentionListener implements QuarkusApplication {
 
-  private static final Logger LOG = LoggerFactory.getLogger(
-    SlackMentionListener.class
-  );
+  private static final Logger LOG = LoggerFactory.getLogger(SlackMentionListener.class);
 
   private final EventBus bus;
   private final String appToken;
   private final String botToken;
 
   public SlackMentionListener(
-    EventBus bus,
-    @ConfigProperty(name = SLACK_APP_TOKEN) String appToken,
-    @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken
-  ) {
+      EventBus bus,
+      @ConfigProperty(name = SLACK_APP_TOKEN) String appToken,
+      @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken) {
     this.bus = requireNonNull(bus);
     this.appToken = requireNonNull(appToken);
     this.botToken = requireNonNull(botToken);
@@ -53,27 +52,21 @@ public class SlackMentionListener implements QuarkusApplication {
   }
 
   private SocketModeApp createApp() throws IOException {
-    AppConfig appConfig = AppConfig
-      .builder()
-      .singleTeamBotToken(botToken)
-      .build();
+    AppConfig appConfig = AppConfig.builder().singleTeamBotToken(botToken).build();
 
     App app = new App(appConfig);
     app.event(
-      AppMentionEvent.class,
-      (req, ctx) -> {
-        LOG.debug("Received : {}", req);
+        AppMentionEvent.class,
+        (req, ctx) -> {
+          LOG.debug("Received : {}", req);
 
-        AppMentionEvent event = req.getEvent();
-        SlackBotAction command = SlackBotAction.guess(event.getText());
-        command
-          .handlerAddress()
-          .ifPresent(address -> bus.publish(address, event));
-        ctx.say(command.response());
+          AppMentionEvent event = req.getEvent();
+          SlackBotAction command = SlackBotAction.guess(event.getText());
+          command.handlerAddress().ifPresent(address -> bus.publish(address, event));
+          ctx.say(command.response());
 
-        return ctx.ack();
-      }
-    );
+          return ctx.ack();
+        });
 
     return new SocketModeApp(appToken, app);
   }

@@ -81,12 +81,9 @@ publishing {
 }
 
 spotless {
-  format 'misc', {
-    target '**/*.md', '**/*.yml', '**/*.json', 'src/*/java/**/*.java'
-    targetExclude 'src/main/resources/templates/**/*.*'
-
-    prettier(['prettier': '2.6.2', 'prettier-plugin-java': '1.6.2'])
-      .configFile('.prettierrc.yml')
+  java {
+    target '**/*.java' // prevent quarkus generated code to be formatted
+    googleJavaFormat('1.15.0')
   }
 }
 

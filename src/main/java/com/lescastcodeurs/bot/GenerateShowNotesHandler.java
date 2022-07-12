@@ -15,9 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import org.slf4j.Logger;
 
-/**
- * Handles {@link SlackBotAction#GENERATE_SHOW_NOTES} commands.
- */
+/** Handles {@link SlackBotAction#GENERATE_SHOW_NOTES} commands. */
 @ApplicationScoped
 public final class GenerateShowNotesHandler {
 
@@ -29,10 +27,9 @@ public final class GenerateShowNotesHandler {
 
   @Inject
   public GenerateShowNotesHandler(
-    SlackClient slackClient,
-    GitHubClient gitHubClient,
-    @Location("show-notes.md") Template notes
-  ) {
+      SlackClient slackClient,
+      GitHubClient gitHubClient,
+      @Location("show-notes.md") Template notes) {
     this.notes = requireNonNull(notes);
     this.slackClient = requireNonNull(slackClient);
     this.gitHubClient = requireNonNull(gitHubClient);
@@ -51,18 +48,11 @@ public final class GenerateShowNotesHandler {
       String showNoteUrl = gitHubClient.createOrUpdateFile(filename, content);
 
       slackClient.chatPostMessage(
-        channel,
-        "C'est fait, les show notes sont disponibles sur <" + showNoteUrl + ">."
-      );
+          channel, "C'est fait, les show notes sont disponibles sur <" + showNoteUrl + ">.");
       LOG.info("Show notes generated for channel {}", channel);
-    } catch (
-      UncheckedIOException | UncheckedSlackApiException | GitHubApiException e
-    ) {
+    } catch (UncheckedIOException | UncheckedSlackApiException | GitHubApiException e) {
       LOG.error(
-        "An unexpected error occurred while generating show notes for channel {}.",
-        channel,
-        e
-      );
+          "An unexpected error occurred while generating show notes for channel {}.", channel, e);
     }
   }
 }

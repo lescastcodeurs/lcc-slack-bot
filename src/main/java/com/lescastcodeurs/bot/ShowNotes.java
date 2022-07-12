@@ -15,12 +15,7 @@ public class ShowNotes {
   public ShowNotes(List<SlackMessage> messages) {
     this.now = LocalDateTime.now();
     this.locale = Locale.FRANCE;
-    this.notes =
-      messages
-        .stream()
-        .filter(ShowNote::isShowNote)
-        .map(ShowNote::new)
-        .toList();
+    this.notes = messages.stream().filter(ShowNote::isShowNote).map(ShowNote::new).toList();
   }
 
   public LocalDateTime now() {
@@ -36,11 +31,10 @@ public class ShowNotes {
   }
 
   public List<ShowNote> notes(String label) {
-    ShowNoteCategory category = ShowNoteCategory
-      .find(label)
-      .orElseThrow(() ->
-        new IllegalArgumentException("no category found for label " + label)
-      );
+    ShowNoteCategory category =
+        ShowNoteCategory.find(label)
+            .orElseThrow(
+                () -> new IllegalArgumentException("no category found for label " + label));
     return notes().stream().filter(n -> n.category() == category).toList();
   }
 }

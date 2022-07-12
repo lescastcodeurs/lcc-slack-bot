@@ -5,9 +5,8 @@ import static java.util.Objects.requireNonNull;
 import com.slack.api.methods.SlackApiException;
 
 /**
- * This class as two purposes :
- * - wraps {@link com.slack.api.methods.SlackApiException} with an unchecked exception,
- * - provide a way to create custom Slack-related exceptions.
+ * This class as two purposes : - wraps {@link com.slack.api.methods.SlackApiException} with an
+ * unchecked exception, - provide a way to create custom Slack-related exceptions.
  */
 public class UncheckedSlackApiException extends RuntimeException {
 

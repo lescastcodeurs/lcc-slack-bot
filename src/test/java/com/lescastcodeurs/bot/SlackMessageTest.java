@@ -32,90 +32,70 @@ class SlackMessageTest {
 
   @Test
   void rawLinksAreProperlyTransformedToMarkdownLinks() {
-    SlackMessage message = new SlackMessage(
-      DEFAULT_TS,
-      "<https://lescastcodeurs.com/>",
-      null
-    );
+    SlackMessage message = new SlackMessage(DEFAULT_TS, "<https://lescastcodeurs.com/>", null);
 
     assertEquals(
-      "[https://lescastcodeurs.com/](https://lescastcodeurs.com/)",
-      message.asMarkdown()
-    );
+        "[https://lescastcodeurs.com/](https://lescastcodeurs.com/)", message.asMarkdown());
   }
 
   @Test
   void titledLinksAreProperlyTransformedToMarkdownLinks() {
-    SlackMessage message = new SlackMessage(
-      DEFAULT_TS,
-      "<https://lescastcodeurs.com/|Le podcast Java en Français>",
-      null
-    );
+    SlackMessage message =
+        new SlackMessage(
+            DEFAULT_TS, "<https://lescastcodeurs.com/|Le podcast Java en Français>", null);
 
     assertEquals(
-      "[Le podcast Java en Français](https://lescastcodeurs.com/)",
-      message.asMarkdown()
-    );
+        "[Le podcast Java en Français](https://lescastcodeurs.com/)", message.asMarkdown());
   }
 
   @Test
   void boldIsProperlyTransformed() {
-    SlackMessage message = new SlackMessage(
-      DEFAULT_TS,
-      "*some bold text*",
-      null
-    );
+    SlackMessage message = new SlackMessage(DEFAULT_TS, "*some bold text*", null);
 
     assertEquals("**some bold text**", message.asMarkdown());
   }
 
   @Test
   void listIsProperlyTransformed() {
-    SlackMessage message = new SlackMessage(
-      DEFAULT_TS,
-      """
+    SlackMessage message =
+        new SlackMessage(DEFAULT_TS, """
     • element 1
     • element 2
-    """,
-      null
-    );
+    """, null);
 
-    assertEquals(
-      """
+    assertEquals("""
     - element 1
     - element 2
-    """,
-      message.asMarkdown()
-    );
+    """, message.asMarkdown());
   }
 
   @Test
   void sublistIsProperlyTransformed() {
-    SlackMessage message = new SlackMessage(
-      DEFAULT_TS,
-      """
+    SlackMessage message =
+        new SlackMessage(
+            DEFAULT_TS,
+            """
     • element 1
       ◦ subelement 1
       ◦ subelement 2
     """,
-      null
-    );
+            null);
 
     assertEquals(
-      """
+        """
     - element 1
       - subelement 1
       - subelement 2
     """,
-      message.asMarkdown()
-    );
+        message.asMarkdown());
   }
 
   @Test
   void complexMessageIsProperlyTransformedToMarkdown() {
-    SlackMessage message = new SlackMessage(
-      DEFAULT_TS,
-      """
+    SlackMessage message =
+        new SlackMessage(
+            DEFAULT_TS,
+            """
       • <https://lescastcodeurs.com/|Le podcast Java en Français>
         ◦ something to say on this link ?
       • <https://lescastcodeurs.com/>
@@ -126,11 +106,10 @@ class SlackMessageTest {
        ◦ ~some striked text~
        ◦ `some code`
       """,
-      null
-    );
+            null);
 
     assertEquals(
-      """
+        """
       - [Le podcast Java en Français](https://lescastcodeurs.com/)
         - something to say on this link ?
       - [https://lescastcodeurs.com/](https://lescastcodeurs.com/)
@@ -141,7 +120,6 @@ class SlackMessageTest {
         - ~some striked text~
         - `some code`
       """,
-      message.asMarkdown()
-    );
+        message.asMarkdown());
   }
 }

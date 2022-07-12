@@ -15,10 +15,8 @@ class SlackBotActionTest {
   @ParameterizedTest
   @EnumSource(SlackBotAction.class)
   void guessWithLowerCase(SlackBotAction action) {
-    for (String command : Stream
-      .of(action.keywords(), action.usages())
-      .flatMap(Collection::stream)
-      .toList()) {
+    for (String command :
+        Stream.of(action.keywords(), action.usages()).flatMap(Collection::stream).toList()) {
       SlackBotAction guessed = guess(command.toLowerCase(Locale.ROOT));
 
       assertEquals(action, guessed);
@@ -28,10 +26,8 @@ class SlackBotActionTest {
   @ParameterizedTest
   @EnumSource(SlackBotAction.class)
   void guessWithUpperCase(SlackBotAction action) {
-    for (String command : Stream
-      .of(action.keywords(), action.usages())
-      .flatMap(Collection::stream)
-      .toList()) {
+    for (String command :
+        Stream.of(action.keywords(), action.usages()).flatMap(Collection::stream).toList()) {
       SlackBotAction guessed = guess(command.toUpperCase(Locale.ROOT));
 
       assertEquals(action, guessed);
@@ -41,10 +37,8 @@ class SlackBotActionTest {
   @ParameterizedTest
   @EnumSource(SlackBotAction.class)
   void guessWithPunctuation(SlackBotAction action) {
-    for (String command : Stream
-      .of(action.keywords(), action.usages())
-      .flatMap(Collection::stream)
-      .toList()) {
+    for (String command :
+        Stream.of(action.keywords(), action.usages()).flatMap(Collection::stream).toList()) {
       SlackBotAction guessed = guess("%s !!!".formatted(command));
 
       assertEquals(action, guessed);

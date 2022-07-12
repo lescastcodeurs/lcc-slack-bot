@@ -37,51 +37,47 @@ public class GitHubClient {
   private final HttpClient client;
 
   public GitHubClient(
-    @ConfigProperty(name = GITHUB_TOKEN) String token,
-    @ConfigProperty(name = GITHUB_REPOSITORY) String repository
-  ) {
+      @ConfigProperty(name = GITHUB_TOKEN) String token,
+      @ConfigProperty(name = GITHUB_REPOSITORY) String repository) {
     this.token = token;
     this.repository = repository;
     this.client =
-      HttpClient
-        .newBuilder()
-        .version(HttpClient.Version.HTTP_2)
-        .connectTimeout(Duration.ofSeconds(10))
-        .build();
+        HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .connectTimeout(Duration.ofSeconds(10))
+            .build();
     this.encoder = Base64.getEncoder();
   }
 
   /**
    * Create or update a file in the configured {@link #repository} under the given filename.
    *
-   * @see <a href="https://docs.github.com/en/rest/repos/contents#create-or-update-file-contents">Create or update file contents</a>
+   * @see <a
+   *     href="https://docs.github.com/en/rest/repos/contents#create-or-update-file-contents">Create
+   *     or update file contents</a>
    */
-  public String createOrUpdateFile(String filename, String content)
-    throws InterruptedException {
-    JsonObjectBuilder commit = createObjectBuilder()
-      .add("message", "publish show notes")
-      .add(
-        "committer",
-        Json
-          .createObjectBuilder()
-          .add("name", "@lcc")
-          .add("email", "commentaire@lescastcodeurs.com")
-      )
-      .add("content", encoder.encodeToString(content.getBytes(UTF_8)));
+  public String createOrUpdateFile(String filename, String content) throws InterruptedException {
+    JsonObjectBuilder commit =
+        createObjectBuilder()
+            .add("message", "publish show notes")
+            .add(
+                "committer",
+                Json.createObjectBuilder()
+                    .add("name", "@lcc")
+                    .add("email", "commentaire@lescastcodeurs.com"))
+            .add("content", encoder.encodeToString(content.getBytes(UTF_8)));
 
     Optional<String> sha = getSha(filename);
     sha.ifPresent(s -> commit.add("sha", s));
 
     send(
-      HttpRequest
-        .newBuilder(URI.create(gitHubApiUrl(filename)))
-        .header("Accept", "application/vnd.github.v3+json")
-        .header("Authorization", "token " + token)
-        .PUT(HttpRequest.BodyPublishers.ofString(commit.build().toString()))
-        .build(),
-      200,
-      201
-    );
+        HttpRequest.newBuilder(URI.create(gitHubApiUrl(filename)))
+            .header("Accept", "application/vnd.github.v3+json")
+            .header("Authorization", "token " + token)
+            .PUT(HttpRequest.BodyPublishers.ofString(commit.build().toString()))
+            .build(),
+        200,
+        201);
 
     return gitHubUrl(filename);
   }
@@ -89,21 +85,18 @@ public class GitHubClient {
   private Optional<String> getSha(String filename) throws InterruptedException {
     String sha = null;
 
-    HttpResponse<String> response = send(
-      HttpRequest
-        .newBuilder(URI.create(gitHubApiUrl(filename)))
-        .header("Accept", "application/vnd.github.v3+json")
-        .header("Authorization", "token " + token)
-        .GET()
-        .build(),
-      200,
-      404
-    );
+    HttpResponse<String> response =
+        send(
+            HttpRequest.newBuilder(URI.create(gitHubApiUrl(filename)))
+                .header("Accept", "application/vnd.github.v3+json")
+                .header("Authorization", "token " + token)
+                .GET()
+                .build(),
+            200,
+            404);
 
     if (response.statusCode() == 200) {
-      try (
-        JsonReader reader = Json.createReader(new StringReader(response.body()))
-      ) {
+      try (JsonReader reader = Json.createReader(new StringReader(response.body()))) {
         JsonObject body = reader.readObject();
         sha = body.getString("sha");
       }
@@ -113,26 +106,17 @@ public class GitHubClient {
   }
 
   private String gitHubApiUrl(String filename) {
-    return "%s/repos/%s/contents/%s".formatted(
-        GITHUB_API_URL,
-        repository,
-        filename
-      );
+    return "%s/repos/%s/contents/%s".formatted(GITHUB_API_URL, repository, filename);
   }
 
   private String gitHubUrl(String filename) {
     return "%s/%s/blob/main/%s".formatted(GITHUB_URL, repository, filename);
   }
 
-  private HttpResponse<String> send(
-    HttpRequest request,
-    Integer... expectedResponseCodes
-  ) throws InterruptedException {
+  private HttpResponse<String> send(HttpRequest request, Integer... expectedResponseCodes)
+      throws InterruptedException {
     try {
-      HttpResponse<String> response = client.send(
-        request,
-        BodyHandlers.ofString()
-      );
+      HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
       int status = response.statusCode();
       Set<Integer> expectedStatuses = Set.of(expectedResponseCodes);

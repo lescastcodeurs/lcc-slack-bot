@@ -20,3 +20,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Internal
 
 - Initiate a changelog based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) (#25).
+- Switch to [google-java-format](https://github.com/diffplug/spotless/tree/main/plugin-gradle#google-java-format) for
+  formatting code (#22).

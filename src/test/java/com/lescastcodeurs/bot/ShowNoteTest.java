@@ -13,9 +13,7 @@ class ShowNoteTest {
   void isShowNoteEntry() {
     assertTrue(isShowNote(new SlackMessage(TS, NOTE_URL, List.of())));
     assertTrue(isShowNote(new SlackMessage(TS, NOTE_HTTP_URL, List.of())));
-    assertTrue(
-      isShowNote(new SlackMessage(TS, UNCATEGORIZED_NOTE_URL, List.of()))
-    );
+    assertTrue(isShowNote(new SlackMessage(TS, UNCATEGORIZED_NOTE_URL, List.of())));
 
     assertFalse(isShowNote(new SlackMessage(TS, URL, List.of())));
     assertFalse(isShowNote(new SlackMessage(TS, "whatever", List.of())));
@@ -44,16 +42,10 @@ class ShowNoteTest {
 
   @Test
   void comments() {
-    SlackMessage message = new SlackMessage(
-      TS,
-      NOTE_URL,
-      List.of(" • note 1\n• \tnote 2\t\n• note 3 \n")
-    );
+    SlackMessage message =
+        new SlackMessage(TS, NOTE_URL, List.of(" • note 1\n• \tnote 2\t\n• note 3 \n"));
     var note = new ShowNote(message);
 
-    assertEquals(
-      List.of("- note 1", "- note 2\t", "- note 3 "),
-      note.comments()
-    );
+    assertEquals(List.of("- note 1", "- note 2\t", "- note 3 "), note.comments());
   }
 }

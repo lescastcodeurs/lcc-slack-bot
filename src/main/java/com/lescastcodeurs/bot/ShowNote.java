@@ -11,20 +11,16 @@ import java.util.regex.Pattern;
 
 /**
  * A wrapper around {@link SlackMessage} to allow customization for show notes generation.
- * <p>
- * This wrapper is not thread safe.
+ *
+ * <p>This wrapper is not thread safe.
  */
 public class ShowNote {
 
-  private static final Pattern SHOW_NOTE_PATTERN = Pattern.compile(
-    "^((?<category>[a-z]+):)?\\s*(?<note><https?://.+)$",
-    CASE_INSENSITIVE
-  );
+  private static final Pattern SHOW_NOTE_PATTERN =
+      Pattern.compile("^((?<category>[a-z]+):)?\\s*(?<note><https?://.+)$", CASE_INSENSITIVE);
 
-  private static final Pattern CATEGORY_PATTERN = Pattern.compile(
-    "^((?<category>[a-z]+):\\s*)?",
-    CASE_INSENSITIVE
-  );
+  private static final Pattern CATEGORY_PATTERN =
+      Pattern.compile("^((?<category>[a-z]+):\\s*)?", CASE_INSENSITIVE);
 
   private final SlackMessage message;
   private final Matcher urlMatcher;
@@ -39,8 +35,7 @@ public class ShowNote {
 
     if (!urlMatcher.find()) {
       throw new IllegalArgumentException(
-        "message does not look like a show note entry, dit you call isShowNote() to check it ?"
-      );
+          "message does not look like a show note entry, dit you call isShowNote() to check it ?");
     }
   }
 
@@ -70,10 +65,10 @@ public class ShowNote {
 
     for (String reply : message.repliesAsMarkdown()) {
       reply
-        .lines()
-        .filter(not(String::isBlank))
-        .map(this::asListItem)
-        .forEachOrdered(comments::add);
+          .lines()
+          .filter(not(String::isBlank))
+          .map(this::asListItem)
+          .forEachOrdered(comments::add);
     }
 
     return List.copyOf(comments);

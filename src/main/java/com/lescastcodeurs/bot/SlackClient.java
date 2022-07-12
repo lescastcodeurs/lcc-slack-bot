@@ -23,27 +23,17 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 
-/**
- * A simple wrapper for this bot around Slacks {@link com.slack.api.methods.MethodsClient}.
- */
+/** A simple wrapper for this bot around Slacks {@link com.slack.api.methods.MethodsClient}. */
 @ApplicationScoped
 public final class SlackClient {
 
-  /**
-   * Chronological comparator of {@link Message}s.
-   */
-  private static final Comparator<Message> CHRONOLOGICAL = comparing(
-    Message::getTs,
-    nullsLast(naturalOrder())
-  );
+  /** Chronological comparator of {@link Message}s. */
+  private static final Comparator<Message> CHRONOLOGICAL =
+      comparing(Message::getTs, nullsLast(naturalOrder()));
 
-  /**
-   * Returns {@code true} if a {@link Message} is a reply, {@code false} otherwise.
-   */
-  private static final Predicate<Message> IS_REPLY = r ->
-    r.getTs() == null ||
-    r.getThreadTs() == null ||
-    !r.getTs().equals(r.getThreadTs());
+  /** Returns {@code true} if a {@link Message} is a reply, {@code false} otherwise. */
+  private static final Predicate<Message> IS_REPLY =
+      r -> r.getTs() == null || r.getThreadTs() == null || !r.getTs().equals(r.getThreadTs());
 
   private static final Logger LOG = getLogger(SlackClient.class);
 
@@ -53,20 +43,16 @@ public final class SlackClient {
     this.botToken = requireNonNull(botToken);
   }
 
-  /**
-   * Get the given channel name.
-   */
+  /** Get the given channel name. */
   public String name(String channel) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
 
-    return SlackApi
-      .check(() ->
-        slack.conversationsInfo(
-          ConversationsInfoRequest.builder().channel(channel).build()
-        )
-      )
-      .getChannel()
-      .getName();
+    return SlackApi.check(
+            () ->
+                slack.conversationsInfo(
+                    ConversationsInfoRequest.builder().channel(channel).build()))
+        .getChannel()
+        .getName();
   }
 
   /**
@@ -78,17 +64,21 @@ public final class SlackClient {
   public List<SlackMessage> history(String channel) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
 
-    return SlackApi
-      .check(() ->
-        slack.conversationsHistory(
-          ConversationsHistoryRequest.builder().channel(channel).build()
-        )
-      )
-      .getMessages()
-      .stream()
-      .sorted(CHRONOLOGICAL)
-      .map(m -> new SlackMessage(m, replies(channel, m))) // note: oddly, m.getChannel() is null, so it should be given explicitly
-      .toList();
+    return SlackApi.check(
+            () ->
+                slack.conversationsHistory(
+                    ConversationsHistoryRequest.builder().channel(channel).build()))
+        .getMessages()
+        .stream()
+        .sorted(CHRONOLOGICAL)
+        .map(
+            m ->
+                new SlackMessage(
+                    m,
+                    replies(
+                        channel, m))) // note: oddly, m.getChannel() is null, so it should be given
+        // explicitly
+        .toList();
   }
 
   private List<String> replies(String channel, Message message) {
@@ -108,18 +98,16 @@ public final class SlackClient {
    */
   public List<String> replies(String channel, String ts) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
-    return SlackApi
-      .check(() ->
-        slack.conversationsReplies(
-          ConversationsRepliesRequest.builder().channel(channel).ts(ts).build()
-        )
-      )
-      .getMessages()
-      .stream()
-      .filter(IS_REPLY)
-      .sorted(CHRONOLOGICAL)
-      .map(Message::getText)
-      .toList();
+    return SlackApi.check(
+            () ->
+                slack.conversationsReplies(
+                    ConversationsRepliesRequest.builder().channel(channel).ts(ts).build()))
+        .getMessages()
+        .stream()
+        .filter(IS_REPLY)
+        .sorted(CHRONOLOGICAL)
+        .map(Message::getText)
+        .toList();
   }
 
   /**
@@ -130,11 +118,10 @@ public final class SlackClient {
   public void chatPostMessage(String channel, String message) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
 
-    SlackApi.check(() ->
-      slack.chatPostMessage(
-        ChatPostMessageRequest.builder().channel(channel).text(message).build()
-      )
-    );
+    SlackApi.check(
+        () ->
+            slack.chatPostMessage(
+                ChatPostMessageRequest.builder().channel(channel).text(message).build()));
   }
 
   /**
@@ -162,23 +149,21 @@ public final class SlackClient {
     static void handleWarning(SlackApiTextResponse response) {
       if (response.getWarning() != null) {
         LOG.warn(
-          "slack {} contains a warning : {}",
-          response.getClass().getSimpleName(),
-          response.getWarning()
-        );
+            "slack {} contains a warning : {}",
+            response.getClass().getSimpleName(),
+            response.getWarning());
       }
     }
 
     static void handleError(SlackApiTextResponse response) {
       if (!response.isOk()) {
         throw new UncheckedSlackApiException(
-          "slack %s contains an error : %s (needed = %s, provided = %s)".formatted(
-              response.getClass().getSimpleName(),
-              response.getError(),
-              response.getNeeded(),
-              response.getProvided()
-            )
-        );
+            "slack %s contains an error : %s (needed = %s, provided = %s)"
+                .formatted(
+                    response.getClass().getSimpleName(),
+                    response.getError(),
+                    response.getNeeded(),
+                    response.getProvided()));
       }
     }
   }
