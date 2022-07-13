@@ -2,10 +2,11 @@ package com.lescastcodeurs.bot;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,11 +17,17 @@ import java.util.regex.Pattern;
  */
 public class ShowNote {
 
+  // First wildcard is non-greedy : only the first link is considered.
   private static final Pattern SHOW_NOTE_PATTERN =
-      Pattern.compile("^((?<category>[a-z]+):)?\\s*(?<note><https?://.+)$", CASE_INSENSITIVE);
+      Pattern.compile(
+          "^.*?(?<note><https?://[^>]+>)\\s*(\\((?<category>[^)]+)\\))?.*$",
+          CASE_INSENSITIVE | DOTALL);
 
-  private static final Pattern CATEGORY_PATTERN =
-      Pattern.compile("^((?<category>[a-z]+):\\s*)?", CASE_INSENSITIVE);
+  // This patten works against the generated markdown. Must be kept in sync with SHOW_NOTE_PATTERN.
+  private static final Pattern CATEGORY_ERASER_PATTERN =
+      Pattern.compile(
+          "^(?<before>.*?\\(https?://[^)]+\\))(?<category>\\s*\\([^)]+\\))?(?<after>.*)$",
+          CASE_INSENSITIVE | DOTALL);
 
   private final SlackMessage message;
   private final Matcher urlMatcher;
@@ -44,20 +51,22 @@ public class ShowNote {
   }
 
   public String text() {
-    if (category() != ShowNoteCategory.NEWS) {
-      return CATEGORY_PATTERN.matcher(message.asMarkdown()).replaceAll(""); // strip category
+    String markdown = message.asMarkdown().replace("\n", " ");
+    Optional<ShowNoteCategory> category = ShowNoteCategory.find(urlMatcher.group("category"));
+
+    if (category.isPresent()) {
+      Matcher markdownMatcher = CATEGORY_ERASER_PATTERN.matcher(markdown);
+      if (markdownMatcher.matches()) {
+        return markdownMatcher.replaceFirst("${before}${after}");
+      }
     }
 
-    return message.asMarkdown();
+    return markdown;
   }
 
   public ShowNoteCategory category() {
     String category = urlMatcher.group("category");
     return ShowNoteCategory.find(category).orElse(ShowNoteCategory.NEWS);
-  }
-
-  public List<String> replies() {
-    return message.repliesAsMarkdown();
   }
 
   public List<String> comments() {

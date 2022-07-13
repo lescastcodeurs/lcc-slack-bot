@@ -9,6 +9,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Update show note template section _Nous contacter_ (#23).
 - Improve `GENERATE_SHOW_NOTES` command help (#18).
+- Relax constraints on show notes messages (#20). All messages containing at least a link are now copied in the show
+  notes.
 
 ### Fixed
 

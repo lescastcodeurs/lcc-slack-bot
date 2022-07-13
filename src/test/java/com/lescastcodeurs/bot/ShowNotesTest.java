@@ -1,5 +1,6 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.SlackMessage.DEFAULT_TS;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,7 +76,8 @@ class ShowNotesTest {
     return messages.stream()
         .map(
             message ->
-                new SlackMessage(null, message, List.of("comment 1", "comment 2", "comment 3")))
+                new SlackMessage(
+                    DEFAULT_TS, message, List.of("comment 1", "comment 2", "comment 3")))
         .toList();
   }
 }

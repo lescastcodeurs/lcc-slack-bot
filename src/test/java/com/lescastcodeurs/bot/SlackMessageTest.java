@@ -59,14 +59,14 @@ class SlackMessageTest {
   void listIsProperlyTransformed() {
     SlackMessage message =
         new SlackMessage(DEFAULT_TS, """
-    • element 1
-    • element 2
-    """, null);
+        • element 1
+        • element 2
+        """, null);
 
     assertEquals("""
-    - element 1
-    - element 2
-    """, message.asMarkdown());
+      - element 1
+      - element 2
+      """, message.asMarkdown());
   }
 
   @Test
@@ -75,18 +75,18 @@ class SlackMessageTest {
         new SlackMessage(
             DEFAULT_TS,
             """
-    • element 1
-      ◦ subelement 1
-      ◦ subelement 2
-    """,
+          • element 1
+            ◦ subelement 1
+            ◦ subelement 2
+          """,
             null);
 
     assertEquals(
         """
-    - element 1
-      - subelement 1
-      - subelement 2
-    """,
+        - element 1
+          - subelement 1
+          - subelement 2
+        """,
         message.asMarkdown());
   }
 
@@ -96,30 +96,30 @@ class SlackMessageTest {
         new SlackMessage(
             DEFAULT_TS,
             """
-      • <https://lescastcodeurs.com/|Le podcast Java en Français>
-        ◦ something to say on this link ?
-      • <https://lescastcodeurs.com/>
-      • <http://example.com/blue+light%20blue?blue%2Blight+blu|I think I blue myself!>
-      • Formatting:
-       ◦ *some bold text*
-       ◦ _some italic text_
-       ◦ ~some striked text~
-       ◦ `some code`
-      """,
+          • <https://lescastcodeurs.com/|Le podcast Java en Français>
+            ◦ something to say on this link ?
+          • <https://lescastcodeurs.com/>
+          • <http://example.com/blue+light%20blue?blue%2Blight+blu|I think I blue myself!>
+          • Formatting:
+           ◦ *some bold text*
+           ◦ _some italic text_
+           ◦ ~some striked text~
+           ◦ `some code`
+          """,
             null);
 
     assertEquals(
         """
-      - [Le podcast Java en Français](https://lescastcodeurs.com/)
-        - something to say on this link ?
-      - [https://lescastcodeurs.com/](https://lescastcodeurs.com/)
-      - [I think I blue myself!](http://example.com/blue+light%20blue?blue%2Blight+blu)
-      - Formatting:
-        - **some bold text**
-        - _some italic text_
-        - ~some striked text~
-        - `some code`
-      """,
+        - [Le podcast Java en Français](https://lescastcodeurs.com/)
+          - something to say on this link ?
+        - [https://lescastcodeurs.com/](https://lescastcodeurs.com/)
+        - [I think I blue myself!](http://example.com/blue+light%20blue?blue%2Blight+blu)
+        - Formatting:
+          - **some bold text**
+          - _some italic text_
+          - ~some striked text~
+          - `some code`
+        """,
         message.asMarkdown());
   }
 }
