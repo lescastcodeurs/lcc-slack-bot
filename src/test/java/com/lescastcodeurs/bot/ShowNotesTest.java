@@ -1,6 +1,5 @@
 package com.lescastcodeurs.bot;
 
-import static com.lescastcodeurs.bot.TestConstants.URL;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +44,7 @@ class ShowNotesTest {
     messages.add("random comment 1");
     for (ShowNoteCategory category : ShowNoteCategory.values()) {
       String label = category.getLabels().stream().findFirst().orElseThrow();
-      String url = "<" + URL + "/" + category + "> (" + label + ")";
+      String url = "<https://lescastcodeurs.com/" + category + "> (" + label + ")";
       messages.add(url);
     }
     messages.add("random comment 2");
@@ -56,7 +55,7 @@ class ShowNotesTest {
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
     for (ShowNoteCategory category : ShowNoteCategory.values()) {
-      String url = URL + "/" + category;
+      String url = "https://lescastcodeurs.com/" + category;
       assertTrue(rendered.contains(url));
     }
     assertTrue(rendered.contains("- comment 1"));
