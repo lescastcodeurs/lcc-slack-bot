@@ -44,14 +44,14 @@ public enum SlackBotAction {
       "OK, je suis sur le coup !",
       List.of("@lcc, génère les show notes.", "@lcc, generate show notes."),
       """
-      génère les notes de l'épisode de ce channel. À noter :
-      - Un channel Slack doit être dédié à un seul épisode.
-      - Un thread de messages (c-a-d une conversation) doit être dédié à un seul lien.
-      - Pour qu'un thread de messages soit reporté dans les show notes, le premier message du thread doit être sur une seule ligne et commencer par un lien (éventuellement préfixé de la catégorie : `(<catégorie>: )?<lien> <puis ce qu'on veut>`).
-      - Les réponses aux liens (replies) peuvent être de simples phrases comme des listes.
-      - La mise en *gras*, la mise en _italique_, ou le formatage de `code` sont autorisés.
-      - un lien peut être catégorisé à l'aide d'un libellé, par exemple `https://www.google.com (outillage)`. Les libellés ne sont pas sensibles à la casse ni à l'utilisation d'accents. Les catégories, avec les libellés qu'il est possible d'utiliser, sont :
-          - %s
+      génère les notes de l'épisode à partir des messages de ce channel et publie le résultat (fichier markdown) sur GitHub. Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour. À noter :
+      • Un channel Slack doit être dédié à un seul épisode.
+      • Un thread de messages doit être dédié à un seul lien.
+      • Pour qu'un thread de messages soit reporté dans les show notes, le premier message du thread doit être sur une seule ligne et commencer par un lien (éventuellement préfixé de la catégorie : `(<catégorie>: )?<lien> <puis ce qu'on veut>`).
+      • Les réponses aux liens peuvent être de simples phrases comme des listes.
+      • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code`.
+      • un lien peut être catégorisé en le préfixant d'un libellé (ex. `outillage: https://www.google.com`). Les libellés ne sont ni sensibles à la casse ni à l'utilisation d'accents. Les catégories, avec les libellés qu'il est possible d'utiliser, sont :
+          ◦ %s
       """
           .formatted(
               stream(ShowNoteCategory.values())
@@ -63,7 +63,7 @@ public enum SlackBotAction {
                                   c.getLabels().stream()
                                       .map("`%s`"::formatted)
                                       .collect(joining(", "))))
-                  .collect(joining("\n    - "))),
+                  .collect(joining("\n    ◦ "))),
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
 
   UNKNOWN(999, List.of(), null, List.of(), null) {

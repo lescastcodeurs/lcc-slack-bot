@@ -8,6 +8,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Update show note template section _Nous contacter_ (#23).
+- Improve `GENERATE_SHOW_NOTES` command help (#18).
 
 ### Fixed
 
