@@ -13,7 +13,7 @@ public enum SlackBotAction {
       1,
       List.of("present", "there", "tu es la", "es-tu la"),
       "Yep, je suis tout ouïes.",
-      List.of("@lcc, est-tu présent ?", "@lcc, are you there?"),
+      List.of("@lcc, es-tu présent ?", "@lcc, are you there?"),
       "permet de vérifier que je suis à l'écoute."),
 
   HELP(
