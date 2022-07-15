@@ -56,3 +56,14 @@ gradle spotlessApply
 
 You are strongly encouraged to install a plugin in your IDE if one is available. Take a look at
 [the google-java-format README](https://github.com/google/google-java-format) to check.
+
+## Publish
+
+Just create a new release with its corresponding tag from
+[the GitHub release page](https://github.com/lescastcodeurs/lcc-slack-bot/releases), and
+[the `publish` workflow](/.github/workflows/publish.yml) will be triggered. The release name and its tag must be set to
+the version number : `x.y.z`. All information from [the changelog](/CHANGELOG.md) must be copied in the release
+description.
+
+After the workflow run, the new release will
+be available in [the project Maven repository](https://github.com/lescastcodeurs/lcc-slack-bot/packages/).
