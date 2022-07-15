@@ -23,7 +23,7 @@ class ShowNoteTest {
   @ParameterizedTest
   @MethodSource("linkArguments")
   void link(String text, String expectedMarkdown, ShowNoteCategory expectedCategory) {
-    SlackMessage message = new SlackMessage(DEFAULT_TS, text, List.of());
+    SlackMessage message = new SlackMessage(DEFAULT_TS, text, List.of(), false);
     assertTrue(isShowNote(message));
 
     ShowNote note = new ShowNote(message);
@@ -93,7 +93,7 @@ class ShowNoteTest {
   @ValueSource(
       strings = {"<tricky> message", "@lcc generate show notes", "https://lescastcodeurs.com/"})
   void notALink() {
-    SlackMessage message = new SlackMessage(DEFAULT_TS, "<tricky> message", List.of());
+    SlackMessage message = new SlackMessage(DEFAULT_TS, "<tricky> message", List.of(), false);
     assertFalse(isShowNote(message));
   }
 
@@ -103,7 +103,8 @@ class ShowNoteTest {
         new SlackMessage(
             DEFAULT_TS,
             "<https://lescastcodeurs.com/>",
-            List.of(" • note 1\n• \tnote 2\t\n• <https://test.io|test> \n", "note 4"));
+            List.of(" • note 1\n• \tnote 2\t\n• <https://test.io|test> \n", "note 4"),
+            false);
     var note = new ShowNote(message);
 
     assertEquals(

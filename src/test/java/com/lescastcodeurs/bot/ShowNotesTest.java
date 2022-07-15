@@ -77,7 +77,7 @@ class ShowNotesTest {
         .map(
             message ->
                 new SlackMessage(
-                    DEFAULT_TS, message, List.of("comment 1", "comment 2", "comment 3")))
+                    DEFAULT_TS, message, List.of("comment 1", "comment 2", "comment 3"), false))
         .toList();
   }
 }

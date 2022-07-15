@@ -15,7 +15,12 @@ public class ShowNotes {
   public ShowNotes(List<SlackMessage> messages) {
     this.now = LocalDateTime.now();
     this.locale = Locale.FRANCE;
-    this.notes = messages.stream().filter(ShowNote::isShowNote).map(ShowNote::new).toList();
+    this.notes =
+        messages.stream()
+            .filter(SlackMessage::isUserMessage)
+            .filter(ShowNote::isShowNote)
+            .map(ShowNote::new)
+            .toList();
   }
 
   public LocalDateTime now() {

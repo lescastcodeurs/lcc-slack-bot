@@ -1,5 +1,7 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.StringUtils.isNotBlank;
+
 import com.slack.api.model.Message;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -31,15 +33,21 @@ public final class SlackMessage {
   private final String timestamp;
   private final String text;
   private final List<String> replies;
+  private final boolean appMessage;
 
-  public SlackMessage(String timestamp, String text, List<String> replies) {
+  public SlackMessage(String timestamp, String text, List<String> replies, boolean appMessage) {
     this.timestamp = timestamp == null ? DEFAULT_TS : timestamp;
     this.text = text == null ? "" : text;
     this.replies = replies == null ? List.of() : List.copyOf(replies);
+    this.appMessage = appMessage;
   }
 
   public SlackMessage(Message message, List<String> replies) {
-    this(message.getTs(), message.getText(), replies);
+    this(
+        message.getTs(),
+        message.getText(),
+        replies,
+        isNotBlank(message.getAppId()) || isNotBlank(message.getBotId()));
   }
 
   public String timestamp() {
@@ -68,6 +76,14 @@ public final class SlackMessage {
 
   public List<String> repliesAsMarkdown() {
     return replies.stream().map(this::convertToMarkdown).toList();
+  }
+
+  public boolean isAppMessage() {
+    return appMessage;
+  }
+
+  public boolean isUserMessage() {
+    return !isAppMessage();
   }
 
   private String convertToMarkdown(String text) {

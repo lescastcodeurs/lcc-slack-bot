@@ -11,28 +11,29 @@ class SlackMessageTest {
 
   @Test
   void nullTimestampIsReplacedWithNonNull() {
-    SlackMessage slackMessage = new SlackMessage(null, "msg", List.of());
+    SlackMessage slackMessage = new SlackMessage(null, "msg", List.of(), false);
 
     assertNotNull(slackMessage.timestamp());
   }
 
   @Test
   void nullTextIsReplacedWithNonNull() {
-    SlackMessage slackMessage = new SlackMessage(DEFAULT_TS, null, List.of());
+    SlackMessage slackMessage = new SlackMessage(DEFAULT_TS, null, List.of(), false);
 
     assertNotNull(slackMessage.text());
   }
 
   @Test
   void nullRepliesIsReplacedWithEmptyList() {
-    SlackMessage slackMessage = new SlackMessage(DEFAULT_TS, "msg", null);
+    SlackMessage slackMessage = new SlackMessage(DEFAULT_TS, "msg", null, false);
 
     assertNotNull(slackMessage.replies());
   }
 
   @Test
   void rawLinksAreProperlyTransformedToMarkdownLinks() {
-    SlackMessage message = new SlackMessage(DEFAULT_TS, "<https://lescastcodeurs.com/>", null);
+    SlackMessage message =
+        new SlackMessage(DEFAULT_TS, "<https://lescastcodeurs.com/>", null, false);
 
     assertEquals(
         "[https://lescastcodeurs.com/](https://lescastcodeurs.com/)", message.asMarkdown());
@@ -42,7 +43,7 @@ class SlackMessageTest {
   void titledLinksAreProperlyTransformedToMarkdownLinks() {
     SlackMessage message =
         new SlackMessage(
-            DEFAULT_TS, "<https://lescastcodeurs.com/|Le podcast Java en Français>", null);
+            DEFAULT_TS, "<https://lescastcodeurs.com/|Le podcast Java en Français>", null, false);
 
     assertEquals(
         "[Le podcast Java en Français](https://lescastcodeurs.com/)", message.asMarkdown());
@@ -50,7 +51,7 @@ class SlackMessageTest {
 
   @Test
   void boldIsProperlyTransformed() {
-    SlackMessage message = new SlackMessage(DEFAULT_TS, "*some bold text*", null);
+    SlackMessage message = new SlackMessage(DEFAULT_TS, "*some bold text*", null, false);
 
     assertEquals("**some bold text**", message.asMarkdown());
   }
@@ -58,10 +59,11 @@ class SlackMessageTest {
   @Test
   void listIsProperlyTransformed() {
     SlackMessage message =
-        new SlackMessage(DEFAULT_TS, """
+        new SlackMessage(
+            DEFAULT_TS, """
         • element 1
         • element 2
-        """, null);
+        """, null, false);
 
     assertEquals("""
       - element 1
@@ -79,7 +81,8 @@ class SlackMessageTest {
             ◦ subelement 1
             ◦ subelement 2
           """,
-            null);
+            null,
+            false);
 
     assertEquals(
         """
@@ -106,7 +109,8 @@ class SlackMessageTest {
            ◦ ~some striked text~
            ◦ `some code`
           """,
-            null);
+            null,
+            false);
 
     assertEquals(
         """
