@@ -24,6 +24,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Dependencies
 
 - Bump quarkus from 2.9.2 to 2.10.2 (#17).
+- Bump bolt-socket-mode from 1.23.1 to 1.24.0 (#31).
 
 ### Internal
 
