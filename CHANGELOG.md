@@ -15,4 +15,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Dependencies
 
+- Bump com.diffplug.spotless from 6.8.0 to 6.9.0 (#34).
+
 ### Internal
