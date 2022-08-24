@@ -1,10 +1,11 @@
 package com.lescastcodeurs.bot;
 
 import static java.util.Arrays.stream;
-import static java.util.Comparator.comparingInt;
+import static java.util.Comparator.*;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public enum SlackBotAction {
       "permet de vérifier que je suis à l'écoute."),
 
   HELP(
-      2,
+      10,
       List.of("aide", "help"),
       null,
       List.of("@lcc, à l'aide !", "@lcc, help me please !"),
@@ -38,6 +39,28 @@ public enum SlackBotAction {
     }
   },
 
+  SHOW_CATEGORIES(
+      20,
+      List.of("category", "categorie", "label", "libelle", "tag"),
+      """
+      Les catégories, et leurs libellés associés, sont : %s
+      """
+          .formatted(
+              stream(ShowNoteCategory.values())
+                  .sorted(comparing(ShowNoteCategory::name))
+                  .map(
+                      c ->
+                          "%s (%s)"
+                              .formatted(
+                                  c.description().toLowerCase(Locale.FRENCH),
+                                  c.getLabels().stream()
+                                      .sorted(naturalOrder())
+                                      .map("`%s`"::formatted)
+                                      .collect(joining(", "))))
+                  .collect(joining(", "))),
+      List.of("@lcc, montre-moi les catégories.", "@lcc, show me the categories."),
+      "affiche la liste des catégories avec leurs libellés associés."),
+
   GENERATE_SHOW_NOTES(
       3,
       List.of("genere", "generate"),
@@ -49,20 +72,8 @@ public enum SlackBotAction {
       • Un thread de messages est reporté dans les show notes si son premier message contient au moins un lien.
       • Les réponses aux liens peuvent être de simples phrases comme des listes.
       • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code`.
-      • Les liens peuvent être catégorisés à l'aide de libellés (ex. `https://www.google.com (outillage)`). Les catégories, avec les libellés qu'il est possible d'utiliser, sont :
-          ◦ %s
-      """
-          .formatted(
-              stream(ShowNoteCategory.values())
-                  .map(
-                      c ->
-                          "%s (%s)"
-                              .formatted(
-                                  c.description(),
-                                  c.getLabels().stream()
-                                      .map("`%s`"::formatted)
-                                      .collect(joining(", "))))
-                  .collect(joining("\n    ◦ "))),
+      • Les liens peuvent être catégorisés à l'aide de libellés (ex. `https://www.google.com (outillage)`). Les catégories, avec les libellés qu'il est possible d'utiliser, sont visibles grâce à la commande dédiée (`@lcc, affiche les catégories.`).
+      """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
 
   UNKNOWN(999, List.of(), null, List.of(), null) {

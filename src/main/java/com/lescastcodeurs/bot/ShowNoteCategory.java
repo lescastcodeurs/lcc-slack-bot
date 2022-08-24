@@ -30,7 +30,7 @@ public enum ShowNoteCategory {
       "organization",
       "orga",
       "org"),
-  EPISODE_TOOL("Outils de l’épisode", "outils", "outil", "tools", "tool"),
+  TOOL_OF_THE_EPISODE("Outils de l’épisode", "outils", "outil", "tools", "tool"),
   BEGINNERS("Rubrique débutant", "debutants", "debutant", "beginners", "beginner"),
   CONFERENCE("Conférences", "conferences", "conference", "conf");
 
