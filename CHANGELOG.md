@@ -5,6 +5,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Ajout d'une nouvelle commande pour afficher la liste triée des catégories et de leurs libellés de manières plus
+  condensée qu'auparavant (#39).
+
 ### Changed
 
 ### Fixed
@@ -15,8 +18,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Dependencies
 
-- Upgrade spotless from 6.8.0 to [6.10.0](https://github.com/diffplug/spotless/blob/main/plugin-gradle/CHANGES.md#6100---2022-08-23)
-  (#34).
+- Upgrade spotless from 6.8.0 to
+  [6.10.0](https://github.com/diffplug/spotless/blob/main/plugin-gradle/CHANGES.md#6100---2022-08-23) (#34).
 - Upgrade quarkus from 2.10.2 to [2.11.2](https://quarkus.io/blog/quarkus-2-11-2-final-released/) (#35, #47).
 - Upgrade java version to [temurin-17.0.4+8](https://www.oracle.com/java/technologies/javase/17-0-4-relnotes.html)
   (#36).
