@@ -10,6 +10,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Tous les mots clés associés aux commandes sont désormais affichés (#48).
+
 ### Fixed
 
 ### Deprecated
