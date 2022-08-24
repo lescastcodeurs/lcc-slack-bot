@@ -26,7 +26,7 @@ public enum SlackBotAction {
     @Override
     public String response() {
       return """
-        Voici les commandes auxquelles je peux répondre (la ponctuation, les accents, la casse ainsi que la présence de mots supplémentaires sont ignorés).
+        Voici les commandes auxquelles je peux répondre (la ponctuation, les accents, la casse ainsi que la présence de mots ou caractères supplémentaires sont ignorés).
 
         %s
         """
@@ -176,7 +176,7 @@ public enum SlackBotAction {
   }
 
   public String help() {
-    String commands = keywords.stream().limit(2).map("*%s*"::formatted).collect(joining(" | "));
+    String commands = keywords.stream().map("*%s*"::formatted).collect(joining(" | "));
     String examples = usages.stream().map("`%s`"::formatted).collect(joining(", "));
     return "%s (%s) : %s".formatted(commands, examples, description);
   }
