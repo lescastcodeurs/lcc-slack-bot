@@ -47,7 +47,7 @@ public enum SlackBotAction {
       """
           .formatted(
               stream(ShowNoteCategory.values())
-                  .sorted(comparing(ShowNoteCategory::name))
+                  .sorted(comparing(ShowNoteCategory::description))
                   .map(
                       c ->
                           "%s (%s)"
@@ -59,7 +59,29 @@ public enum SlackBotAction {
                                       .collect(joining(", "))))
                   .collect(joining(", "))),
       List.of("@lcc, montre-moi les catégories.", "@lcc, show me the categories."),
-      "affiche la liste des catégories avec leurs libellés associés."),
+      "affiche la liste des catégories avec leurs libellés associés (une seule ligne, ordre alphabétique)."),
+
+  SHOW_CATEGORIES2(
+      19,
+      List.of("categories2"),
+      """
+    Les catégories, et leurs libellés associés, sont :
+    • %s
+    """
+          .formatted(
+              stream(ShowNoteCategory.values())
+                  .map(
+                      c ->
+                          "%s (%s)"
+                              .formatted(
+                                  c.description(),
+                                  c.getLabels().stream()
+                                      .sorted(naturalOrder())
+                                      .map("`%s`"::formatted)
+                                      .collect(joining(", "))))
+                  .collect(joining("\n• "))),
+      List.of("@lcc, montre-moi les catégories2.", "@lcc, show me the categories2."),
+      "affiche la liste des catégories avec leurs libellés associés (multilignes, ordre de déclaration)."),
 
   GENERATE_SHOW_NOTES(
       3,
