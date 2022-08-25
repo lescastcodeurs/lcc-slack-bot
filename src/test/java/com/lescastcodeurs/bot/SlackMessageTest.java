@@ -94,6 +94,30 @@ class SlackMessageTest {
   }
 
   @Test
+  void blockquoteIsProperlyTransformed() {
+    SlackMessage message =
+        new SlackMessage(
+            DEFAULT_TS,
+            """
+      La classe américaine, L’indien à Hugues. :
+      &gt; J’aimerais bien que tu restes.
+      &gt; On va manger des chips. Tu entends ? Des chips !
+      &gt; C’est tout ce que ça te fait quand je te dis qu’on va manger des chips ?
+      """,
+            null,
+            false);
+
+    assertEquals(
+        """
+      La classe américaine, L’indien à Hugues. :
+      > J’aimerais bien que tu restes.
+      > On va manger des chips. Tu entends ? Des chips !
+      > C’est tout ce que ça te fait quand je te dis qu’on va manger des chips ?
+      """,
+        message.asMarkdown());
+  }
+
+  @Test
   void complexMessageIsProperlyTransformedToMarkdown() {
     SlackMessage message =
         new SlackMessage(

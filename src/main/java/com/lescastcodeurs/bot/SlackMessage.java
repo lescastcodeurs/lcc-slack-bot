@@ -94,6 +94,8 @@ public final class SlackMessage {
     markdown = BOLD_PATTERN.matcher(markdown).replaceAll("**${content}**");
     markdown = LIST_PATTERN.matcher(markdown).replaceAll("- ");
     markdown = SUBLIST_PATTERN.matcher(markdown).replaceAll("  - ");
+    markdown = markdown.replace("&gt;", ">");
+    markdown = markdown.replace("&lt;", "<");
 
     return markdown;
   }

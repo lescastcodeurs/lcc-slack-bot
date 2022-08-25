@@ -51,7 +51,7 @@ public class ShowNote {
   }
 
   public String text() {
-    String markdown = message.asMarkdown().replace("\n", " ");
+    String markdown = message.asMarkdown();
     Optional<ShowNoteCategory> category = ShowNoteCategory.find(urlMatcher.group("category"));
 
     if (category.isPresent()) {

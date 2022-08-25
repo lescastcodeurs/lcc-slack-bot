@@ -71,7 +71,7 @@ public enum SlackBotAction {
       • Un channel Slack doit être dédié à un seul épisode.
       • Un thread de messages est reporté dans les show notes si son premier message contient au moins un lien.
       • Les réponses aux liens peuvent être de simples phrases comme des listes.
-      • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code`.
+      • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code` et citations (sur le premier message uniquement).
       • Les liens peuvent être catégorisés à l'aide de libellés (ex. `https://www.google.com (outillage)`). Les catégories, avec les libellés qu'il est possible d'utiliser, sont visibles grâce à la commande dédiée (`@lcc, affiche les catégories.`).
       """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),

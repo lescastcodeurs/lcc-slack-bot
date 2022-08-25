@@ -7,6 +7,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Ajout d'une nouvelle commande pour afficher la liste triée des catégories et de leurs libellés de manières plus
   condensée qu'auparavant (#39).
+- Gestion des citations (#38). Les chevrons, qui sont HTML-encodés dans les messages Slack, sont désormais désencodés
+  afin d'être correctement interprétés dans le markdown. Et les retours chariots sont désormais conservés sur le premier
+  message.
 
 ### Changed
 

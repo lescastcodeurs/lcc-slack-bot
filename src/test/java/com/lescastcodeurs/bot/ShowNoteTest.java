@@ -81,11 +81,11 @@ class ShowNoteTest {
             LIBRARIES),
         Arguments.of(
             "<https://test.io/>\nthis\nis\na\ntest",
-            "[https://test.io/](https://test.io/) this is a test",
+            "[https://test.io/](https://test.io/)\nthis\nis\na\ntest",
             NEWS),
         Arguments.of(
-            "bla bla\n<https://test.io/d/a.txt?a=b&c=d#!#e=f%20g|this is a test> (cloud)\nbla bla <https://link.to|link> (test)",
-            "bla bla [this is a test](https://test.io/d/a.txt?a=b&c=d#!#e=f%20g) bla bla [link](https://link.to) (test)",
+            "bla bla \n<https://test.io/d/a.txt?a=b&c=d#!#e=f%20g|this is a test> (cloud) \nbla bla <https://link.to|link> (test)",
+            "bla bla \n[this is a test](https://test.io/d/a.txt?a=b&c=d#!#e=f%20g) \nbla bla [link](https://link.to) (test)",
             CLOUD));
   }
 
