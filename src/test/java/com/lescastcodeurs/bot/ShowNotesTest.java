@@ -44,8 +44,7 @@ class ShowNotesTest {
     List<String> messages = new ArrayList<>();
     messages.add("random comment 1");
     for (ShowNoteCategory category : ShowNoteCategory.values()) {
-      String label = category.getLabels().stream().findFirst().orElseThrow();
-      String url = "<https://lescastcodeurs.com/" + category + "> (" + label + ")";
+      String url = "<https://lescastcodeurs.com/" + category + "> (" + category.mainLabel() + ")";
       messages.add(url);
     }
     messages.add("random comment 2");

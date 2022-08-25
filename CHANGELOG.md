@@ -5,7 +5,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Add a new command, `category`, that displays the ordered list of categories and their associated labels (#39).
+- Add a new command, `category`, that displays the list of categories and their associated labels (#39).
+- Support a main label for categories (#39).
 - Support blockquotes (#38).
   - Brackets (`&lt;` and `&gt;`) are now unescaped in the messages in order to be properly interpreted in the final
     markdown document.
@@ -15,6 +16,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - All commands associated keywords are now displayed in the help message (#48).
+- Update categories order and labels (#39).
 
 ### Fixed
 

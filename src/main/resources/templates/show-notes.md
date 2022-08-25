@@ -30,7 +30,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Langages
 
-{#for note in notes('Langages')}
+{#for note in notes('lang')}
 {note.text}
 
 {#for comment in note.comments}
@@ -41,7 +41,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Librairies
 
-{#for note in notes('Librairies')}
+{#for note in notes('lib')}
 {note.text}
 
 {#for comment in note.comments}
@@ -52,7 +52,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Infrastructure
 
-{#for note in notes('Infrastructure')}
+{#for note in notes('infra')}
 {note.text}
 
 {#for comment in note.comments}
@@ -63,7 +63,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Cloud
 
-{#for note in notes('Cloud')}
+{#for note in notes('cloud')}
 {note.text}
 
 {#for comment in note.comments}
@@ -74,7 +74,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Web
 
-{#for note in notes('Web')}
+{#for note in notes('web')}
 {note.text}
 
 {#for comment in note.comments}
@@ -85,7 +85,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Data
 
-{#for note in notes('Data')}
+{#for note in notes('data')}
 {note.text}
 
 {#for comment in note.comments}
@@ -96,7 +96,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Outillage
 
-{#for note in notes('Outillage')}
+{#for note in notes('outil')}
 {note.text}
 
 {#for comment in note.comments}
@@ -107,7 +107,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Architecture
 
-{#for note in notes('Architecture')}
+{#for note in notes('archi')}
 {note.text}
 
 {#for comment in note.comments}
@@ -118,7 +118,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Méthodologies
 
-{#for note in notes('Méthodologies')}
+{#for note in notes('methodo')}
 {note.text}
 
 {#for comment in note.comments}
@@ -129,7 +129,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Sécurité
 
-{#for note in notes('Sécurité')}
+{#for note in notes('secu')}
 {note.text}
 
 {#for comment in note.comments}
@@ -140,7 +140,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Loi, société et organisation
 
-{#for note in notes('Loi')}
+{#for note in notes('loi')}
 {note.text}
 
 {#for comment in note.comments}
@@ -151,7 +151,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ## Outils de l’épisode
 
-{#for note in notes('Outils')}
+{#for note in notes('outil-ep')}
 {note.text}
 
 {#for comment in note.comments}
@@ -162,7 +162,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ## Rubrique débutant
 
-{#for note in notes('débutant')}
+{#for note in notes('debutant')}
 {note.text}
 
 {#for comment in note.comments}
@@ -176,7 +176,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 [Nom de la conf du x au y mois à Ville]() - [CfP]() jusqu’à y mois
 TODO: reprendre celles de l’épisode d’avant
 
-{#for note in notes('Conférences')}
+{#for note in notes('conf')}
 {note.text}
 
 {#for comment in note.comments}

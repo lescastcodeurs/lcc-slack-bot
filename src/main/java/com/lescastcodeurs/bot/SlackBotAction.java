@@ -1,11 +1,10 @@
 package com.lescastcodeurs.bot;
 
 import static java.util.Arrays.stream;
-import static java.util.Comparator.*;
+import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ public enum SlackBotAction {
       List.of("present", "there", "tu es la", "es-tu la"),
       "Yep, je suis tout ouïes.",
       List.of("@lcc, es-tu présent ?", "@lcc, are you there?"),
-      "permet de vérifier que je suis à l'écoute."),
+      "Permet de vérifier que je suis à l'écoute."),
 
   HELP(
       10,
@@ -43,45 +42,25 @@ public enum SlackBotAction {
       20,
       List.of("category", "categorie", "label", "libelle", "tag"),
       """
-      Les catégories, et leurs libellés associés, sont : %s
+      Les catégories et leurs libellés sont :
+      • %s
+      • Non catégorisé: laissé sans catégorie ou catégorisé avec un libellé inconnu
       """
           .formatted(
               stream(ShowNoteCategory.values())
-                  .sorted(comparing(ShowNoteCategory::description))
+                  .filter(c -> c != ShowNoteCategory.NEWS)
                   .map(
                       c ->
-                          "%s (%s)"
-                              .formatted(
-                                  c.description().toLowerCase(Locale.FRENCH),
-                                  c.getLabels().stream()
-                                      .sorted(naturalOrder())
-                                      .map("`%s`"::formatted)
-                                      .collect(joining(", "))))
-                  .collect(joining(", "))),
-      List.of("@lcc, montre-moi les catégories.", "@lcc, show me the categories."),
-      "affiche la liste des catégories avec leurs libellés associés (une seule ligne, ordre alphabétique)."),
-
-  SHOW_CATEGORIES2(
-      19,
-      List.of("categories2"),
-      """
-    Les catégories, et leurs libellés associés, sont :
-    • %s
-    """
-          .formatted(
-              stream(ShowNoteCategory.values())
-                  .map(
-                      c ->
-                          "%s (%s)"
+                          "%s : `%s` (%s)"
                               .formatted(
                                   c.description(),
-                                  c.getLabels().stream()
-                                      .sorted(naturalOrder())
+                                  c.mainLabel(),
+                                  c.alternateLabels().stream()
                                       .map("`%s`"::formatted)
                                       .collect(joining(", "))))
                   .collect(joining("\n• "))),
-      List.of("@lcc, montre-moi les catégories2.", "@lcc, show me the categories2."),
-      "affiche la liste des catégories avec leurs libellés associés (multilignes, ordre de déclaration)."),
+      List.of("@lcc, montre-moi les catégories.", "@lcc, show me the categories."),
+      "Affiche la liste des catégories avec leurs libellés associés (multilignes, ordre de déclaration)."),
 
   GENERATE_SHOW_NOTES(
       3,
@@ -89,12 +68,12 @@ public enum SlackBotAction {
       "OK, je suis sur le coup !",
       List.of("@lcc, génère les show notes.", "@lcc, generate show notes."),
       """
-      génère les notes de l'épisode à partir des messages de ce channel et publie le résultat sur GitHub. Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour. À noter :
+      Génère les notes de l'épisode à partir des messages de ce channel et publie le résultat sur GitHub. Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour. À noter :
       • Un channel Slack doit être dédié à un seul épisode.
       • Un thread de messages est reporté dans les show notes si son premier message contient au moins un lien.
       • Les réponses aux liens peuvent être de simples phrases comme des listes.
       • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code` et citations (sur le premier message uniquement).
-      • Les liens peuvent être catégorisés à l'aide de libellés (ex. `https://www.google.com (outillage)`). Les catégories, avec les libellés qu'il est possible d'utiliser, sont visibles grâce à la commande dédiée (`@lcc, affiche les catégories.`).
+      • Les liens peuvent être catégorisés à l'aide de libellés (ex. `Nouveau JEP https://www.java.com (lang)`). Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
       """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
 
