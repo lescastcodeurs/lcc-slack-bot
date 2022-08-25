@@ -2,16 +2,18 @@ package com.lescastcodeurs.bot;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.DOTALL;
 
-import java.util.ArrayList;
+import com.lescastcodeurs.bot.slack.SlackReply;
+import com.lescastcodeurs.bot.slack.SlackThread;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A wrapper around {@link SlackMessage} to allow customization for show notes generation.
+ * A wrapper around {@link SlackThread} to allow customization for show notes generation.
  *
  * <p>This wrapper is not thread safe.
  */
@@ -29,16 +31,16 @@ public class ShowNote {
           "^(?<before>.*?\\(https?://[^)]+\\))(?<category>\\s*\\([^)]+\\))?(?<after>.*)$",
           CASE_INSENSITIVE | DOTALL);
 
-  private final SlackMessage message;
+  private final SlackThread thread;
   private final Matcher urlMatcher;
 
-  public static boolean isShowNote(SlackMessage message) {
-    return SHOW_NOTE_PATTERN.matcher(message.text()).matches();
+  public static boolean isShowNote(SlackThread thread) {
+    return SHOW_NOTE_PATTERN.matcher(thread.text()).matches();
   }
 
-  public ShowNote(SlackMessage message) {
-    this.message = requireNonNull(message);
-    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(message.text());
+  public ShowNote(SlackThread thread) {
+    this.thread = requireNonNull(thread);
+    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(thread.text());
 
     if (!urlMatcher.find()) {
       throw new IllegalArgumentException(
@@ -47,11 +49,11 @@ public class ShowNote {
   }
 
   public String timestamp() {
-    return message.timestamp();
+    return thread.timestamp();
   }
 
   public String text() {
-    String markdown = message.asMarkdown();
+    String markdown = thread.asMarkdown();
     Optional<ShowNoteCategory> category = ShowNoteCategory.find(urlMatcher.group("category"));
 
     if (category.isPresent()) {
@@ -70,17 +72,12 @@ public class ShowNote {
   }
 
   public List<String> comments() {
-    List<String> comments = new ArrayList<>();
-
-    for (String reply : message.repliesAsMarkdown()) {
-      reply
-          .lines()
-          .filter(not(String::isBlank))
-          .map(this::asListItem)
-          .forEachOrdered(comments::add);
-    }
-
-    return List.copyOf(comments);
+    return thread.replies().stream()
+        .map(SlackReply::asMarkdown)
+        .flatMap(String::lines)
+        .filter(not(String::isBlank))
+        .map(this::asListItem)
+        .toList();
   }
 
   private String asListItem(String line) {

@@ -5,6 +5,7 @@ import static java.util.Comparator.*;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.lescastcodeurs.bot.slack.SlackThread;
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
@@ -61,7 +62,7 @@ public final class SlackClient {
    * @see #replies(String, String)
    * @see <a href="https://api.slack.com/methods/conversations.history">conversations.history</a>.
    */
-  public List<SlackMessage> history(String channel) {
+  public List<SlackThread> history(String channel) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
 
     return SlackApi.check(
@@ -71,17 +72,13 @@ public final class SlackClient {
         .getMessages()
         .stream()
         .sorted(CHRONOLOGICAL)
-        .map(
-            m ->
-                new SlackMessage(
-                    m,
-                    replies(
-                        channel, m))) // note: oddly, m.getChannel() is null, so it should be given
+        // note: oddly, m.getChannel() is null, so it should be given
+        .map(m -> new SlackThread(m, replies(channel, m)))
         // explicitly
         .toList();
   }
 
-  private List<String> replies(String channel, Message message) {
+  private List<Message> replies(String channel, Message message) {
     Integer replyCount = message.getReplyCount();
 
     if (replyCount != null && replyCount > 0) {
@@ -96,7 +93,7 @@ public final class SlackClient {
    *
    * @see <a href="https://api.slack.com/methods/conversations.replies">conversations.replies</a>.
    */
-  public List<String> replies(String channel, String ts) {
+  public List<Message> replies(String channel, String ts) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
     return SlackApi.check(
             () ->
@@ -106,7 +103,6 @@ public final class SlackClient {
         .stream()
         .filter(IS_REPLY)
         .sorted(CHRONOLOGICAL)
-        .map(Message::getText)
         .toList();
   }
 

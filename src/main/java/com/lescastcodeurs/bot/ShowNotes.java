@@ -1,5 +1,6 @@
 package com.lescastcodeurs.bot;
 
+import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.qute.TemplateData;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,12 +13,12 @@ public class ShowNotes {
   private final Locale locale;
   private final List<ShowNote> notes;
 
-  public ShowNotes(List<SlackMessage> messages) {
+  public ShowNotes(List<SlackThread> threads) {
     this.now = LocalDateTime.now();
     this.locale = Locale.FRANCE;
     this.notes =
-        messages.stream()
-            .filter(SlackMessage::isUserMessage)
+        threads.stream()
+            .filter(SlackThread::isUserMessage)
             .filter(ShowNote::isShowNote)
             .map(ShowNote::new)
             .toList();

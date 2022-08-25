@@ -1,9 +1,10 @@
 package com.lescastcodeurs.bot;
 
-import static com.lescastcodeurs.bot.SlackMessage.DEFAULT_TS;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.lescastcodeurs.bot.slack.Messages;
+import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.test.junit.QuarkusTest;
@@ -67,16 +68,20 @@ class ShowNotesTest {
     assertFalse(rendered.contains("generate show notes"));
   }
 
-  private List<SlackMessage> history(String... messages) {
+  private List<SlackThread> history(String... messages) {
     return history(asList(messages));
   }
 
-  private List<SlackMessage> history(List<String> messages) {
+  private List<SlackThread> history(List<String> messages) {
     return messages.stream()
         .map(
             message ->
-                new SlackMessage(
-                    DEFAULT_TS, message, List.of("comment 1", "comment 2", "comment 3"), false))
+                new SlackThread(
+                    Messages.of(message),
+                    List.of(
+                        Messages.of("comment 1"),
+                        Messages.of("comment 2"),
+                        Messages.of("comment 3"))))
         .toList();
   }
 }

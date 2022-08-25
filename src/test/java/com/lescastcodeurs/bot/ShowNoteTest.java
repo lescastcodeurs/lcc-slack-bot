@@ -2,9 +2,10 @@ package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.ShowNote.isShowNote;
 import static com.lescastcodeurs.bot.ShowNoteCategory.*;
-import static com.lescastcodeurs.bot.SlackMessage.DEFAULT_TS;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.lescastcodeurs.bot.slack.Messages;
+import com.lescastcodeurs.bot.slack.SlackThread;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class ShowNoteTest {
   @ParameterizedTest
   @MethodSource("linkArguments")
   void link(String text, String expectedMarkdown, ShowNoteCategory expectedCategory) {
-    SlackMessage message = new SlackMessage(DEFAULT_TS, text, List.of(), false);
+    SlackThread message = new SlackThread(Messages.of(text), null);
     assertTrue(isShowNote(message));
 
     ShowNote note = new ShowNote(message);
@@ -93,18 +94,18 @@ class ShowNoteTest {
   @ValueSource(
       strings = {"<tricky> message", "@lcc generate show notes", "https://lescastcodeurs.com/"})
   void notALink() {
-    SlackMessage message = new SlackMessage(DEFAULT_TS, "<tricky> message", List.of(), false);
+    SlackThread message = new SlackThread(Messages.of("<tricky> message"), List.of());
     assertFalse(isShowNote(message));
   }
 
   @Test
   void comments() {
-    SlackMessage message =
-        new SlackMessage(
-            DEFAULT_TS,
-            "<https://lescastcodeurs.com/>",
-            List.of(" • note 1\n• \tnote 2\t\n• <https://test.io|test> \n", "note 4"),
-            false);
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://lescastcodeurs.com/>"),
+            List.of(
+                Messages.of(" • note 1\n• \tnote 2\t\n• <https://test.io|test> \n"),
+                Messages.of("note 4")));
     var note = new ShowNote(message);
 
     assertEquals(

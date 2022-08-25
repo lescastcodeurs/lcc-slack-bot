@@ -1,13 +1,12 @@
-package com.lescastcodeurs.bot;
+package com.lescastcodeurs.bot.slack;
 
 import static com.lescastcodeurs.bot.StringUtils.isNotBlank;
 
 import com.slack.api.model.Message;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /** Hold required information from a Slack message. */
-public final class SlackMessage {
+abstract sealed class SlackMessage permits SlackThread, SlackReply {
 
   /**
    * @see <a href="https://stackoverflow.com/a/1547940">Which characters make a URL invalid?</a>
@@ -32,29 +31,19 @@ public final class SlackMessage {
   // See https://github.com/slackhq/slack-api-docs/issues/7#issuecomment-67913241.
   private final String timestamp;
   private final String text;
-  private final List<String> replies;
   private final boolean appMessage;
 
-  public SlackMessage(String timestamp, String text, List<String> replies, boolean appMessage) {
-    this.timestamp = timestamp == null ? DEFAULT_TS : timestamp;
-    this.text = text == null ? "" : text;
-    this.replies = replies == null ? List.of() : List.copyOf(replies);
-    this.appMessage = appMessage;
+  public SlackMessage(Message message) {
+    this.timestamp = message.getTs() == null ? DEFAULT_TS : message.getTs();
+    this.text = message.getText() == null ? "" : message.getText();
+    this.appMessage = isNotBlank(message.getAppId()) || isNotBlank(message.getBotId());
   }
 
-  public SlackMessage(Message message, List<String> replies) {
-    this(
-        message.getTs(),
-        message.getText(),
-        replies,
-        isNotBlank(message.getAppId()) || isNotBlank(message.getBotId()));
-  }
-
-  public String timestamp() {
+  public final String timestamp() {
     return timestamp;
   }
 
-  public String text() {
+  public final String text() {
     return text;
   }
 
@@ -66,27 +55,7 @@ public final class SlackMessage {
    * @see <a href="https://www.markdownguide.org/tools/slack/">Slack Markdown Reference | Markdown
    *     Guide</a>
    */
-  public String asMarkdown() {
-    return convertToMarkdown(text);
-  }
-
-  public List<String> replies() {
-    return replies;
-  }
-
-  public List<String> repliesAsMarkdown() {
-    return replies.stream().map(this::convertToMarkdown).toList();
-  }
-
-  public boolean isAppMessage() {
-    return appMessage;
-  }
-
-  public boolean isUserMessage() {
-    return !isAppMessage();
-  }
-
-  private String convertToMarkdown(String text) {
+  public final String asMarkdown() {
     String markdown = text;
 
     markdown = SLACK_RAW_URL_PATTERN.matcher(markdown).replaceAll("[${url}](${url})");
@@ -98,5 +67,13 @@ public final class SlackMessage {
     markdown = markdown.replace("&lt;", "<");
 
     return markdown;
+  }
+
+  public final boolean isAppMessage() {
+    return appMessage;
+  }
+
+  public final boolean isUserMessage() {
+    return !isAppMessage();
   }
 }
