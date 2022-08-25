@@ -5,15 +5,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Ajout d'une nouvelle commande pour afficher la liste triée des catégories et de leurs libellés de manières plus
-  condensée qu'auparavant (#39).
-- Gestion des citations (#38). Les chevrons, qui sont HTML-encodés dans les messages Slack, sont désormais désencodés
-  afin d'être correctement interprétés dans le markdown. Et les retours chariots sont désormais conservés sur le premier
-  message.
+- Add a new command, `category`, that displays the ordered list of categories and their associated labels (#39).
+- Support blockquotes (#38).
+  - Brackets (`&lt;` and `&gt;`) are now unescaped in the messages in order to be properly interpreted in the final
+    markdown document.
+  - New lines are now retained if they appear in the first message of a thread. New lines in replies are still deleted:
+    this is required because replies must be displayed in a markdown list.
 
 ### Changed
 
-- Tous les mots clés associés aux commandes sont désormais affichés (#48).
+- All commands associated keywords are now displayed in the help message (#48).
 
 ### Fixed
 
