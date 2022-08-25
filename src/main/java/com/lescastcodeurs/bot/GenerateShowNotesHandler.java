@@ -5,6 +5,7 @@ import static com.lescastcodeurs.bot.StringUtils.asFilename;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.lescastcodeurs.bot.slack.SlackThread;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
@@ -41,10 +42,10 @@ public final class GenerateShowNotesHandler {
 
     try {
       String channelName = slackClient.name(channel);
-      List<SlackMessage> messages = slackClient.history(channel);
+      List<SlackThread> threads = slackClient.history(channel);
 
       String filename = asFilename(channelName, "md");
-      String content = notes.render(new ShowNotes(messages));
+      String content = notes.render(new ShowNotes(threads));
       String showNoteUrl = gitHubClient.createOrUpdateFile(filename, content);
 
       slackClient.chatPostMessage(

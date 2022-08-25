@@ -1,88 +1,79 @@
-package com.lescastcodeurs.bot;
+package com.lescastcodeurs.bot.slack;
 
-import static com.lescastcodeurs.bot.SlackMessage.DEFAULT_TS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class SlackMessageTest {
 
   @Test
   void nullTimestampIsReplacedWithNonNull() {
-    SlackMessage slackMessage = new SlackMessage(null, "msg", List.of(), false);
+    SlackMessage msg = new SlackReply(Messages.of(null, "text"));
 
-    assertNotNull(slackMessage.timestamp());
+    assertNotNull(msg.timestamp());
   }
 
   @Test
   void nullTextIsReplacedWithNonNull() {
-    SlackMessage slackMessage = new SlackMessage(DEFAULT_TS, null, List.of(), false);
+    SlackMessage msg = new SlackReply(Messages.of(null));
 
-    assertNotNull(slackMessage.text());
+    assertNotNull(msg.text());
   }
 
   @Test
   void nullRepliesIsReplacedWithEmptyList() {
-    SlackMessage slackMessage = new SlackMessage(DEFAULT_TS, "msg", null, false);
+    SlackThread thread = new SlackThread(Messages.of("text"), null);
 
-    assertNotNull(slackMessage.replies());
+    assertNotNull(thread.replies());
+    assertTrue(thread.replies().isEmpty());
   }
 
   @Test
   void rawLinksAreProperlyTransformedToMarkdownLinks() {
-    SlackMessage message =
-        new SlackMessage(DEFAULT_TS, "<https://lescastcodeurs.com/>", null, false);
+    SlackMessage msg = new SlackReply(Messages.of("<https://lescastcodeurs.com/>"));
 
-    assertEquals(
-        "[https://lescastcodeurs.com/](https://lescastcodeurs.com/)", message.asMarkdown());
+    assertEquals("[https://lescastcodeurs.com/](https://lescastcodeurs.com/)", msg.asMarkdown());
   }
 
   @Test
   void titledLinksAreProperlyTransformedToMarkdownLinks() {
-    SlackMessage message =
-        new SlackMessage(
-            DEFAULT_TS, "<https://lescastcodeurs.com/|Le podcast Java en Français>", null, false);
+    SlackMessage msg =
+        new SlackReply(Messages.of("<https://lescastcodeurs.com/|Le podcast Java en Français>"));
 
-    assertEquals(
-        "[Le podcast Java en Français](https://lescastcodeurs.com/)", message.asMarkdown());
+    assertEquals("[Le podcast Java en Français](https://lescastcodeurs.com/)", msg.asMarkdown());
   }
 
   @Test
   void boldIsProperlyTransformed() {
-    SlackMessage message = new SlackMessage(DEFAULT_TS, "*some bold text*", null, false);
+    SlackMessage msg = new SlackReply(Messages.of("*some bold text*"));
 
-    assertEquals("**some bold text**", message.asMarkdown());
+    assertEquals("**some bold text**", msg.asMarkdown());
   }
 
   @Test
   void listIsProperlyTransformed() {
-    SlackMessage message =
-        new SlackMessage(
-            DEFAULT_TS, """
+    SlackMessage msg =
+        new SlackReply(Messages.of("""
         • element 1
         • element 2
-        """, null, false);
+        """));
 
     assertEquals("""
       - element 1
       - element 2
-      """, message.asMarkdown());
+      """, msg.asMarkdown());
   }
 
   @Test
   void sublistIsProperlyTransformed() {
-    SlackMessage message =
-        new SlackMessage(
-            DEFAULT_TS,
-            """
+    SlackMessage msg =
+        new SlackReply(
+            Messages.of(
+                """
           • element 1
             ◦ subelement 1
             ◦ subelement 2
-          """,
-            null,
-            false);
+          """));
 
     assertEquals(
         """
@@ -90,22 +81,20 @@ class SlackMessageTest {
           - subelement 1
           - subelement 2
         """,
-        message.asMarkdown());
+        msg.asMarkdown());
   }
 
   @Test
   void blockquoteIsProperlyTransformed() {
-    SlackMessage message =
-        new SlackMessage(
-            DEFAULT_TS,
-            """
+    SlackMessage msg =
+        new SlackReply(
+            Messages.of(
+                """
       La classe américaine, L’indien à Hugues. :
       &gt; J’aimerais bien que tu restes.
       &gt; On va manger des chips. Tu entends ? Des chips !
       &gt; C’est tout ce que ça te fait quand je te dis qu’on va manger des chips ?
-      """,
-            null,
-            false);
+      """));
 
     assertEquals(
         """
@@ -114,15 +103,15 @@ class SlackMessageTest {
       > On va manger des chips. Tu entends ? Des chips !
       > C’est tout ce que ça te fait quand je te dis qu’on va manger des chips ?
       """,
-        message.asMarkdown());
+        msg.asMarkdown());
   }
 
   @Test
   void complexMessageIsProperlyTransformedToMarkdown() {
-    SlackMessage message =
-        new SlackMessage(
-            DEFAULT_TS,
-            """
+    SlackMessage msg =
+        new SlackReply(
+            Messages.of(
+                """
           • <https://lescastcodeurs.com/|Le podcast Java en Français>
             ◦ something to say on this link ?
           • <https://lescastcodeurs.com/>
@@ -132,9 +121,7 @@ class SlackMessageTest {
            ◦ _some italic text_
            ◦ ~some striked text~
            ◦ `some code`
-          """,
-            null,
-            false);
+          """));
 
     assertEquals(
         """
@@ -148,6 +135,6 @@ class SlackMessageTest {
           - ~some striked text~
           - `some code`
         """,
-        message.asMarkdown());
+        msg.asMarkdown());
   }
 }
