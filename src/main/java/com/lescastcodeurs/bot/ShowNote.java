@@ -12,11 +12,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * A wrapper around {@link SlackThread} to allow customization for show notes generation.
- *
- * <p>This wrapper is not thread safe.
- */
+/** A wrapper around {@link SlackThread} to allow customization for show notes generation. */
 public class ShowNote {
 
   // First wildcard is non-greedy : only the first link is considered.
@@ -38,11 +34,14 @@ public class ShowNote {
   public ShowNote(SlackThread thread) {
     this.thread = requireNonNull(thread);
     this.markdown = thread.asMarkdown();
-    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(markdown);
+    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(thread.text());
   }
 
   public boolean isShowNote() {
-    return thread.isUserMessage() && SHOW_NOTE_PATTERN.matcher(markdown).matches();
+    boolean userMessage = !thread.isAppMessage();
+    boolean containsLink = urlMatcher.matches();
+    boolean hasNoMention = !thread.hasMention();
+    return containsLink && userMessage && hasNoMention;
   }
 
   public String timestamp() {
@@ -69,6 +68,7 @@ public class ShowNote {
 
   public List<String> comments() {
     return thread.replies().stream()
+        .filter(not(SlackReply::hasMention))
         .map(SlackReply::asMarkdown)
         .flatMap(String::lines)
         .filter(not(String::isBlank))

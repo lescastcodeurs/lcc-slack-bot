@@ -25,6 +25,7 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
 
   private static final Pattern LIST_PATTERN = Pattern.compile("^\\s*•\\s+", Pattern.MULTILINE);
   private static final Pattern SUBLIST_PATTERN = Pattern.compile("^ \\s*◦\\s+", Pattern.MULTILINE);
+  private static final Pattern MENTION_PATTERN = Pattern.compile(".*<[@!][A-Za-z0-9]+>.*");
 
   public static final String DEFAULT_TS = "9999999999.999999";
 
@@ -33,7 +34,7 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
   private final String text;
   private final boolean appMessage;
 
-  public SlackMessage(Message message) {
+  SlackMessage(Message message) {
     this.timestamp = message.getTs() == null ? DEFAULT_TS : message.getTs();
     this.text = message.getText() == null ? "" : message.getText();
     this.appMessage = isNotBlank(message.getAppId()) || isNotBlank(message.getBotId());
@@ -73,7 +74,7 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
     return appMessage;
   }
 
-  public final boolean isUserMessage() {
-    return !isAppMessage();
+  public boolean hasMention() {
+    return MENTION_PATTERN.matcher(text).matches();
   }
 }
