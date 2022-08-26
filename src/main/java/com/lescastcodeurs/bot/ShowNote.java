@@ -32,20 +32,17 @@ public class ShowNote {
           CASE_INSENSITIVE | DOTALL);
 
   private final SlackThread thread;
+  private final String markdown;
   private final Matcher urlMatcher;
-
-  public static boolean isShowNote(SlackThread thread) {
-    return SHOW_NOTE_PATTERN.matcher(thread.text()).matches();
-  }
 
   public ShowNote(SlackThread thread) {
     this.thread = requireNonNull(thread);
-    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(thread.text());
+    this.markdown = thread.asMarkdown();
+    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(markdown);
+  }
 
-    if (!urlMatcher.find()) {
-      throw new IllegalArgumentException(
-          "message does not look like a show note entry, dit you call isShowNote() to check it ?");
-    }
+  public boolean isShowNote() {
+    return thread.isUserMessage() && SHOW_NOTE_PATTERN.matcher(markdown).matches();
   }
 
   public String timestamp() {
@@ -53,7 +50,6 @@ public class ShowNote {
   }
 
   public String text() {
-    String markdown = thread.asMarkdown();
     Optional<ShowNoteCategory> category = ShowNoteCategory.find(urlMatcher.group("category"));
 
     if (category.isPresent()) {
@@ -76,15 +72,7 @@ public class ShowNote {
         .map(SlackReply::asMarkdown)
         .flatMap(String::lines)
         .filter(not(String::isBlank))
-        .map(this::asListItem)
+        .map(line -> (!line.startsWith("-") && !line.startsWith("  -")) ? "- " + line : line)
         .toList();
-  }
-
-  private String asListItem(String line) {
-    if (!line.startsWith("-") && !line.startsWith("  -")) {
-      return "- " + line;
-    }
-
-    return line;
   }
 }

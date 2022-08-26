@@ -1,6 +1,5 @@
 package com.lescastcodeurs.bot;
 
-import static com.lescastcodeurs.bot.ShowNote.isShowNote;
 import static com.lescastcodeurs.bot.ShowNoteCategory.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,10 +23,9 @@ class ShowNoteTest {
   @ParameterizedTest
   @MethodSource("linkArguments")
   void link(String text, String expectedMarkdown, ShowNoteCategory expectedCategory) {
-    SlackThread message = new SlackThread(Messages.of(text), null);
-    assertTrue(isShowNote(message));
+    ShowNote note = new ShowNote(new SlackThread(Messages.of(text), null));
 
-    ShowNote note = new ShowNote(message);
+    assertTrue(note.isShowNote());
     assertEquals(expectedMarkdown, note.text());
     assertEquals(expectedCategory, note.category());
   }
@@ -95,7 +93,9 @@ class ShowNoteTest {
       strings = {"<tricky> message", "@lcc generate show notes", "https://lescastcodeurs.com/"})
   void notALink() {
     SlackThread message = new SlackThread(Messages.of("<tricky> message"), List.of());
-    assertFalse(isShowNote(message));
+    ShowNote note = new ShowNote(message);
+
+    assertFalse(note.isShowNote());
   }
 
   @Test
