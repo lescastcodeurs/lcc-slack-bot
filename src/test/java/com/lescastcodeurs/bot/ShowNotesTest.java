@@ -57,7 +57,7 @@ class ShowNotesTest {
     assertTrue(rendered.startsWith("---"));
     for (ShowNoteCategory category : ShowNoteCategory.values()) {
       String url = "https://lescastcodeurs.com/" + category;
-      assertTrue(rendered.contains(url));
+      assertEquals(category != ShowNoteCategory.IGNORED, rendered.contains(url));
     }
     assertTrue(rendered.contains("- comment 1"));
     assertTrue(rendered.contains("- comment 2"));

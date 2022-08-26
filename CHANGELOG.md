@@ -9,9 +9,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Support a main label for categories (#39).
 - Support blockquotes (#38).
   - Brackets (`&lt;` and `&gt;`) are now unescaped in the messages in order to be properly interpreted in the final
-    markdown document.
+    Markdown document.
   - New lines are now retained if they appear in the first message of a thread. New lines in replies are still deleted:
-    this is required because replies must be displayed in a markdown list.
+    this is required because replies must be displayed in a Markdown list.
+- Add a new category, `ignore` (#42). This category allows you to ignore a link when generating show notes.
 
 ### Changed
 
