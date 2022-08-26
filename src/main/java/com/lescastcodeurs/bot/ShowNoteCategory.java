@@ -38,6 +38,9 @@ public enum ShowNoteCategory {
   TOOL_OF_THE_EPISODE("Outils de l’épisode", "outil-ep", "outil-episode"),
   BEGINNERS("Rubrique débutant", "debutant", "debutants", "beginner", "beginners"),
   CONFERENCES("Conférences", "conf", "conferences", "conference"),
+  // This category must not be used in template.
+  IGNORED("Ignoré", "ignore", "ignorer", "ignored", "exclu", "exclude", "exclure"),
+  // Fall-back for unrecognized categories.
   NEWS("Non catégorisé", "news", "nouvelles", "nouvelle");
 
   private final String description;

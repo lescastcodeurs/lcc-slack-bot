@@ -1,5 +1,7 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.ShowNoteCategory.IGNORED;
+import static com.lescastcodeurs.bot.ShowNoteCategory.NEWS;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.joining;
@@ -44,11 +46,12 @@ public enum SlackBotAction {
       """
       Les catégories et leurs libellés sont :
       • %s
+      • Ignoré: les liens catégorisés avec `%s` n'apparaissent pas dans les notes de l'épisode (%s).
       • Non catégorisé: laissé sans catégorie ou catégorisé avec un libellé inconnu
       """
           .formatted(
               stream(ShowNoteCategory.values())
-                  .filter(c -> c != ShowNoteCategory.NEWS)
+                  .filter(c -> c != NEWS && c != IGNORED)
                   .map(
                       c ->
                           "%s : `%s` (%s)"
@@ -58,7 +61,9 @@ public enum SlackBotAction {
                                   c.alternateLabels().stream()
                                       .map("`%s`"::formatted)
                                       .collect(joining(", "))))
-                  .collect(joining("\n• "))),
+                  .collect(joining("\n• ")),
+              IGNORED.mainLabel(),
+              IGNORED.alternateLabels().stream().map("`%s`"::formatted).collect(joining(", "))),
       List.of("@lcc, montre-moi les catégories.", "@lcc, show me the categories."),
       "Affiche la liste des catégories avec leurs libellés associés (multilignes, ordre de déclaration)."),
 
