@@ -13,9 +13,15 @@ public final class Messages {
   }
 
   public static Message of(String timestamp, String text) {
+    return of(timestamp, text, null, null);
+  }
+
+  public static Message of(String timestamp, String text, String appId, String botId) {
     Message message = new Message();
     message.setTs(timestamp);
     message.setText(text);
+    message.setAppId(appId);
+    message.setBotId(botId);
     return message;
   }
 }

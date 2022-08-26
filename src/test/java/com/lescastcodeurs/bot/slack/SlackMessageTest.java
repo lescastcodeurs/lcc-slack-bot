@@ -137,4 +137,25 @@ class SlackMessageTest {
         """,
         msg.asMarkdown());
   }
+
+  @Test
+  void recognizeUserMentionAbsence() {
+    SlackMessage message = new SlackReply(Messages.of("test message"));
+
+    assertFalse(message.hasMention());
+  }
+
+  @Test
+  void recognizeUserMentionInMainMessage() {
+    SlackMessage message = new SlackReply(Messages.of("test <@U1N352J01>"));
+
+    assertTrue(message.hasMention());
+  }
+
+  @Test
+  void recognizeChannelMentionInMainMessage() {
+    SlackMessage message = new SlackReply(Messages.of("test <!channel>"));
+
+    assertTrue(message.hasMention());
+  }
 }

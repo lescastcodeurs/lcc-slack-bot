@@ -21,8 +21,8 @@ class ShowNoteTest {
   }
 
   @ParameterizedTest
-  @MethodSource("linkArguments")
-  void link(String text, String expectedMarkdown, ShowNoteCategory expectedCategory) {
+  @MethodSource("validShowNotes")
+  void validShowNotes(String text, String expectedMarkdown, ShowNoteCategory expectedCategory) {
     ShowNote note = new ShowNote(new SlackThread(Messages.of(text), null));
 
     assertTrue(note.isShowNote());
@@ -30,7 +30,7 @@ class ShowNoteTest {
     assertEquals(expectedCategory, note.category());
   }
 
-  private static Stream<Arguments> linkArguments() {
+  private static Stream<Arguments> validShowNotes() {
     return Stream.of(
         Arguments.of("<https://test.io>", "[https://test.io](https://test.io)", NEWS),
         Arguments.of("<http://test.io>", "[http://test.io](http://test.io)", NEWS),
@@ -90,16 +90,44 @@ class ShowNoteTest {
 
   @ParameterizedTest
   @ValueSource(
-      strings = {"<tricky> message", "@lcc generate show notes", "https://lescastcodeurs.com/"})
-  void notALink() {
-    SlackThread message = new SlackThread(Messages.of("<tricky> message"), List.of());
-    ShowNote note = new ShowNote(message);
+      strings = {
+        "",
+        "message without link",
+        "message with plain link : https://lescastcodeurs.com/",
+        "message with something that is not a <link>",
+        "message with <@user> mention",
+        "message with <!channel> mention",
+        "message with <!here> mention"
+      })
+  void invalidShowNotes(String message) {
+    SlackThread thread = new SlackThread(Messages.of(message), List.of());
+    ShowNote note = new ShowNote(thread);
 
     assertFalse(note.isShowNote());
   }
 
   @Test
-  void comments() {
+  void appMessageAreInvalid() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of(null, "<https://lescastcodeurs.com/>", "ABCD", null), List.of());
+    var note = new ShowNote(message);
+
+    assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void botMessageAreInvalid() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of(null, "<https://lescastcodeurs.com/>", null, "ABCD"), List.of());
+    var note = new ShowNote(message);
+
+    assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void repliesAreProperlyTransformedToList() {
     SlackThread message =
         new SlackThread(
             Messages.of("<https://lescastcodeurs.com/>"),
@@ -111,5 +139,21 @@ class ShowNoteTest {
     assertEquals(
         List.of("- note 1", "- note 2\t", "- [test](https://test.io) ", "- note 4"),
         note.comments());
+  }
+
+  @Test
+  void repliesWithMentionsAreFilteredOut() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://lescastcodeurs.com/>"),
+            List.of(
+                Messages.of("note 1"),
+                Messages.of("<@user> mention"),
+                Messages.of("mention <!channel>"),
+                Messages.of("a <!here> mention"),
+                Messages.of("note 2")));
+    var note = new ShowNote(message);
+
+    assertEquals(List.of("- note 1", "- note 2"), note.comments());
   }
 }

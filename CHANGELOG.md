@@ -17,6 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - All commands associated keywords are now displayed in the help message (#48).
 - Update categories order and labels (#39).
+- Messages (thread or replies) are ignored if they contain a user mention (#40).
 
 ### Fixed
 

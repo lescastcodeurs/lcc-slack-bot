@@ -70,9 +70,9 @@ public enum SlackBotAction {
       """
       Génère les notes de l'épisode à partir des messages de ce channel et publie le résultat sur GitHub. Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour. À noter :
       • Un channel Slack doit être dédié à un seul épisode.
-      • Un thread de messages est reporté dans les show notes si son premier message contient au moins un lien.
-      • Les réponses aux liens peuvent être de simples phrases comme des listes.
-      • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code` et citations (sur le premier message uniquement).
+      • Un thread de messages est reporté dans les show notes si son premier message contient au moins un lien et ne contient aucune mention à un utilisateur.
+      • Les réponses aux liens peuvent être de simples phrases comme des listes. Elles sont reportées dans les show notes que si elles ne contiennent aucune mention à un utilisateur.
+      • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code` et citations (sur le premier message du thread uniquement).
       • Les liens peuvent être catégorisés à l'aide de libellés (ex. `Nouveau JEP https://www.java.com (lang)`). Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
       """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
