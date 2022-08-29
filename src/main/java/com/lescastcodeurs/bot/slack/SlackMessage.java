@@ -3,6 +3,8 @@ package com.lescastcodeurs.bot.slack;
 import static com.lescastcodeurs.bot.StringUtils.isNotBlank;
 
 import com.slack.api.model.Message;
+import com.slack.api.model.Reaction;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /** Hold required information from a Slack message. */
@@ -32,11 +34,16 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
   // See https://github.com/slackhq/slack-api-docs/issues/7#issuecomment-67913241.
   private final String timestamp;
   private final String text;
+  private final List<String> reactions;
   private final boolean appMessage;
 
   SlackMessage(Message message) {
     this.timestamp = message.getTs() == null ? DEFAULT_TS : message.getTs();
     this.text = message.getText() == null ? "" : message.getText();
+    this.reactions =
+        message.getReactions() == null
+            ? List.of()
+            : message.getReactions().stream().map(Reaction::getName).toList();
     this.appMessage = isNotBlank(message.getAppId()) || isNotBlank(message.getBotId());
   }
 
@@ -46,6 +53,10 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
 
   public final String text() {
     return text;
+  }
+
+  public final List<String> reactions() {
+    return reactions;
   }
 
   /**
@@ -72,6 +83,10 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
 
   public final boolean isAppMessage() {
     return appMessage;
+  }
+
+  public boolean hasLink() {
+    return text.contains("<http");
   }
 
   public boolean hasMention() {

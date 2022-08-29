@@ -1,11 +1,11 @@
-package com.lescastcodeurs.bot;
+package com.lescastcodeurs.bot.slack;
 
 import static com.lescastcodeurs.bot.Constants.SLACK_BOT_TOKEN;
 import static java.util.Comparator.*;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.lescastcodeurs.bot.slack.SlackThread;
+import com.lescastcodeurs.bot.UncheckedSlackApiException;
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
@@ -68,7 +68,10 @@ public final class SlackClient {
     return SlackApi.check(
             () ->
                 slack.conversationsHistory(
-                    ConversationsHistoryRequest.builder().channel(channel).build()))
+                    ConversationsHistoryRequest.builder()
+                        .channel(channel)
+                        .includeAllMetadata(true)
+                        .build()))
         .getMessages()
         .stream()
         .sorted(CHRONOLOGICAL)
