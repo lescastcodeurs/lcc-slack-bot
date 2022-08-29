@@ -67,6 +67,7 @@ public enum SlackBotAction {
       """
       Génère les notes de l'épisode à partir des messages de ce channel et publie le résultat sur GitHub. Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour. À noter :
       • Un channel Slack doit être dédié à un seul épisode.
+      • Le nom du channel est utilisé pour construire le nom du fichier sur GitHub. Si ce nom contient un ou plusieurs nombres, le premier nombre est utilisé comme numéro de l'épisode.
       • Un thread de messages est automatiquement reporté dans les show notes si son premier message contient au moins un lien et ne contient aucune <mention|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack>.
       • Les réponses aux threads peuvent être de simples phrases comme des listes. Elles sont reportées dans les show notes que si elles ne contiennent aucune <mention|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack>.
       • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code` et citations (sur le premier message du thread uniquement).

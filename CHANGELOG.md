@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     Markdown document.
   - New lines are now retained if they appear in the first message of a thread. New lines in replies are still deleted:
     this is required because replies must be displayed in a Markdown list.
+- Use the first number in channel name as the episode number (#44).
 
 ### Changed
 

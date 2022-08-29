@@ -1,9 +1,9 @@
 ---
-title: LCC 999 -
+title: LCC {episodeNumber} -
 author: 'Emmanuel Bernard'
 team: 'Emmanuel Bernard, Guillaume Laforge, Vincent Massol, Antonio Goncalves, Arnaud Héritier, Audrey Neveu'
 layout: blog-post
-episode: 999
+episode: {episodeNumber}
 mp3_length: 85017000
 tweet: TODO
 # tweet size: 91-93 -> 99-101 #######################################################################
@@ -13,7 +13,7 @@ Résumé
 
 Enregistré le {now.format('d MMM uuuu', locale)}
 
-Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffic.libsyn.com/lescastcodeurs/LesCastCodeurs-Episode-999.mp3)
+Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](https://traffic.libsyn.com/lescastcodeurs/LesCastCodeurs-Episode-{episodeNumber}.mp3)
 
 ## News
 

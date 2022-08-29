@@ -20,8 +20,10 @@ class ShowNotesTest {
 
   @Test
   void generateEmpty() {
-    String rendered = notes.render(new ShowNotes(List.of()));
+    ShowNotes showNotes = new ShowNotes("test", List.of());
+    String rendered = notes.render(showNotes);
 
+    assertEquals(ShowNotes.DEFAULT_EPISODE_NUMBER, showNotes.episodeNumber());
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
     assertTrue(rendered.contains("title:"));
@@ -49,8 +51,10 @@ class ShowNotesTest {
     threads.add(thread("random comment 2"));
     threads.add(thread("@lcc generate show notes"));
 
-    String rendered = notes.render(new ShowNotes(threads));
+    ShowNotes showNotes = new ShowNotes("test-123", threads);
+    String rendered = notes.render(showNotes);
 
+    assertEquals(123, showNotes.episodeNumber());
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
     assertContains(
@@ -99,6 +103,13 @@ class ShowNotesTest {
 
     assertFalse(rendered.contains("random comment"));
     assertFalse(rendered.contains("generate show notes"));
+  }
+
+  @Test
+  void whenMultipleNumbersInTitle_theFirstOneIsTheEpisodeNumber() {
+    ShowNotes showNotes = new ShowNotes("test42 54", List.of());
+
+    assertEquals(42, showNotes.episodeNumber());
   }
 
   private void assertContains(String actual, String expected) {
