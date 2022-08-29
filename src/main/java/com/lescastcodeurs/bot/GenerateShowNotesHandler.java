@@ -46,7 +46,7 @@ public final class GenerateShowNotesHandler {
       List<SlackThread> threads = slackClient.history(channel);
 
       String filename = asFilename(channelName, "md");
-      String content = notes.render(new ShowNotes(threads));
+      String content = notes.render(new ShowNotes(channelName, threads));
       String showNoteUrl = gitHubClient.createOrUpdateFile(filename, content);
 
       slackClient.chatPostMessage(
