@@ -6,19 +6,18 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - Add a new command, `category`, that displays the list of categories and their associated labels (#39).
-- Support a main label for categories (#39).
 - Support blockquotes (#38).
   - Brackets (`&lt;` and `&gt;`) are now unescaped in the messages in order to be properly interpreted in the final
     Markdown document.
   - New lines are now retained if they appear in the first message of a thread. New lines in replies are still deleted:
     this is required because replies must be displayed in a Markdown list.
-- Add a new category, `ignore` (#42). This category allows you to ignore a link when generating show notes.
 
 ### Changed
 
 - All commands associated keywords are now displayed in the help message (#48).
 - Update categories order and labels (#39).
 - Messages (thread or replies) are ignored if they contain a user mention (#40).
+- Use reactions (with emojis) for a better categorization of news (#41, #42).
 
 ### Fixed
 

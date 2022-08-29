@@ -2,13 +2,14 @@ package com.lescastcodeurs.bot.slack;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class SlackMessageTest {
 
   @Test
   void nullTimestampIsReplacedWithNonNull() {
-    SlackMessage msg = new SlackReply(Messages.of(null, "text"));
+    SlackMessage msg = new SlackReply(Messages.of(null, "text", List.of(), null, null));
 
     assertNotNull(msg.timestamp());
   }
@@ -157,5 +158,28 @@ class SlackMessageTest {
     SlackMessage message = new SlackReply(Messages.of("test <!channel>"));
 
     assertTrue(message.hasMention());
+  }
+
+  @Test
+  void recognizeLinkAbsence() {
+    SlackMessage message = new SlackReply(Messages.of("test message"));
+
+    assertFalse(message.hasLink());
+  }
+
+  @Test
+  void recognizeSimpleLinkPresence() {
+    SlackMessage message = new SlackReply(Messages.of("test <https://lescastcodeurs.com/>"));
+
+    assertTrue(message.hasLink());
+  }
+
+  @Test
+  void recognizeTitledLinkPresence() {
+    SlackMessage message =
+        new SlackReply(
+            Messages.of("test <https://lescastcodeurs.com/|Le podcast Java en Français>"));
+
+    assertTrue(message.hasLink());
   }
 }

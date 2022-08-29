@@ -1,7 +1,7 @@
 package com.lescastcodeurs.bot;
 
-import static com.lescastcodeurs.bot.ShowNoteCategory.IGNORED;
-import static com.lescastcodeurs.bot.ShowNoteCategory.NEWS;
+import static com.lescastcodeurs.bot.ShowNoteCategory.EXCLUDE;
+import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.joining;
@@ -44,28 +44,20 @@ public enum SlackBotAction {
       20,
       List.of("category", "categorie", "label", "libelle", "tag"),
       """
-      Les catégories et leurs libellés sont :
+      Les catégories et leur réaction associée sont :
       • %s
-      • Ignoré: les liens catégorisés avec `%s` n'apparaissent pas dans les notes de l'épisode (%s).
-      • Non catégorisé: laissé sans catégorie ou catégorisé avec un libellé inconnu
+
+      Les réactions `lcc_include` (:lcc_include:) et `lcc_exclude` (:lcc_exclude:) permettent de forcer l'inclusion ou l'exclusion d'un message.
       """
           .formatted(
               stream(ShowNoteCategory.values())
-                  .filter(c -> c != NEWS && c != IGNORED)
+                  .filter(c -> c != INCLUDE && c != EXCLUDE)
                   .map(
                       c ->
-                          "%s : `%s` (%s)"
-                              .formatted(
-                                  c.description(),
-                                  c.mainLabel(),
-                                  c.alternateLabels().stream()
-                                      .map("`%s`"::formatted)
-                                      .collect(joining(", "))))
-                  .collect(joining("\n• ")),
-              IGNORED.mainLabel(),
-              IGNORED.alternateLabels().stream().map("`%s`"::formatted).collect(joining(", "))),
+                          "%s : `%s` (:%s:)".formatted(c.description(), c.reaction(), c.reaction()))
+                  .collect(joining("\n• "))),
       List.of("@lcc, montre-moi les catégories.", "@lcc, show me the categories."),
-      "Affiche la liste des catégories avec leurs libellés associés (multilignes, ordre de déclaration)."),
+      "Affiche la liste des catégories avec leur réaction associée."),
 
   GENERATE_SHOW_NOTES(
       3,
@@ -75,19 +67,19 @@ public enum SlackBotAction {
       """
       Génère les notes de l'épisode à partir des messages de ce channel et publie le résultat sur GitHub. Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour. À noter :
       • Un channel Slack doit être dédié à un seul épisode.
-      • Un thread de messages est reporté dans les show notes si son premier message contient au moins un lien et ne contient aucune mention à un utilisateur.
-      • Les réponses aux liens peuvent être de simples phrases comme des listes. Elles sont reportées dans les show notes que si elles ne contiennent aucune mention à un utilisateur.
+      • Un thread de messages est automatiquement reporté dans les show notes si son premier message contient au moins un lien et ne contient aucune <mention|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack>.
+      • Les réponses aux threads peuvent être de simples phrases comme des listes. Elles sont reportées dans les show notes que si elles ne contiennent aucune <mention|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack>.
       • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code` et citations (sur le premier message du thread uniquement).
-      • Les liens peuvent être catégorisés à l'aide de libellés (ex. `Nouveau JEP https://www.java.com (lang)`). Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
+      • Les liens peuvent être catégorisés à l'aide de <réactions utilisant des émojis personnalisés|https://slack.com/intl/fr-fr/help/articles/202931348-Utilisez-les-%C3%A9mojis-et-les-r%C3%A9actions>. Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
       """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
 
-  UNKNOWN(999, List.of(), null, List.of(), null) {
-    @Override
-    public String response() {
-      return "Désolé, je n'ai pas compris la commande. %s".formatted(HELP.response());
-    }
-
+  UNKNOWN(
+      999,
+      List.of(),
+      "Désolé, je n'ai pas compris la commande. Pour voir l'aide utilisez la commande dédiée (`@lcc, à l'aide !`)",
+      List.of(),
+      null) {
     @Override
     protected boolean canReplyTo(String request) {
       return true;

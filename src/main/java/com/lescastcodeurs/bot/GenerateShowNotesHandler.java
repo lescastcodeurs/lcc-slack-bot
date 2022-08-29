@@ -5,6 +5,7 @@ import static com.lescastcodeurs.bot.StringUtils.asFilename;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.qute.Location;

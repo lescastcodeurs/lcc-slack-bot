@@ -6,123 +6,135 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.lescastcodeurs.bot.slack.Messages;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class ShowNoteTest {
 
   @Test
-  void messageCannotBeNull() {
+  void threadCannotBeNull() {
     assertThrows(NullPointerException.class, () -> new ShowNote(null));
   }
 
-  @ParameterizedTest
-  @MethodSource("validShowNotes")
-  void validShowNotes(String text, String expectedMarkdown, ShowNoteCategory expectedCategory) {
-    ShowNote note = new ShowNote(new SlackThread(Messages.of(text), null));
+  @Test
+  void appMessageIsNotShowNote() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://lescastcodeurs.com/>", null, "ABCD", null), List.of());
+    var note = new ShowNote(message);
 
+    assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void botMessageIsNotShowNote() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://lescastcodeurs.com/>", null, null, "ABCD"), List.of());
+    var note = new ShowNote(message);
+
+    assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void messageWithoutLinkAndWithoutCategoryIsNotShowNote() {
+    SlackThread message = new SlackThread(Messages.of("test", null), List.of());
+    var note = new ShowNote(message);
+
+    assertNull(note.category());
+    assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void messageWithoutLinkAndWithCategoryIsShowNote() {
+    SlackThread message =
+        new SlackThread(Messages.of("test", List.of(CLOUD.reaction())), List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(CLOUD, note.category());
     assertTrue(note.isShowNote());
-    assertEquals(expectedMarkdown, note.text());
-    assertEquals(expectedCategory, note.category());
+    assertEquals("test", note.text());
   }
 
-  private static Stream<Arguments> validShowNotes() {
-    return Stream.of(
-        Arguments.of("<https://test.io>", "[https://test.io](https://test.io)", NEWS),
-        Arguments.of("<http://test.io>", "[http://test.io](http://test.io)", NEWS),
-        Arguments.of(
-            "<https://test.io/2022/07/12/new/>",
-            "[https://test.io/2022/07/12/new/](https://test.io/2022/07/12/new/)",
-            NEWS),
-        Arguments.of(
-            "<https://test.io/new.html>",
-            "[https://test.io/new.html](https://test.io/new.html)",
-            NEWS),
-        Arguments.of(
-            "<https://test.io/?q=test&a=test>",
-            "[https://test.io/?q=test&a=test](https://test.io/?q=test&a=test)",
-            NEWS),
-        Arguments.of(
-            "<https://test.io/#fragment>",
-            "[https://test.io/#fragment](https://test.io/#fragment)",
-            NEWS),
-        Arguments.of(
-            "<https://test.io/some%20test/>",
-            "[https://test.io/some%20test/](https://test.io/some%20test/)", NEWS),
-        Arguments.of(
-            "<https://test.io/|this is a test>", "[this is a test](https://test.io/)", NEWS),
-        Arguments.of("<https://test.io/> (cloud)", "[https://test.io/](https://test.io/)", CLOUD),
-        Arguments.of(
-            "<https://test.io/> (unknown)", "[https://test.io/](https://test.io/) (unknown)", NEWS),
-        Arguments.of(
-            "this is a test : <https://test.io/>",
-            "this is a test : [https://test.io/](https://test.io/)",
-            NEWS),
-        Arguments.of(
-            "<https://test.io/> : this is a test",
-            "[https://test.io/](https://test.io/) : this is a test",
-            NEWS),
-        Arguments.of(
-            "<https://test1.io|test1> et <https://test2.io|test2>",
-            "[test1](https://test1.io) et [test2](https://test2.io)",
-            NEWS),
-        Arguments.of(
-            "<https://test1.io|test1> et <https://test2.io|test2> (cloud)",
-            "[test1](https://test1.io) et [test2](https://test2.io) (cloud)",
-            NEWS),
-        Arguments.of(
-            "<https://test1.io|test1> (lib) et <https://test2.io|test2> (cloud)",
-            "[test1](https://test1.io) et [test2](https://test2.io) (cloud)",
-            LIBRARIES),
-        Arguments.of(
-            "<https://test.io/>\nthis\nis\na\ntest",
-            "[https://test.io/](https://test.io/)\nthis\nis\na\ntest",
-            NEWS),
-        Arguments.of(
-            "bla bla \n<https://test.io/d/a.txt?a=b&c=d#!#e=f%20g|this is a test> (cloud) \nbla bla <https://link.to|link> (test)",
-            "bla bla \n[this is a test](https://test.io/d/a.txt?a=b&c=d#!#e=f%20g) \nbla bla [link](https://link.to) (test)",
-            CLOUD));
+  @Test
+  void messageWithLinkAndWithoutCategoryIsShowNote() {
+    SlackThread message = new SlackThread(Messages.of("<https://test.io>"), List.of());
+    var note = new ShowNote(message);
+
+    assertNull(note.category());
+    assertTrue(note.isShowNote());
+    assertEquals("[https://test.io](https://test.io)", note.text());
   }
 
-  @ParameterizedTest
-  @ValueSource(
-      strings = {
-        "",
-        "message without link",
-        "message with plain link : https://lescastcodeurs.com/",
-        "message with something that is not a <link>",
-        "message with <@user> mention",
-        "message with <!channel> mention",
-        "message with <!here> mention"
-      })
-  void invalidShowNotes(String message) {
-    SlackThread thread = new SlackThread(Messages.of(message), List.of());
-    ShowNote note = new ShowNote(thread);
+  @Test
+  void messageWithLinkAndWithUserMentionAndWithoutCategoryIsNotShowNote() {
+    SlackThread message = new SlackThread(Messages.of("<http://test.io/> <@XXX>"), List.of());
+    var note = new ShowNote(message);
 
+    assertNull(note.category());
     assertFalse(note.isShowNote());
   }
 
   @Test
-  void appMessageAreInvalid() {
-    SlackThread message =
-        new SlackThread(
-            Messages.of(null, "<https://lescastcodeurs.com/>", "ABCD", null), List.of());
+  void messageWithLinkAndWithChannelMentionAndWithoutCategoryIsNotShowNote() {
+    SlackThread message = new SlackThread(Messages.of("<http://test.io/> <!channel>"), List.of());
     var note = new ShowNote(message);
 
+    assertNull(note.category());
     assertFalse(note.isShowNote());
   }
 
   @Test
-  void botMessageAreInvalid() {
-    SlackThread message =
-        new SlackThread(
-            Messages.of(null, "<https://lescastcodeurs.com/>", null, "ABCD"), List.of());
+  void messageWithLinkAndWithHereMentionAndWithoutCategoryIsNotShowNote() {
+    SlackThread message = new SlackThread(Messages.of("<http://test.io/> <!here>"), List.of());
     var note = new ShowNote(message);
 
+    assertNull(note.category());
+    assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void messageWithLinkAndWithCategoryIsShowNote() {
+    SlackThread message =
+        new SlackThread(Messages.of("<https://test.io>", List.of(CLOUD.reaction())), List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(CLOUD, note.category());
+    assertTrue(note.isShowNote());
+    assertEquals("[https://test.io](https://test.io)", note.text());
+  }
+
+  @Test
+  void messageWithLinkAndExplicitlyIgnoredIsNotShowNote() {
+    SlackThread message =
+        new SlackThread(Messages.of("<https://test.io>", List.of(EXCLUDE.reaction())), List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(EXCLUDE, note.category());
+    assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void lastReactionWins1() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://test.io>", List.of(EXCLUDE.reaction(), CLOUD.reaction())),
+            List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(CLOUD, note.category());
+    assertTrue(note.isShowNote());
+    assertEquals("[https://test.io](https://test.io)", note.text());
+  }
+
+  @Test
+  void lastReactionWins2() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://test.io>", List.of(CLOUD.reaction(), EXCLUDE.reaction())),
+            List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(EXCLUDE, note.category());
     assertFalse(note.isShowNote());
   }
 
@@ -142,6 +154,21 @@ class ShowNoteTest {
   }
 
   @Test
+  void appAndBotRepliesAreFilteredOut() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://lescastcodeurs.com/>"),
+            List.of(
+                Messages.of("note 1"),
+                Messages.of("app reply", List.of(), "XXX", null),
+                Messages.of("bot reply", List.of(), null, "XXX"),
+                Messages.of("note 2")));
+    var note = new ShowNote(message);
+
+    assertEquals(List.of("- note 1", "- note 2"), note.comments());
+  }
+
+  @Test
   void repliesWithMentionsAreFilteredOut() {
     SlackThread message =
         new SlackThread(
@@ -151,6 +178,35 @@ class ShowNoteTest {
                 Messages.of("<@user> mention"),
                 Messages.of("mention <!channel>"),
                 Messages.of("a <!here> mention"),
+                Messages.of("note 2")));
+    var note = new ShowNote(message);
+
+    assertEquals(List.of("- note 1", "- note 2"), note.comments());
+  }
+
+  @Test
+  void repliesWithMentionsAreNotFilteredIfExplicitlyIncluded() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://lescastcodeurs.com/>"),
+            List.of(
+                Messages.of("note 1"),
+                Messages.of("<@user> mention", List.of(INCLUDE.reaction())),
+                Messages.of("note 2")));
+    var note = new ShowNote(message);
+
+    assertEquals(List.of("- note 1", "- <@user> mention", "- note 2"), note.comments());
+  }
+
+  @Test
+  void explicitlyExcludedRepliesAreFilteredOut() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://lescastcodeurs.com/>"),
+            List.of(
+                Messages.of("note 1"),
+                Messages.of("excluded 1", List.of(EXCLUDE.reaction())),
+                Messages.of("excluded 2", List.of(EXCLUDE.reaction())),
                 Messages.of("note 2")));
     var note = new ShowNote(message);
 

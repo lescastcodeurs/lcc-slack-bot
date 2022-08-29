@@ -1,47 +1,52 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.ShowNoteCategory.EXCLUDE;
+import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
-import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static java.util.regex.Pattern.DOTALL;
 
 import com.lescastcodeurs.bot.slack.SlackReply;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /** A wrapper around {@link SlackThread} to allow customization for show notes generation. */
 public class ShowNote {
 
-  // First wildcard is non-greedy : only the first link is considered.
-  private static final Pattern SHOW_NOTE_PATTERN =
-      Pattern.compile(
-          "^.*?(?<note><https?://[^>]+>)\\s*(\\((?<category>[^)]+)\\))?.*$",
-          CASE_INSENSITIVE | DOTALL);
-
-  // This patten works against the generated markdown. Must be kept in sync with SHOW_NOTE_PATTERN.
-  private static final Pattern CATEGORY_ERASER_PATTERN =
-      Pattern.compile(
-          "^(?<before>.*?\\(https?://[^)]+\\))(?<category>\\s*\\([^)]+\\))?(?<after>.*)$",
-          CASE_INSENSITIVE | DOTALL);
-
   private final SlackThread thread;
-  private final String markdown;
-  private final Matcher urlMatcher;
 
   public ShowNote(SlackThread thread) {
     this.thread = requireNonNull(thread);
-    this.markdown = thread.asMarkdown();
-    this.urlMatcher = SHOW_NOTE_PATTERN.matcher(thread.text());
+  }
+
+  public ShowNoteCategory category() {
+    ShowNoteCategory category = null;
+
+    for (String reaction : thread.reactions()) {
+      Optional<ShowNoteCategory> guessed = ShowNoteCategory.find(reaction);
+      if (guessed.isPresent()) {
+        category = guessed.get();
+      }
+    }
+
+    return category;
   }
 
   public boolean isShowNote() {
-    boolean userMessage = !thread.isAppMessage();
-    boolean containsLink = urlMatcher.matches();
-    boolean hasNoMention = !thread.hasMention();
-    return containsLink && userMessage && hasNoMention;
+    if (thread.isAppMessage()) {
+      return false; // application or bot message
+    }
+
+    ShowNoteCategory category = category();
+    if (category == null) {
+      if (thread.hasMention()) {
+        return false;
+      } else {
+        return thread.hasLink();
+      }
+    }
+
+    return category != EXCLUDE;
   }
 
   public String timestamp() {
@@ -49,26 +54,23 @@ public class ShowNote {
   }
 
   public String text() {
-    Optional<ShowNoteCategory> category = ShowNoteCategory.find(urlMatcher.group("category"));
-
-    if (category.isPresent()) {
-      Matcher markdownMatcher = CATEGORY_ERASER_PATTERN.matcher(markdown);
-      if (markdownMatcher.matches()) {
-        return markdownMatcher.replaceFirst("${before}${after}");
-      }
-    }
-
-    return markdown;
-  }
-
-  public ShowNoteCategory category() {
-    String category = urlMatcher.group("category");
-    return ShowNoteCategory.find(category).orElse(ShowNoteCategory.NEWS);
+    return thread.asMarkdown();
   }
 
   public List<String> comments() {
     return thread.replies().stream()
-        .filter(not(SlackReply::hasMention))
+        .filter(
+            reply -> {
+              if (reply.isAppMessage()) {
+                return false;
+              } else if (reply.reactions().contains(EXCLUDE.reaction())) {
+                return false;
+              } else if (reply.reactions().contains(INCLUDE.reaction())) {
+                return true;
+              } else {
+                return !reply.hasMention();
+              }
+            })
         .map(SlackReply::asMarkdown)
         .flatMap(String::lines)
         .filter(not(String::isBlank))

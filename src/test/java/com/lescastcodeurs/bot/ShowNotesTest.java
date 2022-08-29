@@ -1,6 +1,5 @@
 package com.lescastcodeurs.bot;
 
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.lescastcodeurs.bot.slack.Messages;
@@ -21,7 +20,7 @@ class ShowNotesTest {
 
   @Test
   void generateEmpty() {
-    String rendered = notes.render(new ShowNotes(history()));
+    String rendered = notes.render(new ShowNotes(List.of()));
 
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
@@ -42,46 +41,79 @@ class ShowNotesTest {
 
   @Test
   void generateWithNotes() {
-    List<String> messages = new ArrayList<>();
-    messages.add("random comment 1");
+    List<SlackThread> threads = new ArrayList<>();
+    threads.add(thread("random comment 1"));
     for (ShowNoteCategory category : ShowNoteCategory.values()) {
-      String url = "<https://lescastcodeurs.com/" + category + "> (" + category.mainLabel() + ")";
-      messages.add(url);
+      threads.add(thread("<https://lescastcodeurs.com/" + category + ">", category));
     }
-    messages.add("random comment 2");
-    messages.add("@lcc generate show notes");
+    threads.add(thread("random comment 2"));
+    threads.add(thread("@lcc generate show notes"));
 
-    String rendered = notes.render(new ShowNotes(history(messages)));
+    String rendered = notes.render(new ShowNotes(threads));
 
     assertNotNull(rendered);
     assertTrue(rendered.startsWith("---"));
-    for (ShowNoteCategory category : ShowNoteCategory.values()) {
-      String url = "https://lescastcodeurs.com/" + category;
-      assertEquals(category != ShowNoteCategory.IGNORED, rendered.contains(url));
-    }
-    assertTrue(rendered.contains("- comment 1"));
-    assertTrue(rendered.contains("- comment 2"));
-    assertTrue(rendered.contains("- comment 3"));
-    assertTrue(rendered.endsWith("<!-- vim: set spelllang=fr : -->\n"));
+    assertContains(
+        rendered,
+        "### Non catégorisées\n\n[https://lescastcodeurs.com/INCLUDE](https://lescastcodeurs.com/INCLUDE)");
+    assertContains(
+        rendered,
+        "### Langages\n\n[https://lescastcodeurs.com/LANGUAGES](https://lescastcodeurs.com/LANGUAGES)");
+    assertContains(
+        rendered,
+        "### Librairies\n\n[https://lescastcodeurs.com/LIBRARIES](https://lescastcodeurs.com/LIBRARIES)");
+    assertContains(
+        rendered,
+        "### Infrastructure\n\n[https://lescastcodeurs.com/INFRASTRUCTURE](https://lescastcodeurs.com/INFRASTRUCTURE)");
+    assertContains(
+        rendered,
+        "### Cloud\n\n[https://lescastcodeurs.com/CLOUD](https://lescastcodeurs.com/CLOUD)");
+    assertContains(
+        rendered, "### Web\n\n[https://lescastcodeurs.com/WEB](https://lescastcodeurs.com/WEB)");
+    assertContains(
+        rendered, "### Data\n\n[https://lescastcodeurs.com/DATA](https://lescastcodeurs.com/DATA)");
+    assertContains(
+        rendered,
+        "### Outillage\n\n[https://lescastcodeurs.com/TOOLING](https://lescastcodeurs.com/TOOLING)");
+    assertContains(
+        rendered,
+        "### Architecture\n\n[https://lescastcodeurs.com/ARCHITECTURE](https://lescastcodeurs.com/ARCHITECTURE)");
+    assertContains(
+        rendered,
+        "### Méthodologies\n\n[https://lescastcodeurs.com/METHODOLOGIES](https://lescastcodeurs.com/METHODOLOGIES)");
+    assertContains(
+        rendered,
+        "### Sécurité\n\n[https://lescastcodeurs.com/SECURITY](https://lescastcodeurs.com/SECURITY)");
+    assertContains(
+        rendered,
+        "### Loi, société et organisation\n\n[https://lescastcodeurs.com/SOCIETY](https://lescastcodeurs.com/SOCIETY)");
+    assertContains(
+        rendered,
+        "## Outils de l’épisode\n\n[https://lescastcodeurs.com/TOOL_OF_THE_EPISODE](https://lescastcodeurs.com/TOOL_OF_THE_EPISODE)");
+    assertContains(
+        rendered,
+        "## Rubrique débutant\n\n[https://lescastcodeurs.com/BEGINNERS](https://lescastcodeurs.com/BEGINNERS)");
+    assertContains(
+        rendered,
+        "## Conférences\n\n[Nom de la conf du x au y mois à Ville]() - [CfP]() jusqu’à y mois\nTODO: reprendre celles de l’épisode d’avant\n\n[https://lescastcodeurs.com/CONFERENCES](https://lescastcodeurs.com/CONFERENCES)");
 
     assertFalse(rendered.contains("random comment"));
     assertFalse(rendered.contains("generate show notes"));
   }
 
-  private List<SlackThread> history(String... messages) {
-    return history(asList(messages));
+  private void assertContains(String actual, String expected) {
+    assertTrue(actual.contains(expected));
   }
 
-  private List<SlackThread> history(List<String> messages) {
-    return messages.stream()
-        .map(
-            message ->
-                new SlackThread(
-                    Messages.of(message),
-                    List.of(
-                        Messages.of("comment 1"),
-                        Messages.of("comment 2"),
-                        Messages.of("comment 3"))))
-        .toList();
+  private SlackThread thread(String message) {
+    return new SlackThread(
+        Messages.of(message),
+        List.of(Messages.of("comment 1"), Messages.of("comment 2"), Messages.of("comment 3")));
+  }
+
+  private SlackThread thread(String message, ShowNoteCategory category) {
+    return new SlackThread(
+        Messages.of(message, List.of(category.reaction()), null, null),
+        List.of(Messages.of("comment 1"), Messages.of("comment 2"), Messages.of("comment 3")));
   }
 }

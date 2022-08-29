@@ -19,7 +19,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Non catégorisées
 
-{#for note in notes('news')}
+{#for note in notes('INCLUDE')}
 {note.text}
 
 {#for comment in note.comments}
@@ -30,7 +30,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Langages
 
-{#for note in notes('lang')}
+{#for note in notes('LANGUAGES')}
 {note.text}
 
 {#for comment in note.comments}
@@ -41,7 +41,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Librairies
 
-{#for note in notes('lib')}
+{#for note in notes('LIBRARIES')}
 {note.text}
 
 {#for comment in note.comments}
@@ -52,7 +52,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Infrastructure
 
-{#for note in notes('infra')}
+{#for note in notes('INFRASTRUCTURE')}
 {note.text}
 
 {#for comment in note.comments}
@@ -63,7 +63,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Cloud
 
-{#for note in notes('cloud')}
+{#for note in notes('CLOUD')}
 {note.text}
 
 {#for comment in note.comments}
@@ -74,7 +74,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Web
 
-{#for note in notes('web')}
+{#for note in notes('WEB')}
 {note.text}
 
 {#for comment in note.comments}
@@ -85,7 +85,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Data
 
-{#for note in notes('data')}
+{#for note in notes('DATA')}
 {note.text}
 
 {#for comment in note.comments}
@@ -96,7 +96,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Outillage
 
-{#for note in notes('outil')}
+{#for note in notes('TOOLING')}
 {note.text}
 
 {#for comment in note.comments}
@@ -107,7 +107,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Architecture
 
-{#for note in notes('archi')}
+{#for note in notes('ARCHITECTURE')}
 {note.text}
 
 {#for comment in note.comments}
@@ -118,7 +118,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Méthodologies
 
-{#for note in notes('methodo')}
+{#for note in notes('METHODOLOGIES')}
 {note.text}
 
 {#for comment in note.comments}
@@ -129,7 +129,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Sécurité
 
-{#for note in notes('secu')}
+{#for note in notes('SECURITY')}
 {note.text}
 
 {#for comment in note.comments}
@@ -140,7 +140,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ### Loi, société et organisation
 
-{#for note in notes('loi')}
+{#for note in notes('SOCIETY')}
 {note.text}
 
 {#for comment in note.comments}
@@ -151,7 +151,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ## Outils de l’épisode
 
-{#for note in notes('outil-ep')}
+{#for note in notes('TOOL_OF_THE_EPISODE')}
 {note.text}
 
 {#for comment in note.comments}
@@ -162,7 +162,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 
 ## Rubrique débutant
 
-{#for note in notes('debutant')}
+{#for note in notes('BEGINNERS')}
 {note.text}
 
 {#for comment in note.comments}
@@ -176,7 +176,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-999.mp3](https://traffi
 [Nom de la conf du x au y mois à Ville]() - [CfP]() jusqu’à y mois
 TODO: reprendre celles de l’épisode d’avant
 
-{#for note in notes('conf')}
+{#for note in notes('CONFERENCES')}
 {note.text}
 
 {#for comment in note.comments}
@@ -187,8 +187,8 @@ TODO: reprendre celles de l’épisode d’avant
 
 ## Nous contacter
 
-Soutenez Les Cast Codeurs sur Patreon <https://www.patreon.com/LesCastCodeurs>  
-[Faire un crowdcast ou une crowdquestion](https://lescastcodeurs.com/crowdcasting/)  
-Contactez-nous via twitter <https://twitter.com/lescastcodeurs>  
+Soutenez Les Cast Codeurs sur Patreon <https://www.patreon.com/LesCastCodeurs>
+[Faire un crowdcast ou une crowdquestion](https://lescastcodeurs.com/crowdcasting/)
+Contactez-nous via twitter <https://twitter.com/lescastcodeurs>
 sur le groupe Google <https://groups.google.com/group/lescastcodeurs>
 <!-- vim: set spelllang=fr : -->

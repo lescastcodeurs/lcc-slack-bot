@@ -31,11 +31,13 @@ public class ShowNotes {
     return notes;
   }
 
-  public List<ShowNote> notes(String label) {
-    ShowNoteCategory category =
-        ShowNoteCategory.find(label)
-            .orElseThrow(
-                () -> new IllegalArgumentException("no category found for label " + label));
-    return notes().stream().filter(n -> n.category() == category).toList();
+  public List<ShowNote> notes(String name) {
+    ShowNoteCategory category = ShowNoteCategory.valueOf(name);
+    return notes().stream()
+        .filter(
+            n ->
+                n.category() == category
+                    || (n.category() == null && category == ShowNoteCategory.INCLUDE))
+        .toList();
   }
 }
