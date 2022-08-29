@@ -19,6 +19,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Update categories order and labels (#39).
 - Messages (thread or replies) are ignored if they contain a user mention (#40).
 - Use reactions (with emojis) for a better categorization of news (#41, #42).
+- Update show notes template (closes #56). It has been updated in lescastcodeurs/lescastcodeurs.com#95.
 
 ### Fixed
 
