@@ -7,9 +7,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Make `lcc_exclude` having the priority over other categories (#57).
-- Do not render empty categories in the show notes template (#58).
-
 ### Fixed
 
 ### Deprecated
@@ -19,5 +16,3 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Dependencies
 
 ### Internal
-
-- Reorganize classes and packages.
