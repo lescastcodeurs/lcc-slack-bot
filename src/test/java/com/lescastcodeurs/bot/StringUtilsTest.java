@@ -1,7 +1,7 @@
 package com.lescastcodeurs.bot;
 
-import static com.lescastcodeurs.bot.StringUtils.asFilename;
-import static com.lescastcodeurs.bot.StringUtils.normalize;
+import static com.lescastcodeurs.bot.internal.StringUtils.asFilename;
+import static com.lescastcodeurs.bot.internal.StringUtils.normalize;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.lescastcodeurs.bot;
+package com.lescastcodeurs.bot.github;
 
 import java.net.URI;
 import java.net.http.HttpResponse;

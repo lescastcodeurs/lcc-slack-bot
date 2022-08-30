@@ -1,4 +1,4 @@
-package com.lescastcodeurs.bot;
+package com.lescastcodeurs.bot.slack;
 
 import static java.util.Objects.requireNonNull;
 

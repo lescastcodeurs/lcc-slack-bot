@@ -1,6 +1,6 @@
 package com.lescastcodeurs.bot.slack;
 
-import static com.lescastcodeurs.bot.StringUtils.isNotBlank;
+import static com.lescastcodeurs.bot.internal.StringUtils.isNotBlank;
 
 import com.slack.api.model.Message;
 import com.slack.api.model.Reaction;
