@@ -1,12 +1,12 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static java.util.Objects.requireNonNull;
 
 import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.qute.TemplateData;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,13 +19,27 @@ public class ShowNotes {
   private final LocalDateTime now;
   private final Locale locale;
   private final String title;
-  private final List<ShowNote> notes;
+  private final Map<ShowNoteCategory, List<ShowNote>> notes;
 
   public ShowNotes(String title, List<SlackThread> threads) {
     this.now = LocalDateTime.now();
     this.locale = Locale.FRANCE;
     this.title = requireNonNull(title);
-    this.notes = threads.stream().map(ShowNote::new).toList();
+
+    this.notes = new EnumMap<>(ShowNoteCategory.class);
+    threads.stream()
+        .map(ShowNote::new)
+        .filter(ShowNote::isShowNote)
+        .forEach(
+            note -> {
+              ShowNoteCategory category = note.category();
+              category = (category == null ? INCLUDE : category);
+
+              if (!notes.containsKey(category)) {
+                notes.put(category, new ArrayList<>());
+              }
+              notes.get(category).add(note);
+            });
   }
 
   public LocalDateTime now() {
@@ -46,14 +60,18 @@ public class ShowNotes {
     return DEFAULT_EPISODE_NUMBER;
   }
 
+  public boolean hasNotes(String name) {
+    ShowNoteCategory category = ShowNoteCategory.valueOf(name);
+    return notes.containsKey(category);
+  }
+
   public List<ShowNote> notes(String name) {
     ShowNoteCategory category = ShowNoteCategory.valueOf(name);
-    return notes.stream()
-        .filter(
-            n ->
-                n.isShowNote()
-                    && (n.category() == category
-                        || (n.category() == null && category == ShowNoteCategory.INCLUDE)))
-        .toList();
+
+    if (notes.containsKey(category)) {
+      return List.copyOf(notes.get(category));
+    }
+
+    return List.of();
   }
 }

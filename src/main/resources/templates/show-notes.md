@@ -17,6 +17,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 
 ## News
 
+{#if hasNotes('INCLUDE')}
 ### Non catégorisées
 
 {#for note in notes('INCLUDE')}
@@ -27,7 +28,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('LANGUAGES')}
 ### Langages
 
 {#for note in notes('LANGUAGES')}
@@ -38,7 +41,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('LIBRARIES')}
 ### Librairies
 
 {#for note in notes('LIBRARIES')}
@@ -49,7 +54,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('INFRASTRUCTURE')}
 ### Infrastructure
 
 {#for note in notes('INFRASTRUCTURE')}
@@ -60,7 +67,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('CLOUD')}
 ### Cloud
 
 {#for note in notes('CLOUD')}
@@ -71,7 +80,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('WEB')}
 ### Web
 
 {#for note in notes('WEB')}
@@ -82,7 +93,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('DATA')}
 ### Data
 
 {#for note in notes('DATA')}
@@ -93,7 +106,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('TOOLING')}
 ### Outillage
 
 {#for note in notes('TOOLING')}
@@ -104,7 +119,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('ARCHITECTURE')}
 ### Architecture
 
 {#for note in notes('ARCHITECTURE')}
@@ -115,7 +132,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('METHODOLOGIES')}
 ### Méthodologies
 
 {#for note in notes('METHODOLOGIES')}
@@ -126,7 +145,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('SECURITY')}
 ### Sécurité
 
 {#for note in notes('SECURITY')}
@@ -137,7 +158,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('SOCIETY')}
 ### Loi, société et organisation
 
 {#for note in notes('SOCIETY')}
@@ -148,7 +171,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('TOOL_OF_THE_EPISODE')}
 ## Outils de l’épisode
 
 {#for note in notes('TOOL_OF_THE_EPISODE')}
@@ -159,7 +184,9 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
+{#if hasNotes('BEGINNERS')}
 ## Rubrique débutant
 
 {#for note in notes('BEGINNERS')}
@@ -170,6 +197,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/for}
 
 {/for}
+{/if}
 
 ## Conférences
 
