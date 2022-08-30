@@ -6,6 +6,7 @@ import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.joining;
 
+import com.lescastcodeurs.bot.internal.StringUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;

@@ -5,7 +5,6 @@ import static java.util.Comparator.*;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.lescastcodeurs.bot.UncheckedSlackApiException;
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;

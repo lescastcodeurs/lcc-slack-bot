@@ -1,12 +1,15 @@
 package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.Constants.GENERATE_SHOW_NOTES_ADDRESS;
-import static com.lescastcodeurs.bot.StringUtils.asFilename;
+import static com.lescastcodeurs.bot.internal.StringUtils.asFilename;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import com.lescastcodeurs.bot.github.GitHubApiException;
+import com.lescastcodeurs.bot.github.GitHubClient;
 import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackThread;
+import com.lescastcodeurs.bot.slack.UncheckedSlackApiException;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;

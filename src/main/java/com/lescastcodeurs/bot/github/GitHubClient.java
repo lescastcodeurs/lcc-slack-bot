@@ -1,4 +1,4 @@
-package com.lescastcodeurs.bot;
+package com.lescastcodeurs.bot.github;
 
 import static com.lescastcodeurs.bot.Constants.GITHUB_REPOSITORY;
 import static com.lescastcodeurs.bot.Constants.GITHUB_TOKEN;

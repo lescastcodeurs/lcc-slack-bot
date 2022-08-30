@@ -1,4 +1,4 @@
-package com.lescastcodeurs.bot;
+package com.lescastcodeurs.bot.internal;
 
 import java.text.Normalizer;
 import java.util.Locale;
