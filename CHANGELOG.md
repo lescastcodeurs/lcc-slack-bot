@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Make `lcc_exclude` having the priority over other categories (#57).
+
 ### Fixed
 
 ### Deprecated
