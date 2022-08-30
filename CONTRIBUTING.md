@@ -66,4 +66,5 @@ the version number : `x.y.z`. All information from [the changelog](/CHANGELOG.md
 description.
 
 After the workflow run, the new release will
-be available in [the project Maven repository](https://github.com/lescastcodeurs/lcc-slack-bot/packages/).
+be available in [the project Maven repository](https://github.com/lescastcodeurs/lcc-slack-bot/packages/). Do not forget
+to also empty the changelog for the next release and to add a link the release notes in the artifact description.
