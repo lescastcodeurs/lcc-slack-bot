@@ -48,7 +48,10 @@ public enum SlackBotAction {
       Les catégories et leur réaction associée sont :
       • %s
 
-      Les réactions `lcc_include` (:lcc_include:) et `lcc_exclude` (:lcc_exclude:) permettent de forcer l'inclusion ou l'exclusion d'un message.
+      La réaction `:lcc_include:` (:lcc_include:) correspond à la catégorie _Non catégorisées_.
+      La réaction `:lcc_exclude:` (:lcc_exclude:) n'est pas une catégorie : elle permet de forcer l'exclusion d'un message. Cette réaction est prioritaire par rapport à toutes les autres réactions.
+
+      Si plusieurs réactions (autres que `:lcc_exclude:`) sont utilisées, c'est la dernière réactions retournée par l'API Slack qui est prise en compte. Ça semble être la dernière réaction ajoutée, mais ça n'est malheureusement <https://forums.slackcommunity.com/s/question/0D53a00008kB81SCAS/how-are-messagereactions-sorted-|pas garanti>.
       """
           .formatted(
               stream(ShowNoteCategory.values())
@@ -66,13 +69,26 @@ public enum SlackBotAction {
       "OK, je suis sur le coup !",
       List.of("@lcc, génère les show notes.", "@lcc, generate show notes."),
       """
-      Génère les notes de l'épisode à partir des messages de ce channel et publie le résultat sur GitHub. Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour. À noter :
-      • Un channel Slack doit être dédié à un seul épisode.
-      • Le nom du channel est utilisé pour construire le nom du fichier sur GitHub. Si ce nom contient un ou plusieurs nombres, le premier nombre est utilisé comme numéro de l'épisode.
-      • Un thread de messages est automatiquement reporté dans les show notes si son premier message contient au moins un lien et ne contient aucune <mention|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack>.
-      • Les réponses aux threads peuvent être de simples phrases comme des listes. Elles sont reportées dans les show notes que si elles ne contiennent aucune <mention|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack>.
-      • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code` et citations (sur le premier message du thread uniquement).
-      • Les liens peuvent être catégorisés à l'aide de <réactions utilisant des émojis personnalisés|https://slack.com/intl/fr-fr/help/articles/202931348-Utilisez-les-%C3%A9mojis-et-les-r%C3%A9actions>. Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
+      Génère les notes de l'épisode à partir des show notes contenues dans ce channel et publie le résultat sur GitHub. À noter :
+       • Un channel Slack doit être dédié à un seul épisode.
+       • Le nom du channel est utilisé pour construire le nom du fichier sur GitHub. Si ce nom contient un ou plusieurs nombres, le premier nombre est utilisé comme numéro de l'épisode.
+       • Chaque thread de messages correspond est potentiellement une show note. Le premier message est généralement un lien (ça n'est néanmoins pas obligatoire).
+       • Les réponses au thread sont les commentaires sur le lien. Ces réponses seront présentées sous la forme d'une liste sous le premier message du thread.
+       • Les show notes peuvent être catégorisées à l'aide de <réactions|https://slack.com/intl/fr-fr/help/articles/202931348-Utilisez-les-%C3%A9mojis-et-les-r%C3%A9actions> utilisant les émojis personnalisés dont le nom démarre par `lcc_`. Elles seront alors écrites directement dans la bonne catégorie. Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
+       • L'utilisation de la réactions `:lcc_exclude:` (:lcc_exclude:) est prioritaire sur toutes les autres réactions.
+       • L'utilisation de <mentions|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack> exclue généralement les messages des show notes.
+       • Un thread de messages est considéré comme show note que si :
+         ◦ son premier message a été écrit par un utilisateur (c-à-d pas un bot ni une application Slack),
+         ◦ son premier message est catégorisé grâce à une autre réaction que `:lcc_exclude:` (:lcc_exclude:),
+         ◦ ou son premier message contient au moins un lien et aucune mention (auquel cas il apparait dans la catégorie _Non catégorisées_).
+       • Les réponses aux threads peuvent être de simples phrases comme des listes ou même des sous-listes. Une réponse est reportée dans les show notes que si :
+         ◦ elle a été écrite par un utilisateur (c-à-d pas un bot ni une application Slack),
+         ◦ elle n'a pas de réaction `:lcc_exclude:` (:lcc_exclude:),
+         ◦ elle a la réaction `:lcc_include:` (:lcc_include:),
+         ◦ ou elle ne contient aucune mention.
+       • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code`. Les citations sont aussi possibles, mais uniquement sur le premier message du thread.
+       • Les retours chariot ne sont conservés que sur le premier message du thread, ou quand les réponses sont organisées sous la forme d'une liste.
+       • Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour.
       """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
 
