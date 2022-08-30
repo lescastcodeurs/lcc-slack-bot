@@ -37,16 +37,16 @@ The following emojis must be added (suggested emojis can also be found in [this 
 | Librairies                   | lcc_lib      | https://openmoji.org/library/emoji-1F4DA/                |
 | Infrastructure               | lcc_infra    | https://openmoji.org/library/emoji-1F3E3/                |
 | Cloud                        | lcc_cloud    | https://openmoji.org/library/emoji-1F32C/                |
-| Web                          | lcc_web      | https://openmoji.org/library/emoji-E055/                 |
-| Data                         | lcc_data     | https://openmoji.org/library/emoji-1F4BE/                |
+| Web                          | lcc_web      | https://openmoji.org/library/emoji-1F310/                |
+| Data                         | lcc_data     | https://openmoji.org/library/emoji-1F4BD/                |
 | Outillage                    | lcc_outil    | https://openmoji.org/library/emoji-1F6E0/                |
-| Architecture                 | lcc_archi    | https://openmoji.org/library/emoji-1F9D1-200D-1F3EB/     |
+| Architecture                 | lcc_archi    | https://openmoji.org/library/emoji-1F4A1/                |
 | Méthodologies                | lcc_methodo  | https://openmoji.org/library/emoji-1F9D1-200D-1F373/     |
-| Sécurité                     | lcc_secu     | https://openmoji.org/library/emoji-1F46E/                |
+| Sécurité                     | lcc_secu     | https://openmoji.org/library/emoji-1F510/                |
 | Loi, société et organisation | lcc_loi      | https://openmoji.org/library/emoji-1F9D1-200D-2696-FE0F/ |
 | Outils de l’épisode          | lcc_outil_ep | https://openmoji.org/library/emoji-1F984/                |
-| Rubrique débutant            | lcc_debutant | https://openmoji.org/library/emoji-1F9D1-200D-1F393/     |
-| Conférences                  | lcc_conf     | https://openmoji.org/library/emoji-1F9D1-200D-1F3A4/     |
+| Rubrique débutant            | lcc_debutant | https://openmoji.org/library/emoji-1F423/                |
+| Conférences                  | lcc_conf     | https://openmoji.org/library/emoji-1F3A4/                |
 | Messages exclus              | lcc_exclude  | https://openmoji.org/library/emoji-274C/                 |
 | Messages inclus              | lcc_include  | https://openmoji.org/library/emoji-2714/                 |
 

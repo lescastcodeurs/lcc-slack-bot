@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Update suggested emoticons.
+
 ### Fixed
 
 - Fix and improve help (closes #61).
