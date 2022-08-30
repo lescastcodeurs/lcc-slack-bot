@@ -117,24 +117,35 @@ class ShowNoteTest {
   void lastReactionWins1() {
     SlackThread message =
         new SlackThread(
-            Messages.of("<https://test.io>", List.of(EXCLUDE.reaction(), CLOUD.reaction())),
+            Messages.of("<https://test.io>", List.of(DATA.reaction(), CLOUD.reaction())),
             List.of());
     var note = new ShowNote(message);
 
     assertEquals(CLOUD, note.category());
     assertTrue(note.isShowNote());
-    assertEquals("[https://test.io](https://test.io)", note.text());
   }
 
   @Test
   void lastReactionWins2() {
     SlackThread message =
         new SlackThread(
-            Messages.of("<https://test.io>", List.of(CLOUD.reaction(), EXCLUDE.reaction())),
+            Messages.of("<https://test.io>", List.of(CLOUD.reaction(), DATA.reaction())),
             List.of());
     var note = new ShowNote(message);
 
-    assertEquals(EXCLUDE, note.category());
+    assertEquals(DATA, note.category());
+    assertTrue(note.isShowNote());
+  }
+
+  @Test
+  void excludeReactionAlwaysWins() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://test.io>", List.of(EXCLUDE.reaction(), CLOUD.reaction())),
+            List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(CLOUD, note.category());
     assertFalse(note.isShowNote());
   }
 

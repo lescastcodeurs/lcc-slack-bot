@@ -37,6 +37,10 @@ public class ShowNote {
       return false; // application or bot message
     }
 
+    if (thread.reactions().contains(EXCLUDE.reaction())) {
+      return false; // Exclude reaction has priority over other reactions (#57).
+    }
+
     ShowNoteCategory category = category();
     if (category == null) {
       if (thread.hasMention()) {
@@ -46,7 +50,7 @@ public class ShowNote {
       }
     }
 
-    return category != EXCLUDE;
+    return true; // Message with a known reaction are always included.
   }
 
   public String timestamp() {
@@ -64,7 +68,7 @@ public class ShowNote {
               if (reply.isAppMessage()) {
                 return false;
               } else if (reply.reactions().contains(EXCLUDE.reaction())) {
-                return false;
+                return false; // Exclude reaction has priority over other reactions (#57).
               } else if (reply.reactions().contains(INCLUDE.reaction())) {
                 return true;
               } else {

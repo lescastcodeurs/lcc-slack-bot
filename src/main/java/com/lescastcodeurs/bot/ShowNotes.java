@@ -25,7 +25,7 @@ public class ShowNotes {
     this.now = LocalDateTime.now();
     this.locale = Locale.FRANCE;
     this.title = requireNonNull(title);
-    this.notes = threads.stream().map(ShowNote::new).filter(ShowNote::isShowNote).toList();
+    this.notes = threads.stream().map(ShowNote::new).toList();
   }
 
   public LocalDateTime now() {
@@ -46,17 +46,14 @@ public class ShowNotes {
     return DEFAULT_EPISODE_NUMBER;
   }
 
-  public List<ShowNote> notes() {
-    return notes;
-  }
-
   public List<ShowNote> notes(String name) {
     ShowNoteCategory category = ShowNoteCategory.valueOf(name);
-    return notes().stream()
+    return notes.stream()
         .filter(
             n ->
-                n.category() == category
-                    || (n.category() == null && category == ShowNoteCategory.INCLUDE))
+                n.isShowNote()
+                    && (n.category() == category
+                        || (n.category() == null && category == ShowNoteCategory.INCLUDE)))
         .toList();
   }
 }
