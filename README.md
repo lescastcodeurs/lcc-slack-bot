@@ -40,7 +40,7 @@ The following emojis must be added (suggested emojis can also be found in [this 
 | Web                          | lcc_web      | https://openmoji.org/library/emoji-1F310/            |
 | Data                         | lcc_data     | https://openmoji.org/library/emoji-1F4BD/            |
 | Outillage                    | lcc_outil    | https://openmoji.org/library/emoji-1F6E0/            |
-| Architecture                 | lcc_archi    | https://openmoji.org/library/emoji-1F4A1/            |
+| Architecture                 | lcc_archi    | https://openmoji.org/library/emoji-E04A/             |
 | Méthodologies                | lcc_methodo  | https://openmoji.org/library/emoji-1F9D1-200D-1F373/ |
 | Sécurité                     | lcc_secu     | https://openmoji.org/library/emoji-1F510/            |
 | Loi, société et organisation | lcc_loi      | https://openmoji.org/library/emoji-2696/             |
