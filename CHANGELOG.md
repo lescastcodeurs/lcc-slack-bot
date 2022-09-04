@@ -17,4 +17,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Dependencies
 
+- Upgrade quarkus from 2.11.2 to [2.12.0](https://github.com/quarkusio/quarkus/releases/tag/2.12.0.Final) (#64).
+
 ### Internal
