@@ -8,9 +8,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 import com.lescastcodeurs.bot.github.GitHubApiException;
 import com.lescastcodeurs.bot.github.GitHubClient;
 import com.lescastcodeurs.bot.slack.SlackClient;
+import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import com.lescastcodeurs.bot.slack.UncheckedSlackApiException;
-import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.vertx.ConsumeEvent;
@@ -41,8 +41,9 @@ public final class GenerateShowNotesHandler {
   }
 
   @ConsumeEvent(GENERATE_SHOW_NOTES_ADDRESS)
-  public void consume(AppMentionEvent event) throws InterruptedException {
-    String channel = event.getChannel();
+  public void consume(SlackMentionEvent event) throws InterruptedException {
+    String channel = event.channel();
+    String threadTs = event.replyTs();
 
     try {
       String channelName = slackClient.name(channel);
@@ -53,7 +54,9 @@ public final class GenerateShowNotesHandler {
       String showNoteUrl = gitHubClient.createOrUpdateFile(filename, content);
 
       slackClient.chatPostMessage(
-          channel, "C'est fait, les show notes sont disponibles sur <" + showNoteUrl + ">.");
+          channel,
+          threadTs,
+          "C'est fait, les show notes sont disponibles sur <" + showNoteUrl + ">.");
       LOG.info("Show notes generated for channel {}", channel);
     } catch (UncheckedIOException | UncheckedSlackApiException | GitHubApiException e) {
       LOG.error(

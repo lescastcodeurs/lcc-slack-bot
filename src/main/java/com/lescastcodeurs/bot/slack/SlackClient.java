@@ -113,13 +113,17 @@ public final class SlackClient {
    *
    * @see <a href="https://api.slack.com/methods/chat.postMessage">chat.postMessage</a>.
    */
-  public void chatPostMessage(String channel, String message) {
+  public void chatPostMessage(String channel, String threadTs, String message) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
 
     SlackApi.check(
         () ->
             slack.chatPostMessage(
-                ChatPostMessageRequest.builder().channel(channel).text(message).build()));
+                ChatPostMessageRequest.builder()
+                    .channel(channel)
+                    .threadTs(threadTs)
+                    .text(message)
+                    .build()));
   }
 
   /**

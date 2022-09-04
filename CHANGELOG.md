@@ -8,6 +8,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Update suggested emojis.
+- Make the bot reply in threads (#65).
 
 ### Fixed
 

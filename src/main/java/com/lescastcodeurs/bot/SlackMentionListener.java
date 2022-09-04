@@ -4,6 +4,8 @@ import static com.lescastcodeurs.bot.Constants.SLACK_APP_TOKEN;
 import static com.lescastcodeurs.bot.Constants.SLACK_BOT_TOKEN;
 import static java.util.Objects.requireNonNull;
 
+import com.lescastcodeurs.bot.slack.SlackClient;
+import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
 import com.slack.api.bolt.socket_mode.SocketModeApp;
@@ -27,14 +29,17 @@ public class SlackMentionListener implements QuarkusApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(SlackMentionListener.class);
 
+  private final SlackClient client;
   private final EventBus bus;
   private final String appToken;
   private final String botToken;
 
   public SlackMentionListener(
+      SlackClient client,
       EventBus bus,
       @ConfigProperty(name = SLACK_APP_TOKEN) String appToken,
       @ConfigProperty(name = SLACK_BOT_TOKEN) String botToken) {
+    this.client = requireNonNull(client);
     this.bus = requireNonNull(bus);
     this.appToken = requireNonNull(appToken);
     this.botToken = requireNonNull(botToken);
@@ -60,10 +65,11 @@ public class SlackMentionListener implements QuarkusApplication {
         (req, ctx) -> {
           LOG.debug("Received : {}", req);
 
-          AppMentionEvent event = req.getEvent();
-          SlackBotAction command = SlackBotAction.guess(event.getText());
+          SlackMentionEvent event = new SlackMentionEvent(req.getEvent());
+          SlackBotAction command = SlackBotAction.guess(event.text());
+          client.chatPostMessage(event.channel(), event.replyTs(), command.response());
+
           command.handlerAddress().ifPresent(address -> bus.publish(address, event));
-          ctx.say(command.response());
 
           return ctx.ack();
         });
