@@ -74,9 +74,9 @@ public enum SlackBotAction {
        • Le nom du channel est utilisé pour construire le nom du fichier sur GitHub. Si ce nom contient un ou plusieurs nombres, le premier nombre est utilisé comme numéro de l'épisode.
        • Chaque thread de messages correspond est potentiellement une show note. Le premier message est généralement un lien (ça n'est néanmoins pas obligatoire).
        • Les réponses au thread sont les commentaires sur le lien. Ces réponses seront présentées sous la forme d'une liste sous le premier message du thread.
-       • Les show notes peuvent être catégorisées à l'aide de <réactions|https://slack.com/intl/fr-fr/help/articles/202931348-Utilisez-les-%C3%A9mojis-et-les-r%C3%A9actions> utilisant les émojis personnalisés dont le nom démarre par `lcc_`. Elles seront alors écrites directement dans la bonne catégorie. Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
+       • Les show notes peuvent être catégorisées à l'aide de <https://slack.com/intl/fr-fr/help/articles/202931348-Utilisez-les-%C3%A9mojis-et-les-r%C3%A9actions|réactions> utilisant les émojis personnalisés dont le nom démarre par `lcc_`. Elles seront alors écrites directement dans la bonne catégorie. Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
        • L'utilisation de la réactions `:lcc_exclude:` (:lcc_exclude:) est prioritaire sur toutes les autres réactions.
-       • L'utilisation de <mentions|https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack> exclue généralement les messages des show notes.
+       • L'utilisation de <https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack|mentions> exclue généralement les messages des show notes.
        • Un thread de messages est considéré comme show note que si :
          ◦ son premier message a été écrit par un utilisateur (c-à-d pas un bot ni une application Slack),
          ◦ son premier message est catégorisé grâce à une autre réaction que `:lcc_exclude:` (:lcc_exclude:),

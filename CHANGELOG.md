@@ -11,6 +11,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Fix links in help (#62).
+
 ### Deprecated
 
 ### Removed
