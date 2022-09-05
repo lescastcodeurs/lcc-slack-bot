@@ -17,4 +17,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Dependencies
 
+- Update bolt-socket-mode from 1.25.0 to [1.25.1](https://github.com/slackapi/java-slack-sdk/releases/tag/v1.25.1) (#67).
+
 ### Internal
