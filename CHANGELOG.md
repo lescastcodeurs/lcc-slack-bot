@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Improve logging of commands and show notes generation (#70).
+- Improve error handling during show notes generation (#69). The bot will now try to alert the user.
 
 ### Fixed
 

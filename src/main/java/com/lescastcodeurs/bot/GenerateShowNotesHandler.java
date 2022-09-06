@@ -5,17 +5,14 @@ import static com.lescastcodeurs.bot.internal.StringUtils.asFilename;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import com.lescastcodeurs.bot.github.GitHubApiException;
 import com.lescastcodeurs.bot.github.GitHubClient;
 import com.lescastcodeurs.bot.internal.Stopwatch;
 import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.lescastcodeurs.bot.slack.SlackThread;
-import com.lescastcodeurs.bot.slack.UncheckedSlackApiException;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.vertx.ConsumeEvent;
-import java.io.UncheckedIOException;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -61,19 +58,24 @@ public final class GenerateShowNotesHandler {
       slackClient.chatPostMessage(
           channel,
           threadTs,
-          "C'est fait, les show notes sont disponibles sur <" + showNoteUrl + ">.");
+          "C'est fait, les show notes sont disponibles sur <%s>.".formatted(showNoteUrl));
       LOG.info(
           "Show notes generation succeeded for for message {} in channel {}, took {}",
           timestamp,
           channel,
           stopwatch);
-    } catch (UncheckedIOException | UncheckedSlackApiException | GitHubApiException e) {
+    } catch (RuntimeException e) {
       LOG.error(
           "Show notes generation failed for for message {} in channel {}, took {}",
           timestamp,
           channel,
           stopwatch,
           e);
+      slackClient.chatPostMessage(
+          channel,
+          threadTs,
+          "Une erreur est survenue lors de la génération des show notes : %s - %s. Pour plus d'infos voir les logs du bot."
+              .formatted(e.getClass().getSimpleName(), e.getMessage()));
     }
   }
 }
