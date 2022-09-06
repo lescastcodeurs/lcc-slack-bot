@@ -17,80 +17,91 @@ class ShowNoteTest {
   }
 
   @Test
-  void appMessageIsNotShowNote() {
+  void appMessagesAreExcluded() {
     SlackThread message =
         new SlackThread(
             Messages.of("<https://lescastcodeurs.com/>", null, "ABCD", null), List.of());
     var note = new ShowNote(message);
 
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
   }
 
   @Test
-  void botMessageIsNotShowNote() {
+  void botMessagesAreExcluded() {
     SlackThread message =
         new SlackThread(
             Messages.of("<https://lescastcodeurs.com/>", null, null, "ABCD"), List.of());
     var note = new ShowNote(message);
 
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
   }
 
   @Test
-  void messageWithoutLinkAndWithoutCategoryIsNotShowNote() {
+  void messagesWithoutLinkAndWithoutCategoryAreExcluded() {
     SlackThread message = new SlackThread(Messages.of("test", null), List.of());
     var note = new ShowNote(message);
 
     assertNull(note.category());
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
   }
 
   @Test
-  void messageWithoutLinkAndWithCategoryIsShowNote() {
+  void messagesWithoutLinkAndWithCategoryAreIncluded() {
     SlackThread message =
         new SlackThread(Messages.of("test", List.of(CLOUD.reaction())), List.of());
     var note = new ShowNote(message);
 
     assertEquals(CLOUD, note.category());
-    assertTrue(note.isShowNote());
+    assertTrue(note.mustBeIncluded());
     assertEquals("test", note.text());
   }
 
   @Test
-  void messageWithLinkAndWithoutCategoryIsShowNote() {
+  void messagesWithLinkAndWithoutCategoryAreIncluded() {
     SlackThread message = new SlackThread(Messages.of("<https://test.io>"), List.of());
     var note = new ShowNote(message);
 
     assertNull(note.category());
-    assertTrue(note.isShowNote());
+    assertTrue(note.mustBeIncluded());
     assertEquals("[https://test.io](https://test.io)", note.text());
   }
 
   @Test
-  void messageWithLinkAndWithUserMentionAndWithoutCategoryIsNotShowNote() {
+  void messagesWithLinkAndWithUserMentionAndWithoutCategoryAreExcluded() {
     SlackThread message = new SlackThread(Messages.of("<http://test.io/> <@XXX>"), List.of());
     var note = new ShowNote(message);
 
     assertNull(note.category());
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
   }
 
   @Test
-  void messageWithLinkAndWithChannelMentionAndWithoutCategoryIsNotShowNote() {
+  void messagesWithLinkAndWithChannelMentionAndWithoutCategoryAreExcluded() {
     SlackThread message = new SlackThread(Messages.of("<http://test.io/> <!channel>"), List.of());
     var note = new ShowNote(message);
 
     assertNull(note.category());
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
   }
 
   @Test
-  void messageWithLinkAndWithHereMentionAndWithoutCategoryIsNotShowNote() {
+  void messagesWithLinkAndWithHereMentionAndWithoutCategoryAreExcluded() {
     SlackThread message = new SlackThread(Messages.of("<http://test.io/> <!here>"), List.of());
     var note = new ShowNote(message);
 
     assertNull(note.category());
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
+  }
+
+  @Test
+  void messagesWithoutLinkAndWithUserMentionAndWithCategoryAreIncluded() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<http://test.io/> <@XXX>", List.of(CLOUD.reaction())), List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(CLOUD, note.category());
+    assertTrue(note.mustBeIncluded());
   }
 
   @Test
@@ -100,7 +111,7 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(CLOUD, note.category());
-    assertTrue(note.isShowNote());
+    assertTrue(note.mustBeIncluded());
     assertEquals("[https://test.io](https://test.io)", note.text());
   }
 
@@ -111,7 +122,7 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(EXCLUDE, note.category());
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
   }
 
   @Test
@@ -121,7 +132,7 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(DEFAULT_ORDER, note.order());
-    assertTrue(note.isShowNote());
+    assertTrue(note.mustBeIncluded());
   }
 
   @Test
@@ -133,7 +144,7 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(9, note.order());
-    assertTrue(note.isShowNote());
+    assertTrue(note.mustBeIncluded());
   }
 
   @Test
@@ -145,7 +156,7 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(CLOUD, note.category());
-    assertTrue(note.isShowNote());
+    assertTrue(note.mustBeIncluded());
   }
 
   @Test
@@ -157,7 +168,7 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(DATA, note.category());
-    assertTrue(note.isShowNote());
+    assertTrue(note.mustBeIncluded());
   }
 
   @Test
@@ -169,7 +180,7 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(CLOUD, note.category());
-    assertFalse(note.isShowNote());
+    assertFalse(note.mustBeIncluded());
   }
 
   @Test
@@ -245,5 +256,33 @@ class ShowNoteTest {
     var note = new ShowNote(message);
 
     assertEquals(List.of("- note 1", "- note 2"), note.comments());
+  }
+
+  @Test
+  void repliesAreProperlyOrderedByDefault() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://test.io>"),
+            List.of(
+                Messages.of("2", "b", List.of(), null, null),
+                Messages.of("1", "a", List.of(), null, null),
+                Messages.of("3", "c", List.of(), null, null)));
+    var note = new ShowNote(message);
+
+    assertEquals(List.of("- a", "- b", "- c"), note.comments());
+  }
+
+  @Test
+  void repliesAreProperlyOrderWhenOrderIsForced() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://test.io>"),
+            List.of(
+                Messages.of("1", "a", List.of("lcc_9"), null, null),
+                Messages.of("2", "b", List.of("lcc_5"), null, null),
+                Messages.of("3", "c", List.of("lcc_1"), null, null)));
+    var note = new ShowNote(message);
+
+    assertEquals(List.of("- c", "- b", "- a"), note.comments());
   }
 }

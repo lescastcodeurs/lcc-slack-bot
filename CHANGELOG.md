@@ -6,7 +6,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - Deployment documentation added to the README.
-- Add a way to order show notes within a section (#68).
+- Add a way to order show notes within a category (#68).
+- Add a way to order replies within a show note (#68).
 
 ### Changed
 

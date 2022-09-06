@@ -29,7 +29,7 @@ public class ShowNotes {
     this.notes = new EnumMap<>(ShowNoteCategory.class);
     threads.stream()
         .map(ShowNote::new)
-        .filter(ShowNote::isShowNote)
+        .filter(ShowNote::mustBeIncluded)
         .sorted(Comparator.comparing(ShowNote::order).thenComparing(ShowNote::timestamp))
         .forEach(
             note -> {

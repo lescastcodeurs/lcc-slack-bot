@@ -1,12 +1,10 @@
 package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.ShowNoteCategory.EXCLUDE;
-import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static java.util.Objects.requireNonNull;
-import static java.util.function.Predicate.not;
 
-import com.lescastcodeurs.bot.slack.SlackReply;
 import com.lescastcodeurs.bot.slack.SlackThread;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +43,7 @@ public final class ShowNote {
     return order;
   }
 
-  public boolean isShowNote() {
+  public boolean mustBeIncluded() {
     if (thread.isAppMessage()) {
       return false; // application or bot message
     }
@@ -76,22 +74,10 @@ public final class ShowNote {
 
   public List<String> comments() {
     return thread.replies().stream()
-        .filter(
-            reply -> {
-              if (reply.isAppMessage()) {
-                return false;
-              } else if (reply.reactions().contains(EXCLUDE.reaction())) {
-                return false; // Exclude reaction has priority over other reactions (#57).
-              } else if (reply.reactions().contains(INCLUDE.reaction())) {
-                return true;
-              } else {
-                return !reply.hasMention();
-              }
-            })
-        .map(SlackReply::asMarkdown)
-        .flatMap(String::lines)
-        .filter(not(String::isBlank))
-        .map(line -> (!line.startsWith("-") && !line.startsWith("  -")) ? "- " + line : line)
+        .map(ShowNoteReply::new)
+        .filter(ShowNoteReply::mustBeIncluded)
+        .sorted(Comparator.comparing(ShowNoteReply::order).thenComparing(ShowNoteReply::timestamp))
+        .flatMap(ShowNoteReply::comments)
         .toList();
   }
 }

@@ -117,8 +117,8 @@ class ShowNotesTest {
                 thread("3", "c", INCLUDE.reaction())));
 
     assertEquals(
-        List.of("1", "2", "3"),
-        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::timestamp).toList());
+        List.of("a", "b", "c"),
+        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::text).toList());
   }
 
   @Test
@@ -132,8 +132,8 @@ class ShowNotesTest {
                 thread("3", "c", INCLUDE.reaction())));
 
     assertEquals(
-        List.of("1", "2", "3"),
-        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::timestamp).toList());
+        List.of("a", "b", "c"),
+        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::text).toList());
   }
 
   @Test
@@ -147,8 +147,8 @@ class ShowNotesTest {
                 thread("3", "c", INCLUDE.reaction(), "lcc_1")));
 
     assertEquals(
-        List.of("3", "2", "1"),
-        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::timestamp).toList());
+        List.of("c", "b", "a"),
+        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::text).toList());
   }
 
   @Test
