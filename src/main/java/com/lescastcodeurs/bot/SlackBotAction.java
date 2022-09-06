@@ -48,8 +48,11 @@ public enum SlackBotAction {
       Les catégories et leur réaction associée sont :
       • %s
 
-      La réaction `:lcc_include:` (:lcc_include:) correspond à la catégorie _Non catégorisées_.
-      La réaction `:lcc_exclude:` (:lcc_exclude:) n'est pas une catégorie : elle permet de forcer l'exclusion d'un message. Cette réaction est prioritaire par rapport à toutes les autres réactions.
+      La réaction `:lcc_include:` (:lcc_include:) correspond à la catégorie _Non catégorisées_. Elle permet aussi de forcer l'inclusion d'un message (show note comme réponse).
+
+      La réaction `:lcc_exclude:` (:lcc_exclude:) n'est pas une catégorie : elle permet de forcer l'exclusion d'un message (show note comme réponse). Cette réaction est prioritaire par rapport à toutes les autres réactions.
+
+      Les réactions `:lcc_1:` (:lcc_1:), `:lcc_2:` (:lcc_2:) ... `:lcc_9:` (:lcc_9:) ne sont pas des catégories : elles permettent d'ordonner les show notes au sein de leur catégorie. L'ordre par défaut des messages est l'ordre dans le channel (ordre chronologique par rapport à la date de création du message).
 
       Si plusieurs réactions (autres que `:lcc_exclude:`) sont utilisées, c'est la dernière réactions retournée par l'API Slack qui est prise en compte. Ça semble être la dernière réaction ajoutée, mais ça n'est malheureusement <https://forums.slackcommunity.com/s/question/0D53a00008kB81SCAS/how-are-messagereactions-sorted-|pas garanti>.
       """
@@ -75,7 +78,8 @@ public enum SlackBotAction {
        • Chaque thread de messages correspond est potentiellement une show note. Le premier message est généralement un lien (ça n'est néanmoins pas obligatoire).
        • Les réponses au thread sont les commentaires sur le lien. Ces réponses seront présentées sous la forme d'une liste sous le premier message du thread.
        • Les show notes peuvent être catégorisées à l'aide de <https://slack.com/intl/fr-fr/help/articles/202931348-Utilisez-les-%C3%A9mojis-et-les-r%C3%A9actions|réactions> utilisant les émojis personnalisés dont le nom démarre par `lcc_`. Elles seront alors écrites directement dans la bonne catégorie. Les catégories supportées peuvent être listées grâce à la commande dédiée (`@lcc, affiche les catégories.`).
-       • L'utilisation de la réactions `:lcc_exclude:` (:lcc_exclude:) est prioritaire sur toutes les autres réactions.
+       • Les show notes peuvent être réordonnées dans leur catégorie à l'aide des réactions `:lcc_1:` (:lcc_1:), `:lcc_2:` (:lcc_2:) ... `:lcc_9:` (:lcc_9:). L'ordre par défaut des show notes est l'ordre dans le channel (chronologique par rapport à la date de création du message).
+       • L'utilisation de la réactions `:lcc_exclude:` (:lcc_exclude:) est prioritaire sur toutes les autres réactions (sinon c'est la dernière réaction qui gagne).
        • L'utilisation de <https://slack.com/intl/fr-fr/help/articles/205240127-Utiliser-les-mentions-dans-Slack|mentions> exclue généralement les messages des show notes.
        • Un thread de messages est considéré comme show note que si :
          ◦ son premier message a été écrit par un utilisateur (c-à-d pas un bot ni une application Slack),

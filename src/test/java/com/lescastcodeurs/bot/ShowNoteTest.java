@@ -1,5 +1,6 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.ShowNote.DEFAULT_ORDER;
 import static com.lescastcodeurs.bot.ShowNoteCategory.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -111,6 +112,28 @@ class ShowNoteTest {
 
     assertEquals(EXCLUDE, note.category());
     assertFalse(note.isShowNote());
+  }
+
+  @Test
+  void noOrderMeansDefaultOrder() {
+    SlackThread message =
+        new SlackThread(Messages.of("<https://test.io>", List.of(INCLUDE.reaction())), List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(DEFAULT_ORDER, note.order());
+    assertTrue(note.isShowNote());
+  }
+
+  @Test
+  void lastOrderWins() {
+    SlackThread message =
+        new SlackThread(
+            Messages.of("<https://test.io>", List.of("lcc_1", INCLUDE.reaction(), "lcc_9")),
+            List.of());
+    var note = new ShowNote(message);
+
+    assertEquals(9, note.order());
+    assertTrue(note.isShowNote());
   }
 
   @Test

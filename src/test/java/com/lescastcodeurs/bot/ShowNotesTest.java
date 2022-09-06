@@ -1,5 +1,6 @@
 package com.lescastcodeurs.bot;
 
+import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.lescastcodeurs.bot.slack.Messages;
@@ -106,6 +107,51 @@ class ShowNotesTest {
   }
 
   @Test
+  void whenNoForcedOrderAndCorrectOrder_thenProperlyOrdered() {
+    ShowNotes showNotes =
+        new ShowNotes(
+            "test",
+            List.of(
+                thread("1", "a", INCLUDE.reaction()),
+                thread("2", "b", INCLUDE.reaction()),
+                thread("3", "c", INCLUDE.reaction())));
+
+    assertEquals(
+        List.of("1", "2", "3"),
+        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::timestamp).toList());
+  }
+
+  @Test
+  void whenNoForcedOrderAndIncorrectOrder_thenProperlyOrdered() {
+    ShowNotes showNotes =
+        new ShowNotes(
+            "test",
+            List.of(
+                thread("2", "b", INCLUDE.reaction()),
+                thread("1", "a", INCLUDE.reaction()),
+                thread("3", "c", INCLUDE.reaction())));
+
+    assertEquals(
+        List.of("1", "2", "3"),
+        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::timestamp).toList());
+  }
+
+  @Test
+  void whenForcedOrder_thenProperlyOrdered() {
+    ShowNotes showNotes =
+        new ShowNotes(
+            "test",
+            List.of(
+                thread("1", "a", INCLUDE.reaction(), "lcc_3"),
+                thread("2", "b", INCLUDE.reaction(), "lcc_2"),
+                thread("3", "c", INCLUDE.reaction(), "lcc_1")));
+
+    assertEquals(
+        List.of("3", "2", "1"),
+        showNotes.notes(INCLUDE.name()).stream().map(ShowNote::timestamp).toList());
+  }
+
+  @Test
   void whenMultipleNumbersInTitle_theFirstOneIsTheEpisodeNumber() {
     ShowNotes showNotes = new ShowNotes("test42 54", List.of());
 
@@ -123,8 +169,12 @@ class ShowNotesTest {
   }
 
   private SlackThread thread(String message, ShowNoteCategory category) {
+    return thread(null, message, category.reaction());
+  }
+
+  private SlackThread thread(String ts, String message, String... reactions) {
     return new SlackThread(
-        Messages.of(message, List.of(category.reaction()), null, null),
+        Messages.of(ts, message, List.of(reactions), null, null),
         List.of(Messages.of("comment 1"), Messages.of("comment 2"), Messages.of("comment 3")));
   }
 }

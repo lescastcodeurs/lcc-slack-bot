@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 /** A wrapper around {@link SlackThread} to allow customization for show notes generation. */
-public class ShowNote {
+public final class ShowNote {
 
+  public static final int DEFAULT_ORDER = 999;
   private final SlackThread thread;
 
   public ShowNote(SlackThread thread) {
@@ -30,6 +31,18 @@ public class ShowNote {
     }
 
     return category;
+  }
+
+  public int order() {
+    int order = DEFAULT_ORDER;
+
+    for (String reaction : thread.reactions()) {
+      if (reaction.matches("lcc_[1-9]")) {
+        order = Integer.parseInt(reaction.split("_")[1]);
+      }
+    }
+
+    return order;
   }
 
   public boolean isShowNote() {

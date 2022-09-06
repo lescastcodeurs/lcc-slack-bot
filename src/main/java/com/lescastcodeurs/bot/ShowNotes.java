@@ -30,6 +30,7 @@ public class ShowNotes {
     threads.stream()
         .map(ShowNote::new)
         .filter(ShowNote::isShowNote)
+        .sorted(Comparator.comparing(ShowNote::order).thenComparing(ShowNote::timestamp))
         .forEach(
             note -> {
               ShowNoteCategory category = note.category();
