@@ -49,6 +49,15 @@ The following emojis must be added (suggested emojis can also be found in [this 
 | Conférences                  | lcc_conf     | https://openmoji.org/library/emoji-1F3A4/            |
 | Messages exclus              | lcc_exclude  | https://openmoji.org/library/emoji-274C/             |
 | Messages inclus              | lcc_include  | https://openmoji.org/library/emoji-2714/             |
+| Ordonner en 1                | lcc_1        | https://openmoji.org/library/emoji-0031-FE0F-20E3/   |
+| Ordonner en 2                | lcc_2        | https://openmoji.org/library/emoji-0032-FE0F-20E3/   |
+| Ordonner en 3                | lcc_3        | https://openmoji.org/library/emoji-0033-FE0F-20E3/   |
+| Ordonner en 4                | lcc_4        | https://openmoji.org/library/emoji-0034-FE0F-20E3/   |
+| Ordonner en 5                | lcc_5        | https://openmoji.org/library/emoji-0035-FE0F-20E3/   |
+| Ordonner en 6                | lcc_6        | https://openmoji.org/library/emoji-0036-FE0F-20E3/   |
+| Ordonner en 7                | lcc_7        | https://openmoji.org/library/emoji-0037-FE0F-20E3/   |
+| Ordonner en 8                | lcc_8        | https://openmoji.org/library/emoji-0038-FE0F-20E3/   |
+| Ordonner en 9                | lcc_9        | https://openmoji.org/library/emoji-0039-FE0F-20E3/   |
 
 Note also that aliases does not work because the name returned by the Slack API is not the name of the alias (it is the
 name of the aliased emoji).
