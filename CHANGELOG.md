@@ -5,14 +5,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Deployment documentation added to the README.
-- Add a way to order show notes within a category (#68).
-- Add a way to order replies within a show note (#68).
-
 ### Changed
-
-- Improve logging of commands and show notes generation (#70).
-- Improve error handling during show notes generation (#69). The bot will now try to alert the user.
 
 ### Fixed
 
@@ -21,7 +14,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Dependencies
-
-- Update bolt-socket-mode from 1.25.0 to [1.25.1](https://github.com/slackapi/java-slack-sdk/releases/tag/v1.25.1) (#67).
 
 ### Internal
