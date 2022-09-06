@@ -4,6 +4,7 @@ import static com.lescastcodeurs.bot.Constants.SLACK_APP_TOKEN;
 import static com.lescastcodeurs.bot.Constants.SLACK_BOT_TOKEN;
 import static java.util.Objects.requireNonNull;
 
+import com.lescastcodeurs.bot.internal.Stopwatch;
 import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.slack.api.bolt.App;
@@ -63,15 +64,32 @@ public class SlackMentionListener implements QuarkusApplication {
     app.event(
         AppMentionEvent.class,
         (req, ctx) -> {
-          LOG.debug("Received : {}", req);
-
+          Stopwatch stopwatch = new Stopwatch();
           SlackMentionEvent event = new SlackMentionEvent(req.getEvent());
           SlackBotAction command = SlackBotAction.guess(event.text());
-          client.chatPostMessage(event.channel(), event.replyTs(), command.response());
+          String channel = event.channel();
 
-          command.handlerAddress().ifPresent(address -> bus.publish(address, event));
-
-          return ctx.ack();
+          try {
+            LOG.info("Processing command {} (ts={}) in channel {}", command, channel, event.ts());
+            client.chatPostMessage(channel, event.replyTs(), command.response());
+            command.handlerAddress().ifPresent(address -> bus.publish(address, event));
+            var response = ctx.ack();
+            LOG.info(
+                "Command {} (ts={}) in channel {} processed, took {}",
+                command,
+                channel,
+                event.ts(),
+                stopwatch);
+            return response;
+          } catch (RuntimeException e) {
+            LOG.error(
+                "Command {} (ts={}) in channel {} failed, took {}",
+                command,
+                channel,
+                event.ts(),
+                stopwatch);
+            throw e;
+          }
         });
 
     return new SocketModeApp(appToken, app);

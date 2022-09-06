@@ -11,6 +11,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Improve logging of commands and show notes generation (#70).
+
 ### Fixed
 
 ### Deprecated

@@ -7,6 +7,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import com.lescastcodeurs.bot.github.GitHubApiException;
 import com.lescastcodeurs.bot.github.GitHubClient;
+import com.lescastcodeurs.bot.internal.Stopwatch;
 import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.lescastcodeurs.bot.slack.SlackThread;
@@ -42,10 +43,14 @@ public final class GenerateShowNotesHandler {
 
   @ConsumeEvent(GENERATE_SHOW_NOTES_ADDRESS)
   public void consume(SlackMentionEvent event) throws InterruptedException {
+    Stopwatch stopwatch = new Stopwatch();
     String channel = event.channel();
+    String timestamp = event.ts();
     String threadTs = event.replyTs();
 
     try {
+      LOG.info(
+          "Starting generation of show notes for message {} in channel {}", timestamp, channel);
       String channelName = slackClient.name(channel);
       List<SlackThread> threads = slackClient.history(channel);
 
@@ -57,10 +62,18 @@ public final class GenerateShowNotesHandler {
           channel,
           threadTs,
           "C'est fait, les show notes sont disponibles sur <" + showNoteUrl + ">.");
-      LOG.info("Show notes generated for channel {}", channel);
+      LOG.info(
+          "Show notes generation succeeded for for message {} in channel {}, took {}",
+          timestamp,
+          channel,
+          stopwatch);
     } catch (UncheckedIOException | UncheckedSlackApiException | GitHubApiException e) {
       LOG.error(
-          "An unexpected error occurred while generating show notes for channel {}.", channel, e);
+          "Show notes generation failed for for message {} in channel {}, took {}",
+          timestamp,
+          channel,
+          stopwatch,
+          e);
     }
   }
 }
