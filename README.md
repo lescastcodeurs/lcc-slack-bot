@@ -89,7 +89,7 @@ export SLACK_BOT_TOKEN='xoxb-xxx'
 export SLACK_APP_TOKEN='xapp-xxx'
 export JAR=$(find . -name 'lcc-slack-bot-*-runner.jar' | sort | tail -n 1)
 
-java -jar "$JAR" | tee -a 'lcc-slack-bot.log'
+java -Xmx128m -jar "$JAR" | tee -a 'lcc-slack-bot.log'
 ```
 
 Finally, you can start the bot [in a screen](https://linux.die.net/man/1/screen) using the following command :
