@@ -68,6 +68,10 @@ public final class ShowNote {
     return thread.timestamp();
   }
 
+  public String rawText() {
+    return thread.text();
+  }
+
   public String text() {
     return thread.asMarkdown();
   }

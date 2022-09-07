@@ -98,6 +98,16 @@ public enum SlackBotAction {
       """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
 
+  GENERATE_SHOW_NOTES_SUMMARY(
+      4,
+      List.of("summary", "sommaire"),
+      "OK, je suis sur le coup !",
+      List.of("@lcc, affiche le sommaire.", "@lcc, display the summary."),
+      """
+    Affiche le sommaire des notes de l'épisode à partir des show notes contenues dans ce channel. Cette commande vise à faciliter la categorisation et l'ordonnancement des notes de l'épisode. Les notes sont organisées selon leur catégorie, et pour chaque note sont affichés son ordre et un permalink qui permet d'accéder facilement au message concerné.
+    """,
+      Constants.GENERATE_SHOW_NOTES_SUMMARY_ADDRESS),
+
   UNKNOWN(
       999,
       List.of(),

@@ -33,6 +33,9 @@ public final class Constants {
   /** Address for the {@link com.lescastcodeurs.bot.GenerateShowNotesHandler}. */
   public static final String GENERATE_SHOW_NOTES_ADDRESS = "generate-show-notes";
 
+  /** Address for the {@link com.lescastcodeurs.bot.GenerateShowNotesSummaryHandler}. */
+  public static final String GENERATE_SHOW_NOTES_SUMMARY_ADDRESS = "generate-show-notes-summary";
+
   private Constants() {
     // prevent instantiation
   }

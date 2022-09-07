@@ -23,7 +23,7 @@ public enum ShowNoteCategory {
 
   // special categories
   INCLUDE(
-      "Messages inclus",
+      "Messages inclus / Non catégorisés",
       "lcc_include"), // Fall-back for unknown categories / force message inclusion.
   EXCLUDE("Messages exclus", "lcc_exclude"); // Force message exclusion.
 

@@ -9,6 +9,7 @@ import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.SlackApiTextResponse;
+import com.slack.api.methods.request.chat.ChatGetPermalinkRequest;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.request.conversations.ConversationsHistoryRequest;
 import com.slack.api.methods.request.conversations.ConversationsInfoRequest;
@@ -61,7 +62,7 @@ public final class SlackClient {
    * @see #replies(String, String)
    * @see <a href="https://api.slack.com/methods/conversations.history">conversations.history</a>.
    */
-  public List<SlackThread> history(String channel) {
+  public List<SlackThread> history(String channel, boolean fetchReplies) {
     MethodsClient slack = Slack.getInstance().methods(botToken);
 
     return SlackApi.check(
@@ -74,9 +75,8 @@ public final class SlackClient {
         .getMessages()
         .stream()
         .sorted(CHRONOLOGICAL)
-        // note: oddly, m.getChannel() is null, so it should be given
-        .map(m -> new SlackThread(m, replies(channel, m)))
-        // explicitly
+        // note: oddly, m.getChannel() is null, so it should be given explicitly
+        .map(m -> new SlackThread(m, fetchReplies ? replies(channel, m) : List.of()))
         .toList();
   }
 
@@ -106,6 +106,20 @@ public final class SlackClient {
         .filter(IS_REPLY)
         .sorted(CHRONOLOGICAL)
         .toList();
+  }
+
+  /**
+   * Get a message permalink.
+   *
+   * @see <a href="https://api.slack.com/methods/chat.getPermalink">chat.getPermalink</a>
+   */
+  public String permalink(String channel, String ts) {
+    MethodsClient slack = Slack.getInstance().methods(botToken);
+    return SlackApi.check(
+            () ->
+                slack.chatGetPermalink(
+                    ChatGetPermalinkRequest.builder().channel(channel).messageTs(ts).build()))
+        .getPermalink();
   }
 
   /**
