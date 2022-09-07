@@ -5,8 +5,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Add a `summary` command to help with categorization and ordering of show notes (#71).
-
 ### Changed
 
 ### Fixed
