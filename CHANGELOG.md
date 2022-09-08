@@ -13,6 +13,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Removed
 
-### Dependencies
-
 ### Internal
+
+- Configure dependabot to check for update of GitHub actions versions (#72).
