@@ -20,11 +20,13 @@ public class ShowNotes {
   private final Locale locale;
   private final String title;
   private final Map<ShowNoteCategory, List<ShowNote>> notes;
+  private final Conferences conferences;
 
-  public ShowNotes(String title, List<SlackThread> threads) {
+  public ShowNotes(String title, List<SlackThread> threads, Conferences conferences) {
     this.now = LocalDateTime.now();
     this.locale = Locale.FRANCE;
     this.title = requireNonNull(title);
+    this.conferences = conferences;
 
     this.notes = new EnumMap<>(ShowNoteCategory.class);
     threads.stream()
@@ -49,6 +51,10 @@ public class ShowNotes {
 
   public Locale locale() {
     return locale;
+  }
+
+  public Conferences conferences() {
+    return conferences;
   }
 
   public int episodeNumber() {

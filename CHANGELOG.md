@@ -5,6 +5,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Automatically fill the _Conférences_ section using french conferences found on
+  [scraly/developers-conferences-agenda](https://github.com/scraly/developers-conferences-agenda) (#74).
+
 ### Changed
 
 ### Fixed

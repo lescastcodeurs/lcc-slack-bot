@@ -95,6 +95,7 @@ public enum SlackBotAction {
        • La formatage suivant est conservé : *gras*, _italique_, ~barré~, `code`. Les citations sont aussi possibles, mais uniquement sur le premier message du thread.
        • Les retours chariot ne sont conservés que sur le premier message du thread, ou quand les réponses sont organisées sous la forme d'une liste.
        • Les show notes peuvent être publiées plusieurs fois: le fichier markdown est alors mis à jour.
+       • La liste des conférences françaises disponible sur <https://github.com/scraly/developers-conferences-agenda> est automatiquement récupérée pour compléter la section _Conférences_.
       """,
       Constants.GENERATE_SHOW_NOTES_ADDRESS),
 

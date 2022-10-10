@@ -30,6 +30,20 @@ public final class Constants {
    */
   public static final String GITHUB_REPOSITORY = "github.repository";
 
+  /**
+   * Configuration key for GitHub repository ({@code owner/repo}).
+   *
+   * <p>For more information see the project README.
+   */
+  public static final String GITHUB_CONFERENCES_REPOSITORY = "github.conferences_repository";
+
+  /**
+   * Configuration key for GitHub criteria (e.g. {@code (France),Devoxx}).
+   *
+   * <p>For more information see the project README.
+   */
+  public static final String GITHUB_CONFERENCES_CRITERIA = "github.conferences_criteria";
+
   /** Address for the {@link com.lescastcodeurs.bot.GenerateShowNotesHandler}. */
   public static final String GENERATE_SHOW_NOTES_ADDRESS = "generate-show-notes";
 

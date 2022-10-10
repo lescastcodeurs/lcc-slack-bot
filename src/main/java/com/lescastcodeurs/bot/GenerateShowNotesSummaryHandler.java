@@ -33,7 +33,7 @@ public final class GenerateShowNotesSummaryHandler extends LongTaskHandlerSuppor
         event,
         () -> {
           List<SlackThread> threads = slackClient.history(event.channel(), false);
-          ShowNotes notes = new ShowNotes("summary", threads);
+          ShowNotes notes = new ShowNotes("summary", threads, null);
 
           StringBuilder response = new StringBuilder();
           for (ShowNoteCategory category : ShowNoteCategory.values()) {

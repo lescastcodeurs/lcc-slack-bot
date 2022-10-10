@@ -1,9 +1,10 @@
 package com.lescastcodeurs.bot;
 
-import static com.lescastcodeurs.bot.Constants.GENERATE_SHOW_NOTES_ADDRESS;
+import static com.lescastcodeurs.bot.Constants.*;
 import static com.lescastcodeurs.bot.internal.StringUtils.asFilename;
 import static java.util.Objects.requireNonNull;
 
+import com.lescastcodeurs.bot.github.GitHubApiException;
 import com.lescastcodeurs.bot.github.GitHubClient;
 import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
@@ -14,6 +15,7 @@ import io.quarkus.vertx.ConsumeEvent;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /** Handles {@link SlackBotAction#GENERATE_SHOW_NOTES} commands. */
 @ApplicationScoped
@@ -22,14 +24,23 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
   private final Template notes;
   private final SlackClient slackClient;
   private final GitHubClient gitHubClient;
+  private final String gitHubRepository;
+  private final String gitHubConfsRepository;
+  private final List<String> gitHubConfsCriteria;
 
   @Inject
   public GenerateShowNotesHandler(
       SlackClient slackClient,
       GitHubClient gitHubClient,
+      @ConfigProperty(name = GITHUB_REPOSITORY) String gitHubRepository,
+      @ConfigProperty(name = GITHUB_CONFERENCES_REPOSITORY) String gitHubConfsRepository,
+      @ConfigProperty(name = GITHUB_CONFERENCES_CRITERIA) List<String> gitHubConfsCriteria,
       @Location("show-notes.md") Template notes) {
     this.slackClient = requireNonNull(slackClient);
     this.gitHubClient = requireNonNull(gitHubClient);
+    this.gitHubRepository = requireNonNull(gitHubRepository);
+    this.gitHubConfsRepository = requireNonNull(gitHubConfsRepository);
+    this.gitHubConfsCriteria = List.copyOf(gitHubConfsCriteria);
     this.notes = requireNonNull(notes);
   }
 
@@ -46,9 +57,23 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
           String channelName = slackClient.name(event.channel());
           List<SlackThread> threads = slackClient.history(event.channel(), true);
 
+          Conferences conferences;
+          try {
+            conferences =
+                new Conferences(
+                    gitHubClient.getContent(gitHubConfsRepository, "README.md"),
+                    gitHubConfsCriteria);
+          } catch (GitHubApiException e) {
+            conferences = new Conferences(null, gitHubConfsCriteria);
+            log.warn(
+                "There was an error while retrieving conferences list from {}/README.md",
+                gitHubConfsRepository,
+                e);
+          }
+
           String filename = asFilename(channelName, "md");
-          String content = notes.render(new ShowNotes(channelName, threads));
-          String showNoteUrl = gitHubClient.createOrUpdateFile(filename, content);
+          String content = notes.render(new ShowNotes(channelName, threads, conferences));
+          String showNoteUrl = gitHubClient.createOrUpdateFile(gitHubRepository, filename, content);
 
           slackClient.chatPostMessage(
               event.channel(),

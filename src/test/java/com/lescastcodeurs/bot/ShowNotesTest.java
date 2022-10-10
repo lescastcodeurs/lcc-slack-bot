@@ -21,7 +21,7 @@ class ShowNotesTest {
 
   @Test
   void generateEmpty() {
-    ShowNotes showNotes = new ShowNotes("test", List.of());
+    ShowNotes showNotes = new ShowNotes("test", List.of(), new Conferences(null, List.of()));
     String rendered = notes.render(showNotes);
 
     assertEquals(ShowNotes.DEFAULT_EPISODE_NUMBER, showNotes.episodeNumber());
@@ -43,7 +43,7 @@ class ShowNotesTest {
   }
 
   @Test
-  void generateWithNotes() {
+  void generateWithNotesAndConferences() {
     List<SlackThread> threads = new ArrayList<>();
     threads.add(thread("random comment 1"));
     for (ShowNoteCategory category : ShowNoteCategory.values()) {
@@ -52,7 +52,18 @@ class ShowNotesTest {
     threads.add(thread("random comment 2"));
     threads.add(thread("@lcc generate show notes"));
 
-    ShowNotes showNotes = new ShowNotes("test-123", threads);
+    Conferences conferences =
+        new Conferences(
+            """
+      ## 2022
+
+      ### October
+
+      * 6-7: [Paris Web](https://paris-web.fr/) - Paris (France) <img alt="Closed Captions" src="https://img.shields.io/static/v1?label=CC&message=Closed%20Captions&color=blue" /> <a href="https://appel.paris-web.fr/"><img alt="CFP Paris Web" src="https://img.shields.io/static/v1?label=CFP&message=24-Mar-2022-%3E24-Apr-2022&color=red"> </a>
+      """,
+            List.of("(France)"));
+
+    ShowNotes showNotes = new ShowNotes("test-123", threads, conferences);
     String rendered = notes.render(showNotes);
 
     assertEquals(123, showNotes.episodeNumber());
@@ -98,9 +109,7 @@ class ShowNotesTest {
     assertContains(
         rendered,
         "## Rubrique débutant\n\n[https://lescastcodeurs.com/BEGINNERS](https://lescastcodeurs.com/BEGINNERS)");
-    assertContains(
-        rendered,
-        "## Conférences\n\n[Nom de la conf du x au y mois à Ville]() - [CfP]() jusqu’à y mois\nTODO: reprendre celles de l’épisode d’avant\n\n[https://lescastcodeurs.com/CONFERENCES](https://lescastcodeurs.com/CONFERENCES)");
+    assertContains(rendered, "Paris Web");
 
     assertFalse(rendered.contains("random comment"));
     assertFalse(rendered.contains("generate show notes"));
@@ -114,7 +123,8 @@ class ShowNotesTest {
             List.of(
                 thread("1", "a", INCLUDE.reaction()),
                 thread("2", "b", INCLUDE.reaction()),
-                thread("3", "c", INCLUDE.reaction())));
+                thread("3", "c", INCLUDE.reaction())),
+            null);
 
     assertEquals(
         List.of("a", "b", "c"),
@@ -129,7 +139,8 @@ class ShowNotesTest {
             List.of(
                 thread("2", "b", INCLUDE.reaction()),
                 thread("1", "a", INCLUDE.reaction()),
-                thread("3", "c", INCLUDE.reaction())));
+                thread("3", "c", INCLUDE.reaction())),
+            null);
 
     assertEquals(
         List.of("a", "b", "c"),
@@ -144,7 +155,8 @@ class ShowNotesTest {
             List.of(
                 thread("1", "a", INCLUDE.reaction(), "lcc_3"),
                 thread("2", "b", INCLUDE.reaction(), "lcc_2"),
-                thread("3", "c", INCLUDE.reaction(), "lcc_1")));
+                thread("3", "c", INCLUDE.reaction(), "lcc_1")),
+            null);
 
     assertEquals(
         List.of("c", "b", "a"),
@@ -153,7 +165,7 @@ class ShowNotesTest {
 
   @Test
   void whenMultipleNumbersInTitle_theFirstOneIsTheEpisodeNumber() {
-    ShowNotes showNotes = new ShowNotes("test42 54", List.of());
+    ShowNotes showNotes = new ShowNotes("test42 54", List.of(), null);
 
     assertEquals(42, showNotes.episodeNumber());
   }

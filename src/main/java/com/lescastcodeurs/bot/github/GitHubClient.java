@@ -1,6 +1,5 @@
 package com.lescastcodeurs.bot.github;
 
-import static com.lescastcodeurs.bot.Constants.GITHUB_REPOSITORY;
 import static com.lescastcodeurs.bot.Constants.GITHUB_TOKEN;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.json.Json.createObjectBuilder;
@@ -31,16 +30,12 @@ public class GitHubClient {
   private static final String GITHUB_API_URL = "https://api.github.com";
 
   private final String token;
-  private final String repository;
 
   private final Base64.Encoder encoder;
   private final HttpClient client;
 
-  public GitHubClient(
-      @ConfigProperty(name = GITHUB_TOKEN) String token,
-      @ConfigProperty(name = GITHUB_REPOSITORY) String repository) {
+  public GitHubClient(@ConfigProperty(name = GITHUB_TOKEN) String token) {
     this.token = token;
-    this.repository = repository;
     this.client =
         HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
@@ -50,13 +45,14 @@ public class GitHubClient {
   }
 
   /**
-   * Create or update a file in the configured {@link #repository} under the given filename.
+   * Create or update a file in the given repository under the given filename.
    *
    * @see <a
    *     href="https://docs.github.com/en/rest/repos/contents#create-or-update-file-contents">Create
    *     or update file contents</a>
    */
-  public String createOrUpdateFile(String filename, String content) throws InterruptedException {
+  public String createOrUpdateFile(String repository, String filename, String content)
+      throws InterruptedException {
     JsonObjectBuilder commit =
         createObjectBuilder()
             .add("message", "publish show notes")
@@ -67,11 +63,11 @@ public class GitHubClient {
                     .add("email", "commentaire@lescastcodeurs.com"))
             .add("content", encoder.encodeToString(content.getBytes(UTF_8)));
 
-    Optional<String> sha = getSha(filename);
+    Optional<String> sha = getSha(repository, filename);
     sha.ifPresent(s -> commit.add("sha", s));
 
     send(
-        HttpRequest.newBuilder(URI.create(gitHubApiUrl(filename)))
+        HttpRequest.newBuilder(URI.create(gitHubApiUrl(repository, filename)))
             .header("Accept", "application/vnd.github.v3+json")
             .header("Authorization", "token " + token)
             .PUT(HttpRequest.BodyPublishers.ofString(commit.build().toString()))
@@ -79,15 +75,28 @@ public class GitHubClient {
         200,
         201);
 
-    return gitHubUrl(filename);
+    return gitHubUrl(repository, filename);
   }
 
-  private Optional<String> getSha(String filename) throws InterruptedException {
+  public String getContent(String repository, String filename) throws InterruptedException {
+    HttpResponse<String> response =
+        send(
+            HttpRequest.newBuilder(URI.create(gitHubApiUrl(repository, filename)))
+                .header("Accept", "application/vnd.github.v3.raw")
+                .header("Authorization", "token " + token)
+                .GET()
+                .build(),
+            200);
+
+    return response.body();
+  }
+
+  private Optional<String> getSha(String repository, String filename) throws InterruptedException {
     String sha = null;
 
     HttpResponse<String> response =
         send(
-            HttpRequest.newBuilder(URI.create(gitHubApiUrl(filename)))
+            HttpRequest.newBuilder(URI.create(gitHubApiUrl(repository, filename)))
                 .header("Accept", "application/vnd.github.v3+json")
                 .header("Authorization", "token " + token)
                 .GET()
@@ -105,11 +114,11 @@ public class GitHubClient {
     return Optional.ofNullable(sha);
   }
 
-  private String gitHubApiUrl(String filename) {
+  private String gitHubApiUrl(String repository, String filename) {
     return "%s/repos/%s/contents/%s".formatted(GITHUB_API_URL, repository, filename);
   }
 
-  private String gitHubUrl(String filename) {
+  private String gitHubUrl(String repository, String filename) {
     return "%s/%s/blob/main/%s".formatted(GITHUB_URL, repository, filename);
   }
 

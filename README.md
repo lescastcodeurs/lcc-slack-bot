@@ -92,10 +92,21 @@ You also need to create the launch script using the following template (do not f
 ```shell
 #!/usr/bin/env bash
 
+# GitHub credentials and repository used for the publication of the show notes.
+# See the "Create the GitHub token" section for an explanation of how to get this token.
 export GITHUB_TOKEN='ghp_xxx'
 export GITHUB_REPOSITORY='lescastcodeurs/staging.lescastcodeurs.com'
+
+# Credentials used to retrieve the show notes in Slack. See the "Register the bot in your workspace" section for an
+# explanation of how to get those tokens.
 export SLACK_BOT_TOKEN='xoxb-xxx'
 export SLACK_APP_TOKEN='xapp-xxx'
+
+# Name of the GitHub repository used to retrieve the conferences list, and criteria used for filtering the list.
+# Those properties are already set to those values by default.
+#export GITHUB_CONFERENCES_REPOSITORY='scraly/developers-conferences-agenda'
+#export GITHUB_CONFERENCES_CRITERIA='(France),Devoxx'
+
 export JAR=$(find . -name 'lcc-slack-bot-*-runner.jar' | sort | tail -n 1)
 
 java -Xmx128m -jar "$JAR" | tee -a 'lcc-slack-bot.log'
