@@ -1,6 +1,7 @@
 package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
+import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.lescastcodeurs.bot.slack.Messages;
@@ -21,7 +22,7 @@ class ShowNotesTest {
 
   @Test
   void generateEmpty() {
-    ShowNotes showNotes = new ShowNotes("test", List.of(), new Conferences(null, List.of()));
+    ShowNotes showNotes = new ShowNotes("test", List.of(), new Conferences(null, List.of()), now());
     String rendered = notes.render(showNotes);
 
     assertEquals(ShowNotes.DEFAULT_EPISODE_NUMBER, showNotes.episodeNumber());
@@ -63,7 +64,7 @@ class ShowNotesTest {
       """,
             List.of("(France)"));
 
-    ShowNotes showNotes = new ShowNotes("test-123", threads, conferences);
+    ShowNotes showNotes = new ShowNotes("test-123", threads, conferences, now());
     String rendered = notes.render(showNotes);
 
     assertEquals(123, showNotes.episodeNumber());
@@ -124,7 +125,8 @@ class ShowNotesTest {
                 thread("1", "a", INCLUDE.reaction()),
                 thread("2", "b", INCLUDE.reaction()),
                 thread("3", "c", INCLUDE.reaction())),
-            null);
+            null,
+            now());
 
     assertEquals(
         List.of("a", "b", "c"),
@@ -140,7 +142,8 @@ class ShowNotesTest {
                 thread("2", "b", INCLUDE.reaction()),
                 thread("1", "a", INCLUDE.reaction()),
                 thread("3", "c", INCLUDE.reaction())),
-            null);
+            null,
+            now());
 
     assertEquals(
         List.of("a", "b", "c"),
@@ -156,7 +159,8 @@ class ShowNotesTest {
                 thread("1", "a", INCLUDE.reaction(), "lcc_3"),
                 thread("2", "b", INCLUDE.reaction(), "lcc_2"),
                 thread("3", "c", INCLUDE.reaction(), "lcc_1")),
-            null);
+            null,
+            now());
 
     assertEquals(
         List.of("c", "b", "a"),
@@ -165,7 +169,7 @@ class ShowNotesTest {
 
   @Test
   void whenMultipleNumbersInTitle_theFirstOneIsTheEpisodeNumber() {
-    ShowNotes showNotes = new ShowNotes("test42 54", List.of(), null);
+    ShowNotes showNotes = new ShowNotes("test42 54", List.of(), null, now());
 
     assertEquals(42, showNotes.episodeNumber());
   }

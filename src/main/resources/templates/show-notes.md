@@ -11,7 +11,7 @@ tweet: TODO
 
 Résumé
 
-Enregistré le {now.format('d MMM uuuu', locale)}
+Enregistré le {recordDate.format('d MMM uuuu', locale)}
 
 Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](https://traffic.libsyn.com/lescastcodeurs/LesCastCodeurs-Episode-{episodeNumber}.mp3)
 

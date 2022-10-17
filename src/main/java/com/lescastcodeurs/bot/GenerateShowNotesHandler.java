@@ -12,6 +12,7 @@ import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.vertx.ConsumeEvent;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -27,6 +28,7 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
   private final String gitHubRepository;
   private final String gitHubConfsRepository;
   private final List<String> gitHubConfsCriteria;
+  private final String recordDateCriterion;
 
   @Inject
   public GenerateShowNotesHandler(
@@ -35,18 +37,20 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
       @ConfigProperty(name = GITHUB_REPOSITORY) String gitHubRepository,
       @ConfigProperty(name = GITHUB_CONFERENCES_REPOSITORY) String gitHubConfsRepository,
       @ConfigProperty(name = GITHUB_CONFERENCES_CRITERIA) List<String> gitHubConfsCriteria,
+      @ConfigProperty(name = LCC_RECORD_DATE_CRITERION) String recordDateCriterion,
       @Location("show-notes.md") Template notes) {
     this.slackClient = requireNonNull(slackClient);
     this.gitHubClient = requireNonNull(gitHubClient);
     this.gitHubRepository = requireNonNull(gitHubRepository);
     this.gitHubConfsRepository = requireNonNull(gitHubConfsRepository);
     this.gitHubConfsCriteria = List.copyOf(gitHubConfsCriteria);
+    this.recordDateCriterion = requireNonNull(recordDateCriterion);
     this.notes = requireNonNull(notes);
   }
 
   @Override
   String description() {
-    return "generation of show notes";
+    return "Generation of show notes";
   }
 
   @ConsumeEvent(GENERATE_SHOW_NOTES_ADDRESS)
@@ -56,23 +60,12 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
         () -> {
           String channelName = slackClient.name(event.channel());
           List<SlackThread> threads = slackClient.history(event.channel(), true);
-
-          Conferences conferences;
-          try {
-            conferences =
-                new Conferences(
-                    gitHubClient.getContent(gitHubConfsRepository, "README.md"),
-                    gitHubConfsCriteria);
-          } catch (GitHubApiException e) {
-            conferences = new Conferences(null, gitHubConfsCriteria);
-            log.warn(
-                "There was an error while retrieving conferences list from {}/README.md",
-                gitHubConfsRepository,
-                e);
-          }
+          Conferences conferences = retrieveConferences();
+          LocalDateTime recordDate = retrieveRecordDate(threads);
 
           String filename = asFilename(channelName, "md");
-          String content = notes.render(new ShowNotes(channelName, threads, conferences));
+          String content =
+              notes.render(new ShowNotes(channelName, threads, conferences, recordDate));
           String showNoteUrl = gitHubClient.createOrUpdateFile(gitHubRepository, filename, content);
 
           slackClient.chatPostMessage(
@@ -87,5 +80,36 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
                 event.replyTs(),
                 "Désolé, une erreur est survenue : %s - %s. Pour plus d'infos voir les logs du bot."
                     .formatted(e.getClass().getSimpleName(), e.getMessage())));
+  }
+
+  private Conferences retrieveConferences() throws InterruptedException {
+    Conferences conferences;
+    try {
+      conferences =
+          new Conferences(
+              gitHubClient.getContent(gitHubConfsRepository, "README.md"), gitHubConfsCriteria);
+      log.info(
+          "Conferences list was successfully retrieved from {}/README.md", gitHubConfsRepository);
+    } catch (GitHubApiException e) {
+      conferences = new Conferences(null, gitHubConfsCriteria);
+      log.warn(
+          "There was an error while retrieving conferences list from {}/README.md",
+          gitHubConfsRepository,
+          e);
+    }
+    return conferences;
+  }
+
+  private LocalDateTime retrieveRecordDate(List<SlackThread> threads) {
+    LocalDateTime recordDate = LocalDateTime.now();
+
+    for (SlackThread thread : threads) {
+      if (thread.text().contains(recordDateCriterion)) {
+        recordDate = thread.dateTime(); // last matching thread wins
+      }
+    }
+
+    log.info("The following record date found will be used: {}", recordDate);
+    return recordDate;
   }
 }

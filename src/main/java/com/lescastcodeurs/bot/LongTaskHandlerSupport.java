@@ -24,7 +24,7 @@ abstract class LongTaskHandlerSupport<R> {
     String desc = description();
 
     try {
-      log.info("starting {} for mention {} in channel {}", desc, ts, channel);
+      log.info("Starting {} for mention {} in channel {}", desc, ts, channel);
       R result = task.call();
       log.info("{} succeeded for for message {} in channel {}, took {}", desc, ts, channel, watch);
       return Optional.ofNullable(result);

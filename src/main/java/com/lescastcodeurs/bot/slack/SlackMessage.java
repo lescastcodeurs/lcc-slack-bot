@@ -2,8 +2,10 @@ package com.lescastcodeurs.bot.slack;
 
 import static com.lescastcodeurs.bot.internal.StringUtils.isNotBlank;
 
+import com.lescastcodeurs.bot.internal.SlackUtils;
 import com.slack.api.model.Message;
 import com.slack.api.model.Reaction;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -30,15 +32,18 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
   private static final Pattern MENTION_PATTERN = Pattern.compile(".*<[@!][A-Za-z0-9]+>.*");
 
   public static final String DEFAULT_TS = "9999999999.999999";
+  public static final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.MAX;
 
   // See https://github.com/slackhq/slack-api-docs/issues/7#issuecomment-67913241.
   private final String timestamp;
+  private final LocalDateTime dateTime;
   private final String text;
   private final List<String> reactions;
   private final boolean appMessage;
 
   SlackMessage(Message message) {
     this.timestamp = message.getTs() == null ? DEFAULT_TS : message.getTs();
+    this.dateTime = SlackUtils.parseTimestamp(message.getTs(), DEFAULT_DATE_TIME);
     this.text = message.getText() == null ? "" : message.getText();
     this.reactions =
         message.getReactions() == null
@@ -49,6 +54,10 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
 
   public final String timestamp() {
     return timestamp;
+  }
+
+  public final LocalDateTime dateTime() {
+    return dateTime;
   }
 
   public final String text() {

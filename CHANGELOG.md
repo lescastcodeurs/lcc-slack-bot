@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Automatically fill the _Conférences_ section using french conferences found on
   [scraly/developers-conferences-agenda](https://github.com/scraly/developers-conferences-agenda) (#74).
+- Add record date detection (#75). Date of messages containing a configured string (typically a link to
+  `recording.zencastr.com`) will be used as record date in the show notes.
 
 ### Changed
 

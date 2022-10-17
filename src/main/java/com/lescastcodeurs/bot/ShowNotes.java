@@ -16,14 +16,15 @@ public class ShowNotes {
   public static final int DEFAULT_EPISODE_NUMBER = 999;
   public static final Pattern EPISODE_NUMBER_PATTERN = Pattern.compile(".*?(?<number>[0-9]+).*?");
 
-  private final LocalDateTime now;
+  private final LocalDateTime recordDate;
   private final Locale locale;
   private final String title;
   private final Map<ShowNoteCategory, List<ShowNote>> notes;
   private final Conferences conferences;
 
-  public ShowNotes(String title, List<SlackThread> threads, Conferences conferences) {
-    this.now = LocalDateTime.now();
+  public ShowNotes(
+      String title, List<SlackThread> threads, Conferences conferences, LocalDateTime recordDate) {
+    this.recordDate = requireNonNull(recordDate);
     this.locale = Locale.FRANCE;
     this.title = requireNonNull(title);
     this.conferences = conferences;
@@ -45,8 +46,8 @@ public class ShowNotes {
             });
   }
 
-  public LocalDateTime now() {
-    return now;
+  public LocalDateTime recordDate() {
+    return recordDate;
   }
 
   public Locale locale() {

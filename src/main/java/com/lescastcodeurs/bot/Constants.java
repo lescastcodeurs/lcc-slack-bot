@@ -44,6 +44,14 @@ public final class Constants {
    */
   public static final String GITHUB_CONFERENCES_CRITERIA = "github.conferences_criteria";
 
+  /**
+   * Configuration key for record date criterion (e.g. {@code
+   * https://recording.zencastr.com/lescastcodeurs}).
+   *
+   * <p>For more information see the project README.
+   */
+  public static final String LCC_RECORD_DATE_CRITERION = "lcc.record_date_criterion";
+
   /** Address for the {@link com.lescastcodeurs.bot.GenerateShowNotesHandler}. */
   public static final String GENERATE_SHOW_NOTES_ADDRESS = "generate-show-notes";
 

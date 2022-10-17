@@ -107,6 +107,11 @@ export SLACK_APP_TOKEN='xapp-xxx'
 #export GITHUB_CONFERENCES_REPOSITORY='scraly/developers-conferences-agenda'
 #export GITHUB_CONFERENCES_CRITERIA='(France),Devoxx'
 
+# Criterion used to retrieve the record date. Any top-level message of a thread containing this criterion is a
+# candidate for guessing the record date (the last one wins).
+# This property is already set to this value by default.
+#export LCC_RECORD_DATE_CRITERION='recording.zencastr.com'
+
 export JAR=$(find . -name 'lcc-slack-bot-*-runner.jar' | sort | tail -n 1)
 
 java -Xmx128m -jar "$JAR" | tee -a 'lcc-slack-bot.log'

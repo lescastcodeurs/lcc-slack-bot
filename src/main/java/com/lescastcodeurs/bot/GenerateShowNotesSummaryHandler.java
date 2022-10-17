@@ -7,6 +7,7 @@ import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.vertx.ConsumeEvent;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -24,7 +25,7 @@ public final class GenerateShowNotesSummaryHandler extends LongTaskHandlerSuppor
 
   @Override
   String description() {
-    return "generation of show notes summary";
+    return "Generation of show notes summary";
   }
 
   @ConsumeEvent(GENERATE_SHOW_NOTES_SUMMARY_ADDRESS)
@@ -33,7 +34,7 @@ public final class GenerateShowNotesSummaryHandler extends LongTaskHandlerSuppor
         event,
         () -> {
           List<SlackThread> threads = slackClient.history(event.channel(), false);
-          ShowNotes notes = new ShowNotes("summary", threads, null);
+          ShowNotes notes = new ShowNotes("summary", threads, null, LocalDateTime.now());
 
           StringBuilder response = new StringBuilder();
           for (ShowNoteCategory category : ShowNoteCategory.values()) {
