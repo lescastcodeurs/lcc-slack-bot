@@ -14,3 +14,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
+
+- Bump development java version from 17.0.4+8 to 17.0.5+8 (#88).
