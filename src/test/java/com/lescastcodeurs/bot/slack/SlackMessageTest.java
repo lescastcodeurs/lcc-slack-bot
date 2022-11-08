@@ -202,6 +202,13 @@ class SlackMessageTest {
   }
 
   @Test
+  void recognizeLinkAbsence2() {
+    SlackMessage message = new SlackReply(Messages.of("test <http://message"));
+
+    assertFalse(message.hasLink());
+  }
+
+  @Test
   void recognizeSimpleLinkPresence() {
     SlackMessage message = new SlackReply(Messages.of("test <https://lescastcodeurs.com/>"));
 
@@ -213,6 +220,21 @@ class SlackMessageTest {
     SlackMessage message =
         new SlackReply(
             Messages.of("test <https://lescastcodeurs.com/|Le podcast Java en Français>"));
+
+    assertTrue(message.hasLink());
+  }
+
+  @Test
+  void recognizeLinkPresenceInMultilineMessages() {
+    SlackMessage message =
+        new SlackReply(
+            Messages.of(
+                """
+ c’est mixé
+ • Je ne suis toujours pas assez doué pour le mégaphone
+ • L’audio <https://lescastcodeurs.com/|Le podcast Java en Français>
+ • Les notes <https://lescastcodeurs.com/>
+"""));
 
     assertTrue(message.hasLink());
   }

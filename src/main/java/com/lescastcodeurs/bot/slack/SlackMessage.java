@@ -19,9 +19,9 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
    */
   private static final String URL_CHARACTER_REGEX = "[A-Za-z\\d-._~:/?#\\[\\]@!$&'()*+,;=%]";
 
-  private static final Pattern SLACK_RAW_URL_PATTERN =
+  private static final Pattern SLACK_RAW_LINK_PATTERN =
       Pattern.compile("<(?<url>http" + URL_CHARACTER_REGEX + "{10,2000})>");
-  private static final Pattern SLACK_TITLED_URL_PATTERN =
+  private static final Pattern SLACK_TITLED_LINK_PATTERN =
       Pattern.compile(
           "<(?<url>http" + URL_CHARACTER_REGEX + "{10,2000})\\|(?<title>[^>]{1,20000})>");
 
@@ -79,8 +79,8 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
   public final String asMarkdown() {
     String markdown = text;
 
-    markdown = SLACK_RAW_URL_PATTERN.matcher(markdown).replaceAll("[${url}](${url})");
-    markdown = SLACK_TITLED_URL_PATTERN.matcher(markdown).replaceAll("[${title}](${url})");
+    markdown = SLACK_RAW_LINK_PATTERN.matcher(markdown).replaceAll("[${url}](${url})");
+    markdown = SLACK_TITLED_LINK_PATTERN.matcher(markdown).replaceAll("[${title}](${url})");
     markdown = BOLD_PATTERN.matcher(markdown).replaceAll("**${content}**");
     markdown = LIST_PATTERN.matcher(markdown).replaceAll("- ");
     markdown = SUBLIST_PATTERN.matcher(markdown).replaceAll("  - ");
@@ -95,7 +95,8 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
   }
 
   public boolean hasLink() {
-    return text.contains("<http");
+    return SLACK_RAW_LINK_PATTERN.matcher(text).find()
+        || SLACK_TITLED_LINK_PATTERN.matcher(text).find();
   }
 
   public boolean hasMention() {

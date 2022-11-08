@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - Fix mention recognition in messages (#87).
+- Fix link recognition in messages (during #87).
 
 ### Deprecated
 
