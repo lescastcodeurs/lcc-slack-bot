@@ -161,6 +161,40 @@ class SlackMessageTest {
   }
 
   @Test
+  void recognizeUserMentionMessageWithLinks() {
+    SlackMessage message =
+        new SlackReply(
+            Messages.of(
+                """
+       c’est mixé <@V6A4QLCNA> cc <@YAP44U4QZ>
+       • Je ne suis toujours pas assez doué pour le mégaphone
+       • L’audio <https://lescastcodeurs.com/|Le podcast Java en Français>
+       • Les notes <https://lescastcodeurs.com/>
+      """));
+
+    assertTrue(message.hasMention());
+    assertTrue(message.hasLink());
+  }
+
+  @Test
+  void recognizeUserMentionInMultilineMessage() {
+    SlackMessage message =
+        new SlackReply(
+            Messages.of(
+                """
+ c’est mixé
+ • Je ne suis toujours pas assez doué pour le mégaphone
+ • L’audio <https://lescastcodeurs.com/|Le podcast Java en Français>
+ • Les notes <https://lescastcodeurs.com/>
+
+ cc <@YAP44U4QZ>
+"""));
+
+    assertTrue(message.hasMention());
+    assertTrue(message.hasLink());
+  }
+
+  @Test
   void recognizeLinkAbsence() {
     SlackMessage message = new SlackReply(Messages.of("test message"));
 

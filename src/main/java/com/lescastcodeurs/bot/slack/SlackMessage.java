@@ -29,7 +29,7 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
 
   private static final Pattern LIST_PATTERN = Pattern.compile("^\\s*•\\s+", Pattern.MULTILINE);
   private static final Pattern SUBLIST_PATTERN = Pattern.compile("^ \\s*◦\\s+", Pattern.MULTILINE);
-  private static final Pattern MENTION_PATTERN = Pattern.compile(".*<[@!][A-Za-z0-9]+>.*");
+  private static final Pattern MENTION_PATTERN = Pattern.compile("<[@!][A-Za-z0-9]+>");
 
   public static final String DEFAULT_TS = "9999999999.999999";
   public static final LocalDateTime DEFAULT_DATE_TIME = LocalDateTime.MAX;
@@ -99,6 +99,6 @@ abstract sealed class SlackMessage permits SlackThread, SlackReply {
   }
 
   public boolean hasMention() {
-    return MENTION_PATTERN.matcher(text).matches();
+    return MENTION_PATTERN.matcher(text).find();
   }
 }

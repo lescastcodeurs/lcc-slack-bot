@@ -9,6 +9,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Fix mention recognition in messages (#87).
+
 ### Deprecated
 
 ### Removed
