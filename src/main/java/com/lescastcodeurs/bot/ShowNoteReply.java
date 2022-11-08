@@ -6,11 +6,14 @@ import static java.util.function.Predicate.not;
 
 import com.lescastcodeurs.bot.slack.SlackReply;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public final class ShowNoteReply {
 
   public static final int DEFAULT_ORDER = 999;
+
+  private static final Pattern LIST_ITEM_PATTERN = Pattern.compile("^ *-");
 
   private final SlackReply reply;
 
@@ -47,10 +50,21 @@ public final class ShowNoteReply {
   }
 
   public Stream<String> comments() {
-    return reply
-        .asMarkdown()
+    String markdown = reply.asMarkdown();
+    boolean isPlainList = markdown.startsWith("-");
+
+    return markdown
         .lines()
         .filter(not(String::isBlank))
-        .map(line -> (!line.startsWith("-") && !line.startsWith("  -")) ? "- " + line : line);
+        .map(
+            line -> {
+              if (LIST_ITEM_PATTERN.matcher(line).find()) {
+                // Lists that do not belong to plain lists messages have to be shifted. See
+                // corresponding tests.
+                return isPlainList ? line : "  " + line;
+              } else {
+                return "- " + line;
+              }
+            });
   }
 }

@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Improve list management in replies (#86).
+
 ### Fixed
 
 - Fix mention recognition in messages (#87).

@@ -84,6 +84,88 @@ class ShowNoteReplyTest {
   }
 
   @Test
+  void plainListIsConvertedAsIs() {
+    SlackReply message =
+        new SlackReply(
+            Messages.of("""
+      - test 1
+      - test 2
+      - test 3
+            """));
+    var reply = new ShowNoteReply(message);
+
+    assertEquals(List.of("- test 1", "- test 2", "- test 3"), reply.comments().toList());
+  }
+
+  @Test
+  void nonPlainListAreConvertedToSublist() {
+    SlackReply message =
+        new SlackReply(
+            Messages.of(
+                """
+      Test:
+      - test 1
+      - test 2
+      - test 3
+            """));
+    var reply = new ShowNoteReply(message);
+
+    assertEquals(
+        List.of("- Test:", "  - test 1", "  - test 2", "  - test 3"), reply.comments().toList());
+  }
+
+  @Test
+  void nonPlainListAreConvertedToSublist2() {
+    SlackReply message =
+        new SlackReply(
+            Messages.of(
+                """
+      Test A:
+      - test A1
+        - test A12
+      - test A2
+      - test A3
+
+      Test B:
+      - test B1
+      - test B2
+      - test B3
+            """));
+    var reply = new ShowNoteReply(message);
+
+    assertEquals(
+        List.of(
+            "- Test A:",
+            "  - test A1",
+            "    - test A12",
+            "  - test A2",
+            "  - test A3",
+            "- Test B:",
+            "  - test B1",
+            "  - test B2",
+            "  - test B3"),
+        reply.comments().toList());
+  }
+
+  @Test
+  void plainListWithSublistIsConvertedAsIs() {
+    SlackReply message =
+        new SlackReply(
+            Messages.of(
+                """
+      - test 1
+        - subtest 1
+        - subtest 2
+      - test 2
+            """));
+    var reply = new ShowNoteReply(message);
+
+    assertEquals(
+        List.of("- test 1", "  - subtest 1", "  - subtest 2", "- test 2"),
+        reply.comments().toList());
+  }
+
+  @Test
   void excludeReactionAlwaysWins() {
     SlackReply message =
         new SlackReply(Messages.of("test", List.of(INCLUDE.reaction(), EXCLUDE.reaction())));
