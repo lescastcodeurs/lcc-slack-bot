@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Improve help when an error occurs, such as a timeout (#97).
+
 ### Fixed
 
 ### Deprecated

@@ -78,7 +78,7 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
             slackClient.chatPostMessage(
                 event.channel(),
                 event.replyTs(),
-                "Désolé, une erreur est survenue : %s - %s. Pour plus d'infos voir les logs du bot."
+                "Désolé, une erreur est survenue : %s - %s. Pour plus d'informations voir les logs du bot. Pensez à réessayer votre commande au cas où, notamment en cas de timeout."
                     .formatted(e.getClass().getSimpleName(), e.getMessage())));
   }
 
