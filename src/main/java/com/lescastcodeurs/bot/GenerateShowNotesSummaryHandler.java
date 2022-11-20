@@ -28,7 +28,7 @@ public final class GenerateShowNotesSummaryHandler extends LongTaskHandlerSuppor
     return "Generation of show notes summary";
   }
 
-  @ConsumeEvent(GENERATE_SHOW_NOTES_SUMMARY_ADDRESS)
+  @ConsumeEvent(value = GENERATE_SHOW_NOTES_SUMMARY_ADDRESS, blocking = true)
   public void consume(SlackMentionEvent event) throws InterruptedException {
     execute(
         event,

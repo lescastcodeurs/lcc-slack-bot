@@ -53,7 +53,7 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
     return "Generation of show notes";
   }
 
-  @ConsumeEvent(GENERATE_SHOW_NOTES_ADDRESS)
+  @ConsumeEvent(value = GENERATE_SHOW_NOTES_ADDRESS, blocking = true)
   public void consume(SlackMentionEvent event) throws InterruptedException {
     execute(
         event,

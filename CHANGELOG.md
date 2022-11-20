@@ -11,6 +11,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- `GenerateShowNotesHandler` and `GenerateShowNotesSummaryHandler` are now executed in a worker thread (#96).
+
 ### Deprecated
 
 ### Removed
