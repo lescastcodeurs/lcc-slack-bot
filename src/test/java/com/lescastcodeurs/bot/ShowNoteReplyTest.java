@@ -3,7 +3,10 @@ package com.lescastcodeurs.bot;
 import static com.lescastcodeurs.bot.ShowNoteCategory.EXCLUDE;
 import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static com.lescastcodeurs.bot.ShowNoteReply.DEFAULT_ORDER;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.lescastcodeurs.bot.slack.Messages;
 import com.lescastcodeurs.bot.slack.SlackReply;
@@ -98,16 +101,51 @@ class ShowNoteReplyTest {
   }
 
   @Test
-  void nonPlainListAreConvertedToSublist() {
+  void plainListWithUnorderedSublistIsConvertedAsIs() {
     SlackReply message =
         new SlackReply(
             Messages.of(
                 """
+      - test 1
+        - subtest 1
+        - subtest 2
+      - test 2
+            """));
+    var reply = new ShowNoteReply(message);
+
+    assertEquals(
+        List.of("- test 1", "  - subtest 1", "  - subtest 2", "- test 2"),
+        reply.comments().toList());
+  }
+
+  @Test
+  void plainListWithOrderedSublistIsConvertedAsIs() {
+    SlackReply message =
+        new SlackReply(
+            Messages.of(
+                """
+      - test 1
+        a. subtest 1
+        b. subtest 2
+      - test 2
+      """));
+    var reply = new ShowNoteReply(message);
+
+    assertEquals(
+        List.of("- test 1", "  1. subtest 1", "  1. subtest 2", "- test 2"),
+        reply.comments().toList());
+  }
+
+  @Test
+  void nonPlainListAreConvertedToSublist() {
+    SlackReply message =
+        new SlackReply(
+            Messages.of("""
       Test:
       - test 1
       - test 2
       - test 3
-            """));
+      """));
     var reply = new ShowNoteReply(message);
 
     assertEquals(
@@ -122,46 +160,28 @@ class ShowNoteReplyTest {
                 """
       Test A:
       - test A1
-        - test A12
+        a. test A12
       - test A2
       - test A3
 
       Test B:
-      - test B1
-      - test B2
-      - test B3
-            """));
+      1. test B1
+      2. test B2
+      3. test B3
+      """));
     var reply = new ShowNoteReply(message);
 
     assertEquals(
         List.of(
             "- Test A:",
             "  - test A1",
-            "    - test A12",
+            "    1. test A12",
             "  - test A2",
             "  - test A3",
             "- Test B:",
-            "  - test B1",
-            "  - test B2",
-            "  - test B3"),
-        reply.comments().toList());
-  }
-
-  @Test
-  void plainListWithSublistIsConvertedAsIs() {
-    SlackReply message =
-        new SlackReply(
-            Messages.of(
-                """
-      - test 1
-        - subtest 1
-        - subtest 2
-      - test 2
-            """));
-    var reply = new ShowNoteReply(message);
-
-    assertEquals(
-        List.of("- test 1", "  - subtest 1", "  - subtest 2", "- test 2"),
+            "  1. test B1",
+            "  2. test B2",
+            "  3. test B3"),
         reply.comments().toList());
   }
 

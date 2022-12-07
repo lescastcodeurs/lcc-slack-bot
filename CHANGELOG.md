@@ -8,6 +8,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Improve help when an error occurs, such as a timeout (#97).
+- Support ordered lists and sublists transformation from Slack syntax to GitHub flavored markdown
+  (#98). Sublists size is limited to at most 26 elements.
 
 ### Fixed
 

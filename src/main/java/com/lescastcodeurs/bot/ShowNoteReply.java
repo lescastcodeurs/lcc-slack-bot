@@ -13,7 +13,9 @@ public final class ShowNoteReply {
 
   public static final int DEFAULT_ORDER = 999;
 
-  private static final Pattern LIST_ITEM_PATTERN = Pattern.compile("^ *-");
+  private static final Pattern UNORDERED_LIST_ITEM_PATTERN = Pattern.compile("^ *-");
+  private static final Pattern ORDERED_LIST_ITEM_PATTERN = Pattern.compile("^ *\\d+\\. ");
+  private static final Pattern ORDERED_SUBLIST_ITEM_PATTERN = Pattern.compile("^ *[a-z]\\. ");
 
   private final SlackReply reply;
 
@@ -58,10 +60,15 @@ public final class ShowNoteReply {
         .filter(not(String::isBlank))
         .map(
             line -> {
-              if (LIST_ITEM_PATTERN.matcher(line).find()) {
+              if (UNORDERED_LIST_ITEM_PATTERN.matcher(line).find()
+                  || ORDERED_LIST_ITEM_PATTERN.matcher(line).find()) {
                 // Lists that do not belong to plain lists messages have to be shifted. See
                 // corresponding tests.
                 return isPlainList ? line : "  " + line;
+              } else if (ORDERED_SUBLIST_ITEM_PATTERN.matcher(line).find()) {
+                // Lists that do not belong to plain lists messages have to be shifted. See
+                // corresponding tests.
+                return (isPlainList ? line : "  " + line).replaceFirst("[a-z]\\.", "1.");
               } else {
                 return "- " + line;
               }
