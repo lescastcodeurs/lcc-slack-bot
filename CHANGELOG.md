@@ -7,20 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Improve help when an error occurs, such as a timeout (#97).
-- Support ordered lists and sublists transformation from Slack syntax to GitHub flavored markdown
-  (#98). Sublists size is limited to at most 26 elements.
-
 ### Fixed
-
-- `GenerateShowNotesHandler` and `GenerateShowNotesSummaryHandler` are now executed in a worker thread (#96).
 
 ### Deprecated
 
 ### Removed
 
 ### Internal
-
-- Bump bolt-socket-mode from 1.26.1 to 1.27.2 (#93, #95, #103).
-- Bump quarkus from 2.13.4.Final to 2.14.3.Final (#94, #99, #104).
-- Bump spotless from 6.11.0 to 6.12.0 (#102).
