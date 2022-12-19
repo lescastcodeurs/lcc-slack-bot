@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Bump quarkus from 2.14.3.Final to 2.15.0.Final (#110).
+
 ### Fixed
 
 ### Deprecated
