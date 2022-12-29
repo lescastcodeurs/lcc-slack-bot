@@ -16,7 +16,7 @@ dependencies {
   implementation 'io.quarkus:quarkus-arc'
   implementation 'io.quarkus:quarkus-vertx'
   implementation 'io.quarkus:quarkus-qute'
-  implementation 'io.quarkus:quarkus-jsonp'
+  implementation 'io.quarkus:quarkus-jackson'
 
   implementation 'com.slack.api:bolt-socket-mode:1.27.2'
   implementation 'javax.websocket:javax.websocket-api:1.1'

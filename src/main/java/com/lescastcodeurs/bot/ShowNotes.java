@@ -6,7 +6,12 @@ import static java.util.Objects.requireNonNull;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.qute.TemplateData;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,10 +25,13 @@ public class ShowNotes {
   private final Locale locale;
   private final String title;
   private final Map<ShowNoteCategory, List<ShowNote>> notes;
-  private final Conferences conferences;
+  private final MarkdownSerializable conferences;
 
   public ShowNotes(
-      String title, List<SlackThread> threads, Conferences conferences, LocalDateTime recordDate) {
+      String title,
+      List<SlackThread> threads,
+      MarkdownSerializable conferences,
+      LocalDateTime recordDate) {
     this.recordDate = requireNonNull(recordDate);
     this.locale = Locale.FRANCE;
     this.title = requireNonNull(title);
@@ -54,7 +62,7 @@ public class ShowNotes {
     return locale;
   }
 
-  public Conferences conferences() {
+  public MarkdownSerializable conferences() {
     return conferences;
   }
 

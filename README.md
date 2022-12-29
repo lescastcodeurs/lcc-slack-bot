@@ -104,8 +104,8 @@ export SLACK_APP_TOKEN='xapp-xxx'
 
 # Name of the GitHub repository used to retrieve the conferences list, and criteria used for filtering the list.
 # Those properties are already set to those values by default.
-#export GITHUB_CONFERENCES_REPOSITORY='scraly/developers-conferences-agenda'
-#export GITHUB_CONFERENCES_CRITERIA='(France),Devoxx'
+#export CONFERENCES_JSON_URL='https://developers.events/all-events.json'
+#export CONFERENCES_SELECTION_CRITERIA='(France),Devoxx'
 
 # Criterion used to retrieve the record date. Any top-level message of a thread containing this criterion is a
 # candidate for guessing the record date (the last one wins).

@@ -210,12 +210,10 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 
 {/for}
 
-{#if !conferences.empty}
 La liste des conférences provenant de [Developers Conferences Agenda/List](https://github.com/scraly/developers-conferences-agenda)
 par [Aurélie Vache](https://github.com/scraly) et contributeurs :
 
 {conferences.markdown}
-{/if}
 
 ## Nous contacter
 
