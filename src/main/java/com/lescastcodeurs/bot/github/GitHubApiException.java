@@ -1,24 +1,15 @@
 package com.lescastcodeurs.bot.github;
 
-import java.net.URI;
+import com.lescastcodeurs.bot.internal.HttpResponseException;
 import java.net.http.HttpResponse;
 
-public class GitHubApiException extends RuntimeException {
+public class GitHubApiException extends HttpResponseException {
 
-  private final int status;
-  private final URI uri;
+  public GitHubApiException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
   public GitHubApiException(HttpResponse<String> response) {
-    super(response.body());
-    this.status = response.statusCode();
-    this.uri = response.uri();
-  }
-
-  public int getStatus() {
-    return status;
-  }
-
-  public URI getUri() {
-    return uri;
+    super(response);
   }
 }

@@ -1,10 +1,12 @@
 package com.lescastcodeurs.bot;
 
-import static com.lescastcodeurs.bot.Constants.*;
+import static com.lescastcodeurs.bot.Constants.GENERATE_SHOW_NOTES_ADDRESS;
+import static com.lescastcodeurs.bot.Constants.GITHUB_REPOSITORY;
+import static com.lescastcodeurs.bot.Constants.LCC_RECORD_DATE_CRITERION;
 import static com.lescastcodeurs.bot.internal.StringUtils.asFilename;
 import static java.util.Objects.requireNonNull;
 
-import com.lescastcodeurs.bot.github.GitHubApiException;
+import com.lescastcodeurs.bot.conferences.ConferencesClient;
 import com.lescastcodeurs.bot.github.GitHubClient;
 import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
@@ -25,25 +27,22 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
   private final Template notes;
   private final SlackClient slackClient;
   private final GitHubClient gitHubClient;
+  private final ConferencesClient conferencesClient;
   private final String gitHubRepository;
-  private final String gitHubConfsRepository;
-  private final List<String> gitHubConfsCriteria;
   private final String recordDateCriterion;
 
   @Inject
   public GenerateShowNotesHandler(
       SlackClient slackClient,
       GitHubClient gitHubClient,
+      ConferencesClient conferencesClient,
       @ConfigProperty(name = GITHUB_REPOSITORY) String gitHubRepository,
-      @ConfigProperty(name = GITHUB_CONFERENCES_REPOSITORY) String gitHubConfsRepository,
-      @ConfigProperty(name = GITHUB_CONFERENCES_CRITERIA) List<String> gitHubConfsCriteria,
       @ConfigProperty(name = LCC_RECORD_DATE_CRITERION) String recordDateCriterion,
       @Location("show-notes.md") Template notes) {
     this.slackClient = requireNonNull(slackClient);
     this.gitHubClient = requireNonNull(gitHubClient);
+    this.conferencesClient = requireNonNull(conferencesClient);
     this.gitHubRepository = requireNonNull(gitHubRepository);
-    this.gitHubConfsRepository = requireNonNull(gitHubConfsRepository);
-    this.gitHubConfsCriteria = List.copyOf(gitHubConfsCriteria);
     this.recordDateCriterion = requireNonNull(recordDateCriterion);
     this.notes = requireNonNull(notes);
   }
@@ -60,7 +59,7 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
         () -> {
           String channelName = slackClient.name(event.channel());
           List<SlackThread> threads = slackClient.history(event.channel(), true);
-          Conferences conferences = retrieveConferences();
+          MarkdownSerializable conferences = conferencesClient.getConferences();
           LocalDateTime recordDate = retrieveRecordDate(threads);
 
           String filename = asFilename(channelName, "md");
@@ -80,24 +79,6 @@ public final class GenerateShowNotesHandler extends LongTaskHandlerSupport<Void>
                 event.replyTs(),
                 "Désolé, une erreur est survenue : %s - %s. Pour plus d'informations voir les logs du bot. Pensez à réessayer votre commande au cas où, notamment en cas de timeout."
                     .formatted(e.getClass().getSimpleName(), e.getMessage())));
-  }
-
-  private Conferences retrieveConferences() throws InterruptedException {
-    Conferences conferences;
-    try {
-      conferences =
-          new Conferences(
-              gitHubClient.getContent(gitHubConfsRepository, "README.md"), gitHubConfsCriteria);
-      log.info(
-          "Conferences list was successfully retrieved from {}/README.md", gitHubConfsRepository);
-    } catch (GitHubApiException e) {
-      conferences = new Conferences(null, gitHubConfsCriteria);
-      log.warn(
-          "There was an error while retrieving conferences list from {}/README.md",
-          gitHubConfsRepository,
-          e);
-    }
-    return conferences;
   }
 
   private LocalDateTime retrieveRecordDate(List<SlackThread> threads) {

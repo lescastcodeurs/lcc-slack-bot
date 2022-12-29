@@ -7,7 +7,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Bump quarkus from 2.14.3.Final to 2.15.0.Final (#110).
+- Filter out past conferences in the _Conférences_ section (#109).
 
 ### Fixed
 
@@ -16,3 +16,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
+
+- Bump quarkus from 2.14.3.Final to 2.15.0.Final (#110).

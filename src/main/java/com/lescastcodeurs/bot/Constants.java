@@ -31,18 +31,18 @@ public final class Constants {
   public static final String GITHUB_REPOSITORY = "github.repository";
 
   /**
-   * Configuration key for GitHub repository ({@code owner/repo}).
+   * URL of the JSON containing all conferences ({@code https://developers.events/all-events.json}).
    *
    * <p>For more information see the project README.
    */
-  public static final String GITHUB_CONFERENCES_REPOSITORY = "github.conferences_repository";
+  public static final String CONFERENCES_JSON_URL = "conferences.json_url";
 
   /**
-   * Configuration key for GitHub criteria (e.g. {@code (France),Devoxx}).
+   * Configuration key for the conferences selection criteria (e.g. {@code (France),Devoxx}).
    *
    * <p>For more information see the project README.
    */
-  public static final String GITHUB_CONFERENCES_CRITERIA = "github.conferences_criteria";
+  public static final String CONFERENCES_SELECTION_CRITERIA = "conferences.selection_criteria";
 
   /**
    * Configuration key for record date criterion (e.g. {@code

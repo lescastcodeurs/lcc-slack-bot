@@ -2,10 +2,11 @@ package com.lescastcodeurs.bot.github;
 
 import static com.lescastcodeurs.bot.Constants.GITHUB_TOKEN;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static javax.json.Json.createObjectBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,13 +15,11 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
@@ -28,6 +27,8 @@ public class GitHubClient {
 
   private static final String GITHUB_URL = "https://github.com";
   private static final String GITHUB_API_URL = "https://api.github.com";
+
+  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   private final String token;
 
@@ -53,24 +54,24 @@ public class GitHubClient {
    */
   public String createOrUpdateFile(String repository, String filename, String content)
       throws InterruptedException {
-    JsonObjectBuilder commit =
-        createObjectBuilder()
-            .add("message", "publish show notes")
-            .add(
-                "committer",
-                Json.createObjectBuilder()
-                    .add("name", "@lcc")
-                    .add("email", "commentaire@lescastcodeurs.com"))
-            .add("content", encoder.encodeToString(content.getBytes(UTF_8)));
+    Map<String, Object> commit = new HashMap<>();
+    commit.put("message", "publish show notes");
+    commit.put("committer", Map.of("name", "@lcc", "email", "commentaire@lescastcodeurs.com"));
+    commit.put("content", encoder.encodeToString(content.getBytes(UTF_8)));
+    getSha(repository, filename).ifPresent(s -> commit.put("sha", s));
 
-    Optional<String> sha = getSha(repository, filename);
-    sha.ifPresent(s -> commit.add("sha", s));
+    String body;
+    try {
+      body = MAPPER.writeValueAsString(commit);
+    } catch (JsonProcessingException e) {
+      throw new GitHubApiException("Cannot generate JSON", e);
+    }
 
     send(
         HttpRequest.newBuilder(URI.create(gitHubApiUrl(repository, filename)))
             .header("Accept", "application/vnd.github.v3+json")
             .header("Authorization", "token " + token)
-            .PUT(HttpRequest.BodyPublishers.ofString(commit.build().toString()))
+            .PUT(HttpRequest.BodyPublishers.ofString(body))
             .build(),
         200,
         201);
@@ -105,9 +106,13 @@ public class GitHubClient {
             404);
 
     if (response.statusCode() == 200) {
-      try (JsonReader reader = Json.createReader(new StringReader(response.body()))) {
-        JsonObject body = reader.readObject();
-        sha = body.getString("sha");
+      try {
+        Map<String, Object> data =
+            MAPPER.readValue(response.body(), new TypeReference<Map<String, Object>>() {});
+        Object value = data.get("sha");
+        sha = value == null ? null : value.toString();
+      } catch (JsonProcessingException e) {
+        throw new GitHubApiException("Cannot parse JSON", e);
       }
     }
 

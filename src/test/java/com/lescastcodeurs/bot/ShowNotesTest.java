@@ -2,8 +2,12 @@ package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static java.time.LocalDateTime.now;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.lescastcodeurs.bot.conferences.NoConferenceMarkdown;
 import com.lescastcodeurs.bot.slack.Messages;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.qute.Location;
@@ -22,7 +26,7 @@ class ShowNotesTest {
 
   @Test
   void generateEmpty() {
-    ShowNotes showNotes = new ShowNotes("test", List.of(), new Conferences(null, List.of()), now());
+    ShowNotes showNotes = new ShowNotes("test", List.of(), new NoConferenceMarkdown(), now());
     String rendered = notes.render(showNotes);
 
     assertEquals(ShowNotes.DEFAULT_EPISODE_NUMBER, showNotes.episodeNumber());
@@ -53,18 +57,7 @@ class ShowNotesTest {
     threads.add(thread("random comment 2"));
     threads.add(thread("@lcc generate show notes"));
 
-    Conferences conferences =
-        new Conferences(
-            """
-      ## 2022
-
-      ### October
-
-      * 6-7: [Paris Web](https://paris-web.fr/) - Paris (France) <img alt="Closed Captions" src="https://img.shields.io/static/v1?label=CC&message=Closed%20Captions&color=blue" /> <a href="https://appel.paris-web.fr/"><img alt="CFP Paris Web" src="https://img.shields.io/static/v1?label=CFP&message=24-Mar-2022-%3E24-Apr-2022&color=red"> </a>
-      """,
-            List.of("(France)"));
-
-    ShowNotes showNotes = new ShowNotes("test-123", threads, conferences, now());
+    ShowNotes showNotes = new ShowNotes("test-123", threads, new NoConferenceMarkdown(), now());
     String rendered = notes.render(showNotes);
 
     assertEquals(123, showNotes.episodeNumber());
@@ -110,7 +103,7 @@ class ShowNotesTest {
     assertContains(
         rendered,
         "## Rubrique débutant\n\n[https://lescastcodeurs.com/BEGINNERS](https://lescastcodeurs.com/BEGINNERS)");
-    assertContains(rendered, "Paris Web");
+    assertContains(rendered, NoConferenceMarkdown.MESSAGE);
 
     assertFalse(rendered.contains("random comment"));
     assertFalse(rendered.contains("generate show notes"));
