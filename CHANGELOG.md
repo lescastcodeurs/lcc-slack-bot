@@ -17,4 +17,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Internal
 
-- Bump quarkus from 2.14.3.Final to 2.15.0.Final (#110).
+- Bump quarkus from 2.14.3.Final to 2.15.1.Final (#110, #112).
