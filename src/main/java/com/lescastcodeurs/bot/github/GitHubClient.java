@@ -25,6 +25,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public class GitHubClient {
 
+  private static final String API_VERSION = "2022-11-28";
+  private static final String API_MEDIA_TYPE = "application/vnd.github+json";
+
   private static final String GITHUB_URL = "https://github.com";
   private static final String GITHUB_API_URL = "https://api.github.com";
 
@@ -69,8 +72,9 @@ public class GitHubClient {
 
     send(
         HttpRequest.newBuilder(URI.create(gitHubApiUrl(repository, filename)))
-            .header("Accept", "application/vnd.github.v3+json")
+            .header("Accept", API_MEDIA_TYPE)
             .header("Authorization", "token " + token)
+            .header("X-GitHub-Api-Version", API_VERSION)
             .PUT(HttpRequest.BodyPublishers.ofString(body))
             .build(),
         200,
@@ -79,27 +83,15 @@ public class GitHubClient {
     return gitHubUrl(repository, filename);
   }
 
-  public String getContent(String repository, String filename) throws InterruptedException {
-    HttpResponse<String> response =
-        send(
-            HttpRequest.newBuilder(URI.create(gitHubApiUrl(repository, filename)))
-                .header("Accept", "application/vnd.github.v3.raw")
-                .header("Authorization", "token " + token)
-                .GET()
-                .build(),
-            200);
-
-    return response.body();
-  }
-
   private Optional<String> getSha(String repository, String filename) throws InterruptedException {
     String sha = null;
 
     HttpResponse<String> response =
         send(
             HttpRequest.newBuilder(URI.create(gitHubApiUrl(repository, filename)))
-                .header("Accept", "application/vnd.github.v3+json")
+                .header("Accept", API_MEDIA_TYPE)
                 .header("Authorization", "token " + token)
+                .header("X-GitHub-Api-Version", API_VERSION)
                 .GET()
                 .build(),
             200,

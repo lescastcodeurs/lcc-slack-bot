@@ -8,6 +8,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 
 - Filter out past conferences in the _Conférences_ section (#109).
+- Adapt GitHubClient to the new API versioning (#113).
 
 ### Fixed
 
