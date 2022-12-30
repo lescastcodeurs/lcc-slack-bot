@@ -7,9 +7,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Filter out past conferences in the _Conférences_ section (#109).
-- Adapt GitHubClient to the new API versioning (#113).
-
 ### Fixed
 
 ### Deprecated
@@ -17,5 +14,3 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
-
-- Bump quarkus from 2.14.3.Final to 2.15.1.Final (#110, #112).
