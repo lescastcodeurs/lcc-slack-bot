@@ -14,3 +14,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
+
+- Bump com.diffplug.spotless from 6.12.0 to 6.12.1 (#117).
