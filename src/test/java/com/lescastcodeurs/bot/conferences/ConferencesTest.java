@@ -1,5 +1,6 @@
 package com.lescastcodeurs.bot.conferences;
 
+import static java.util.Locale.FRANCE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,7 +25,7 @@ class ConferencesTest {
   void withMalformedJson() {
     Conferences confs = new Conferences("a malformed json", EMPTY);
 
-    assertTrue(confs.markdown().contains(NoConferenceMarkdown.MESSAGE));
+    assertTrue(confs.markdown(FRANCE).contains(NoConferenceMarkdown.MESSAGE));
   }
 
   @Test
@@ -67,7 +68,7 @@ class ConferencesTest {
       """,
             List.of("(France)", "Devoxx"));
 
-    String markdown = confs.markdown();
+    String markdown = confs.markdown(FRANCE);
     assertTrue(markdown.contains("Devoxx"));
   }
 }

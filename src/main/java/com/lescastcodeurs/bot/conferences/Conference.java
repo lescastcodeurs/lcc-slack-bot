@@ -10,6 +10,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("java:S6218") // don't care
 public record Conference(String name, String hyperlink, String location, long[] date, String misc)
@@ -54,17 +55,18 @@ public record Conference(String name, String hyperlink, String location, long[] 
   }
 
   @Override
-  public String markdown() {
+  public String markdown(Locale locale) {
     LocalDate start = timestampToDate(date[0]);
     LocalDate end = timestampToDate(date[1]);
+    DateTimeFormatter formatter = FORMAT.withLocale(locale);
 
     String date;
     if (start.equals(end)) {
-      date = end.format(FORMAT);
+      date = end.format(formatter);
     } else if (start.getMonth() == end.getMonth()) {
-      date = start.getDayOfMonth() + "-" + end.format(FORMAT);
+      date = start.getDayOfMonth() + "-" + end.format(formatter);
     } else {
-      date = start.format(FORMAT) + "-" + end.format(FORMAT);
+      date = start.format(formatter) + "-" + end.format(formatter);
     }
 
     return "- %s : [%s](%s) - %s %s%n".formatted(date, name, hyperlink, location, misc);

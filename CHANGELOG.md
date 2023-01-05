@@ -9,6 +9,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+-  Internationalize conferences dates (#116).
+
 ### Deprecated
 
 ### Removed
