@@ -12,14 +12,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @SuppressWarnings("java:S6218") // don't care
-public record Conference(String name, String hyperlink, String location, String misc, int[] date)
+public record Conference(String name, String hyperlink, String location, long[] date, String misc)
     implements MarkdownSerializable {
 
+  public static final long MIN_TIMESTAMP = Instant.MIN.getEpochSecond();
+  public static final long MAX_TIMESTAMP = Instant.MAX.getEpochSecond();
   private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("d MMMM uuuu");
 
   public boolean isValidCandidate(List<String> selectionCriteria, LocalDate date) {
     boolean result = hasValidData();
-    result = result && isAfter(date);
+    result = result && isOnOrAfter(date);
     result = result && matchesAnyOf(selectionCriteria);
     return result;
   }
@@ -27,12 +29,15 @@ public record Conference(String name, String hyperlink, String location, String 
   public boolean hasValidData() {
     return date != null
         && date.length == 2
+        && date[0] >= MIN_TIMESTAMP
+        && date[1] <= MAX_TIMESTAMP
+        && date[0] <= date[1]
         && isNotBlank(name)
         && isNotBlank(hyperlink)
         && isNotBlank(location);
   }
 
-  public boolean isAfter(LocalDate d) {
+  public boolean isOnOrAfter(LocalDate d) {
     long end = date[1];
     long now = d.toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC);
     return end >= now;
@@ -65,7 +70,7 @@ public record Conference(String name, String hyperlink, String location, String 
     return "- %s : [%s](%s) - %s %s%n".formatted(date, name, hyperlink, location, misc);
   }
 
-  private static LocalDate timestampToDate(int timestamp) {
+  private static LocalDate timestampToDate(long timestamp) {
     Instant instant = Instant.ofEpochSecond(timestamp);
     ZonedDateTime dateTime = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC);
     return dateTime.toLocalDate();
