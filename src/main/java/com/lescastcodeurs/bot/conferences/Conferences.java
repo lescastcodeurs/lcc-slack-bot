@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lescastcodeurs.bot.MarkdownSerializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +26,13 @@ public record Conferences(String json, List<String> selectionCriteria)
   }
 
   @Override
-  public String markdown() {
+  public String markdown(Locale locale) {
     LocalDate now = LocalDate.now();
 
     try {
       return MAPPER.readValue(json, new TypeReference<List<Conference>>() {}).stream()
           .filter(c -> c.isValidCandidate(selectionCriteria, now))
-          .map(Conference::markdown)
+          .map(c -> c.markdown(locale))
           .collect(Collectors.joining());
     } catch (JsonProcessingException e) {
       LOG.warn("An error occurred during JSON processing", e);
