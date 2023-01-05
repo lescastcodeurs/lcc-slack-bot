@@ -16,3 +16,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Internal
 
 - Bump com.diffplug.spotless from 6.12.0 to 6.12.1 (#117).
+- Bump quarkus from 2.15.1.Final to 2.15.2.Final (#118).
