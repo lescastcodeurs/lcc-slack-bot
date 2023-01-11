@@ -14,3 +14,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
+
+- Bump bolt-socket-mode from 1.27.2 to 1.27.3 (#121).
