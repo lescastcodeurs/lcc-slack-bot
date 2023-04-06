@@ -17,6 +17,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump bolt-socket-mode from 1.27.2 to 1.29.0 (#121, #131, #133, #134).
 - Bump quarkus from 2.15.2.Final to 2.16.3.Final (#122, #125, #128, #130).
-- Bump com.diffplug.spotless from 6.12.1 to 6.17.0 (#123, #124, #126, #127, #129, #132).
+- Bump com.diffplug.spotless from 6.12.1 to 6.18.0 (#123, #124, #126, #127, #129, #132, #135).
 - Bump temurin from 17.0.5+8 to 17.0.6+10 (#128).
 - Bump bolt-socket-mode from 1.27.3 to 1.28.1 (#131, #133).
