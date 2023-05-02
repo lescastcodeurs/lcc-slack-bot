@@ -20,3 +20,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump com.diffplug.spotless from 6.12.1 to 6.18.0 (#123, #124, #126, #127, #129, #132, #135).
 - Bump temurin from 17.0.5+8 to 17.0.6+10 (#128).
 - Bump bolt-socket-mode from 1.27.3 to 1.28.1 (#131, #133).
+- Bump temurin from temurin-17.0.6+10 to temurin-17.0.7+7 (#138).
