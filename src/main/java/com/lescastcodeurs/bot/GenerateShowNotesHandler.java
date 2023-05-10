@@ -14,10 +14,10 @@ import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.qute.Location;
 import io.quarkus.qute.Template;
 import io.quarkus.vertx.ConsumeEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 /** Handles {@link SlackBotAction#GENERATE_SHOW_NOTES} commands. */

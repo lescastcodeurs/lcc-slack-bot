@@ -7,10 +7,10 @@ import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.lescastcodeurs.bot.slack.SlackThread;
 import io.quarkus.vertx.ConsumeEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 /** Handles {@link SlackBotAction#GENERATE_SHOW_NOTES_SUMMARY} commands. */
 @ApplicationScoped
