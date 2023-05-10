@@ -2,7 +2,6 @@ package com.lescastcodeurs.bot.conferences;
 
 import static com.lescastcodeurs.bot.conferences.Conference.MAX_TIMESTAMP;
 import static com.lescastcodeurs.bot.conferences.Conference.MIN_TIMESTAMP;
-import static java.time.LocalTime.MIDNIGHT;
 import static java.time.ZoneOffset.UTC;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,9 +23,9 @@ class ConferenceTest {
   private static final String MISC = "CFP ends on 2023-01-01";
 
   private static final LocalDate START = LocalDate.of(2023, 4, 12);
-  private static final long START_STAMP = START.toEpochSecond(MIDNIGHT, UTC);
+  private static final long START_STAMP = START.atStartOfDay().toInstant(UTC).toEpochMilli();
   private static final LocalDate END = LocalDate.of(2023, 4, 14);
-  private static final long END_STAMP = END.toEpochSecond(MIDNIGHT, UTC);
+  private static final long END_STAMP = END.atStartOfDay().toInstant(UTC).toEpochMilli();
   private static final long[] DATES = new long[] {START_STAMP, END_STAMP};
 
   @Test
@@ -53,7 +52,6 @@ class ConferenceTest {
   private static Stream<Arguments> invalidDates() {
     return Stream.of(
         of((Object) new long[] {}),
-        of((Object) new long[] {MIN_TIMESTAMP}),
         of((Object) new long[] {MIN_TIMESTAMP, MAX_TIMESTAMP, MAX_TIMESTAMP}),
         // Disabled: https://github.com/scraly/developers-conferences-agenda/issues/319
         of((Object) new long[] {MAX_TIMESTAMP, MIN_TIMESTAMP}),

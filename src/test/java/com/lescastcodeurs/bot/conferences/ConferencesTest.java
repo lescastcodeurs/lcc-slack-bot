@@ -37,8 +37,8 @@ class ConferencesTest {
         {
           "name": "Devoxx France",
           "date": [
-            2147483647,
-            2147483647
+            9223372036854775007,
+            9223372036854775007
           ],
           "hyperlink": "https://devoxx.fr/",
           "location": "France (Paris)",
@@ -47,8 +47,8 @@ class ConferencesTest {
         {
           "name": "Monitorama",
           "date": [
-            2147483647,
-            2147483647
+            9223372036854775007,
+            9223372036854775007
           ],
           "hyperlink": "http://monitorama.com/",
           "location": "USA",
@@ -57,8 +57,8 @@ class ConferencesTest {
         {
           "name": "Best Of Web",
           "date": [
-            -2147483648,
-            -2147483648
+            0,
+            0
           ],
           "hyperlink": "http://bestofweb.paris/",
           "location": "France",

@@ -9,6 +9,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Adapt to the new conferences `àll-events.json` format (#139).
+
 ### Deprecated
 
 ### Removed
