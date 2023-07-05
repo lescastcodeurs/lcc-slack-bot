@@ -16,3 +16,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Internal
 
 - Bump com.diffplug.spotless from 6.18.0 to 6.20.0 (#146, #148).
+- Bump com.slack.api:bolt-socket-mode from 1.29.2 to 1.30.0 (#147).
