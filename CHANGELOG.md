@@ -15,4 +15,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Internal
 
-- Bump com.diffplug.spotless from 6.18.0 to 6.19.0 (#146).
+- Bump com.diffplug.spotless from 6.18.0 to 6.20.0 (#146, #148).
