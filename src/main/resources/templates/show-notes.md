@@ -1,7 +1,7 @@
 ---
 title: LCC {episodeNumber} -
 author: 'Emmanuel Bernard'
-team: 'Emmanuel Bernard, Guillaume Laforge, Vincent Massol, Antonio Goncalves, Arnaud Héritier, Audrey Neveu'
+team: 'Emmanuel Bernard, Guillaume Laforge, Vincent Massol, Antonio Goncalves, Arnaud Héritier, Audrey Neveu, Katia Aresti'
 layout: blog-post
 episode: {episodeNumber}
 mp3_length: 85017000
