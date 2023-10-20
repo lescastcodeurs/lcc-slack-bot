@@ -9,9 +9,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Fix conferences retrieval (#161).
+
 ### Deprecated
 
 ### Removed
 
 ### Internal
-

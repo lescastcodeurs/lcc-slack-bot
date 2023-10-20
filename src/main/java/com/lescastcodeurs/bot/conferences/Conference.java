@@ -14,7 +14,7 @@ import java.util.Locale;
 
 // Those fields are not used (but we still want this object to exactly reflect the expected JSON
 // structure).
-@JsonIgnoreProperties({"cfp", "status"})
+@JsonIgnoreProperties({"cfp", "status", "closedCaptions"})
 @SuppressWarnings("java:S6218") // don't care
 public record Conference(String name, String hyperlink, String location, long[] date, String misc)
     implements MarkdownSerializable {
