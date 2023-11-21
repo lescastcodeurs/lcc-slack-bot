@@ -11,10 +11,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
-- Fix conferences retrieval (#161).
-
 ### Deprecated
 
 ### Removed
 
 ### Internal
+
+- Bump com.slack.api:bolt-socket-mode from 1.34.0 to 1.36.1 (#166)
