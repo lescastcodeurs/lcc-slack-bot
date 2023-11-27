@@ -96,7 +96,7 @@ Téléchargement de l’épisode [LesCastCodeurs-Episode-{episodeNumber}.mp3](ht
 {/if}
 
 {#if hasNotes('DATA')}
-### Data
+### Data et Intelligence Artificielle
 
 {#for note in notes('DATA')}
 {note.text}

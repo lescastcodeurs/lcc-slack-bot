@@ -81,7 +81,8 @@ class ShowNotesTest {
     assertContains(
         rendered, "### Web\n\n[https://lescastcodeurs.com/WEB](https://lescastcodeurs.com/WEB)");
     assertContains(
-        rendered, "### Data\n\n[https://lescastcodeurs.com/DATA](https://lescastcodeurs.com/DATA)");
+        rendered,
+        "### Data et Intelligence Artificielle\n\n[https://lescastcodeurs.com/DATA](https://lescastcodeurs.com/DATA)");
     assertContains(
         rendered,
         "### Outillage\n\n[https://lescastcodeurs.com/TOOLING](https://lescastcodeurs.com/TOOLING)");

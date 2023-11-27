@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Update _Data_ section title to _Data et Intelligence Artificielle_.
+
 ### Fixed
 
 - Fix conferences retrieval (#161).
