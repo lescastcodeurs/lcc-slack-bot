@@ -62,7 +62,8 @@ class ConferencesTest {
           ],
           "hyperlink": "http://bestofweb.paris/",
           "location": "France",
-          "misc": ""
+          "misc": "",
+          "city": "Paris"
         }
       ]
       """,

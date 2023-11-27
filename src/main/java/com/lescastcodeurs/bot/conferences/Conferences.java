@@ -1,5 +1,6 @@
 package com.lescastcodeurs.bot.conferences;
 
+import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static java.util.Objects.requireNonNull;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,7 +19,8 @@ public record Conferences(String json, List<String> selectionCriteria)
 
   private static final Logger LOG = LoggerFactory.getLogger(Conferences.class);
 
-  private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final ObjectMapper MAPPER =
+      new ObjectMapper().configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
 
   public Conferences {
     requireNonNull(json);

@@ -2,7 +2,6 @@ package com.lescastcodeurs.bot.conferences;
 
 import static com.lescastcodeurs.bot.internal.StringUtils.isBlank;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lescastcodeurs.bot.MarkdownSerializable;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -12,9 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-// Those fields are not used (but we still want this object to exactly reflect the expected JSON
-// structure).
-@JsonIgnoreProperties({"cfp", "status", "closedCaptions"})
 @SuppressWarnings("java:S6218") // don't care
 public record Conference(String name, String hyperlink, String location, long[] date, String misc)
     implements MarkdownSerializable {
