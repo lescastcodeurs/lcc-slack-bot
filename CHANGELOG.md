@@ -19,3 +19,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 - Bump com.slack.api:bolt-socket-mode from 1.34.0 to 1.36.1 (#166)
 - Bump org.glassfish.tyrus.bundles:tyrus-standalone-client from 1.20 to 1.21 (#162).
+- Bump com.diffplug.spotless from 6.22.0 to 6.23.3 (#173).
