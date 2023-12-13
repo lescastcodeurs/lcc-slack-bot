@@ -21,3 +21,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Bump org.glassfish.tyrus.bundles:tyrus-standalone-client from 1.20 to 1.21 (#162).
 - Bump com.diffplug.spotless from 6.22.0 to 6.23.3 (#173).
 - Bump actions/setup-java from 3 to 4 (#170).
+- Bump github/codeql-action from 2 to 3 (#174).
