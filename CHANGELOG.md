@@ -7,7 +7,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-- Update _Data_ section title to _Data et Intelligence Artificielle_.
 
 ### Fixed
 
@@ -17,8 +16,4 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Internal
 
-- Bump com.slack.api:bolt-socket-mode from 1.34.0 to 1.36.1 (#166)
-- Bump org.glassfish.tyrus.bundles:tyrus-standalone-client from 1.20 to 1.21 (#162).
-- Bump com.diffplug.spotless from 6.22.0 to 6.23.3 (#173).
-- Bump actions/setup-java from 3 to 4 (#170).
-- Bump github/codeql-action from 2 to 3 (#174).
+- Bump com.diffplug.spotless from 6.23.3 to 6.25.0 (#177).
