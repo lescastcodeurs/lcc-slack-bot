@@ -7,7 +7,6 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
-
 ### Fixed
 
 ### Deprecated
@@ -15,6 +14,3 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
-
-- Bump com.slack.api:bolt-socket-mode from 1.36.1 to 1.38.0 (#178)
-- Bump com.diffplug.spotless from 6.23.3 to 6.25.0 (#177).
