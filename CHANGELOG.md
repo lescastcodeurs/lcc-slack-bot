@@ -14,3 +14,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
+
+- Bump com.slack.api:bolt-socket-mode from 1.38.0 to 1.38.1 (#181).
