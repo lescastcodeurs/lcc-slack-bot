@@ -15,5 +15,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Internal
 
-- Bump com.slack.api:bolt-socket-mode from 1.38.0 to 1.38.2 (#181, #182).
+- Bump com.slack.api:bolt-socket-mode from 1.38.0 to 1.38.3 (#181, #182, #183).
 - Bump gradle/gradle-build-action from 2 to 3 (#180).
