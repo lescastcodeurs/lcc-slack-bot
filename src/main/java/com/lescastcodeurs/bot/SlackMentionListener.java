@@ -9,7 +9,7 @@ import com.lescastcodeurs.bot.slack.SlackClient;
 import com.lescastcodeurs.bot.slack.SlackMentionEvent;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.AppConfig;
-import com.slack.api.bolt.socket_mode.SocketModeApp;
+import com.slack.api.bolt.jakarta_socket_mode.SocketModeApp;
 import com.slack.api.model.event.AppMentionEvent;
 import io.quarkus.runtime.QuarkusApplication;
 import io.vertx.core.eventbus.EventBus;
