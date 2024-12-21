@@ -7,6 +7,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Update show notes template with YouTube and more (#202).
+
 ### Fixed
 
 ### Deprecated
