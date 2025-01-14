@@ -5,7 +5,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- Add category _Ask me anything_.
+- Add category _Ask me anything_ (#212).
 
 ### Changed
 
@@ -16,3 +16,5 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Removed
 
 ### Internal
+
+- Bump com.diffplug.spotless from 6.25.0 to 7.0.2 (#210).
