@@ -19,6 +19,7 @@ public enum ShowNoteCategory {
   SOCIETY("Loi, société et organisation", "lcc_loi"),
   TOOL_OF_THE_EPISODE("Outils de l’épisode", "lcc_outil_ep"),
   BEGINNERS("Rubrique débutant", "lcc_debutant"),
+  ASK_ME_ANYTHING("Ask me anything", "lcc_ama"),
   CONFERENCES("Conférences", "lcc_conf"),
 
   // special categories

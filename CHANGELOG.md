@@ -5,6 +5,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Add category _Ask me anything_.
+
 ### Changed
 
 ### Fixed

@@ -46,6 +46,7 @@ The following emojis must be added (suggested emojis can also be found in [this 
 | Loi, société et organisation | lcc_loi      | https://openmoji.org/library/emoji-2696/             |
 | Outils de l’épisode          | lcc_outil_ep | https://openmoji.org/library/emoji-1F984/            |
 | Rubrique débutant            | lcc_debutant | https://openmoji.org/library/emoji-1F423/            |
+| Ask me anything              | lcc_ama      | https://openmoji.org/library/emoji-1F5E8/            |
 | Conférences                  | lcc_conf     | https://openmoji.org/library/emoji-1F3A4/            |
 | Messages exclus              | lcc_exclude  | https://openmoji.org/library/emoji-274C/             |
 | Messages inclus              | lcc_include  | https://openmoji.org/library/emoji-2714/             |

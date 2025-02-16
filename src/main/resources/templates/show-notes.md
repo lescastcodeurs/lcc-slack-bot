@@ -4,7 +4,7 @@ author: 'Emmanuel Bernard'
 team: 'Emmanuel Bernard, Guillaume Laforge, Vincent Massol, Antonio Goncalves, Arnaud Héritier, Audrey Neveu, Katia Aresti'
 layout: blog-post
 episode: {episodeNumber}
-youtube: 
+youtube:
 mp3_length: 85017000
 tweet: TODO
 # tweet size: 91-93 -> 99-101 #######################################################################
@@ -191,6 +191,19 @@ ou en vidéo [sur YouTube](https://www.youtube.com/@lescastcodeurs).
 ## Rubrique débutant
 
 {#for note in notes('BEGINNERS')}
+{note.text}
+
+{#for comment in note.comments}
+{comment}
+{/for}
+
+{/for}
+{/if}
+
+{#if hasNotes('ASK_ME_ANYTHING')}
+## Ask me anything
+
+{#for note in notes('ASK_ME_ANYTHING')}
 {note.text}
 
 {#for comment in note.comments}

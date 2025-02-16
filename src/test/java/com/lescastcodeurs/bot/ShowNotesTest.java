@@ -2,10 +2,7 @@ package com.lescastcodeurs.bot;
 
 import static com.lescastcodeurs.bot.ShowNoteCategory.INCLUDE;
 import static java.time.LocalDateTime.now;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.lescastcodeurs.bot.conferences.NoConferenceMarkdown;
 import com.lescastcodeurs.bot.slack.Messages;
@@ -104,6 +101,9 @@ class ShowNotesTest {
     assertContains(
         rendered,
         "## Rubrique débutant\n\n[https://lescastcodeurs.com/BEGINNERS](https://lescastcodeurs.com/BEGINNERS)");
+    assertContains(
+        rendered,
+        "## Ask me anything\n\n[https://lescastcodeurs.com/ASK_ME_ANYTHING](https://lescastcodeurs.com/ASK_ME_ANYTHING)");
     assertContains(rendered, NoConferenceMarkdown.MESSAGE);
 
     assertFalse(rendered.contains("random comment"));
