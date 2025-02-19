@@ -18,7 +18,7 @@ dependencies {
   implementation 'io.quarkus:quarkus-qute'
   implementation 'io.quarkus:quarkus-jackson'
 
-  implementation 'com.slack.api:bolt-jakarta-socket-mode:1.45.2'
+  implementation 'com.slack.api:bolt-jakarta-socket-mode:1.45.3'
   implementation 'jakarta.websocket:jakarta.websocket-client-api:2.2.0'
   implementation 'org.glassfish.tyrus.bundles:tyrus-standalone-client:2.2.0'
 
