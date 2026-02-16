@@ -22,8 +22,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Gradle
-        uses: 'gradle/gradle-build-action@v3'
+      - name: Setup Gradle
+        uses: 'gradle/actions/setup-gradle@v5'
         with:
-          gradle-version: 'current'
-          arguments: 'build'
+          gradle-version: '7.5.1'
+
+      - name: Build with Gradle
+        run: './gradlew build'
