@@ -1,7 +1,7 @@
 ---
 title: LCC {episodeNumber} -
 author: 'Emmanuel Bernard'
-team: 'Emmanuel Bernard, Guillaume Laforge, Vincent Massol, Antonio Goncalves, Arnaud Héritier, Audrey Neveu, Katia Aresti'
+team: 'Emmanuel Bernard, Guillaume Laforge, Antonio Goncalves, Arnaud Héritier, Katia Aresti'
 layout: blog-post
 episode: {episodeNumber}
 youtube:
